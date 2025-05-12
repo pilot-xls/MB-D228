@@ -1,24 +1,57 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-	<link rel="manifest" href="manifest.json">
-	<meta name="theme-color" content="#0d0d0d">
-	<link rel="apple-touch-icon" href="icone.png">
-	<meta name="apple-mobile-web-app-capable" content="yes">
-	<meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <!-- Meta e links para comportamento de app e aparência em mobile -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0d0d0d">
+    <link rel="apple-touch-icon" href="icone.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="UTF-8">
     <title>Mass & Balance Dornier 228</title>
+
+    <!-- Estilos CSS ajustados para ecrã de telemóvel e melhor usabilidade -->
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        table { border-collapse: collapse; margin-bottom: 30px; width: 100%; max-width: 600px; }
-        th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
-        th { background-color: #f2f2f2; }
-        input[type=number] { width: 80px; }
-        .highlight { color: red; font-weight: bold; }
-    .limit-check.exceeded { background-color: #ffcccc; color: red; font-weight: bold; }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 10px;
+            padding: 0;
+            max-width: 100vw;
+            overflow-x: hidden;
+        }
+        table {
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            width: 100%;
+            font-size: 14px;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        input[type=number] {
+            width: 100%;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        .highlight {
+            color: red;
+            font-weight: bold;
+        }
+        .limit-check.exceeded {
+            background-color: #ffcccc;
+            color: red;
+            font-weight: bold;
+        }
     </style>
 </head>
 
+<!-- Registo do Service Worker para funcionamento offline -->
 <script>
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('service-worker.js')
@@ -28,22 +61,25 @@
 </script>
 
 <body>
+    <!-- Tabela para calcular o peso total de passageiros e bagagem -->
     <h2>Cálculo do Payload</h2>
     <table>
         <tr><th>Tipo</th><th>Nº Passageiros</th><th>Peso total (kg)</th></tr>
-        <tr><td>Homens (86kg + 10kg)</td><td><input type="number" id="men" value="0" oninput="calculate()" onchange="calculate()"></td><td id="menWeight">0</td></tr>
-        <tr><td>Mulheres (68kg + 10kg)</td><td><input type="number" id="women" value="0" oninput="calculate()" onchange="calculate()"></td><td id="womenWeight">0</td></tr>
+        <tr><td>Homens (96kg)</td><td><input type="number" id="men" value="0" oninput="calculate()" onchange="calculate()"></td><td id="menWeight">0</td></tr>
+        <tr><td>Mulheres (78kg)</td><td><input type="number" id="women" value="0" oninput="calculate()" onchange="calculate()"></td><td id="womenWeight">0</td></tr>
         <tr><td>Crianças (35kg)</td><td><input type="number" id="children" value="0" oninput="calculate()" onchange="calculate()"></td><td id="childrenWeight">0</td></tr>
         <tr><td>Bagagem extra (kg)</td><td colspan="2"><input type="number" id="extraBag" value="0" oninput="calculate()" onchange="calculate()"></td></tr>
         <tr><td><strong>Payload total (kg)</strong></td><td colspan="2" id="totalPayload">0</td></tr>
     </table>
 
+    <!-- Tabela para conversão de unidades entre kg e lb -->
     <h2>Conversor Kg &harr; Lb</h2>
     <table>
         <tr><td>Kg para lb</td><td><input type="number" id="kg" value="0" oninput="convertKgToLb()" onchange="convertKgToLb()"></td><td id="toLb">0</td></tr>
         <tr><td>Lb para kg</td><td><input type="number" id="lb" value="0" oninput="convertLbToKg()" onchange="convertLbToKg()"></td><td id="toKg">0</td></tr>
     </table>
 
+    <!-- Tabela para cálculo de massa e balanceamento da aeronave -->
     <h2>Mass & Balance</h2>
     <table>
         <tr><th>Item</th><th>Peso (kg)</th><th>Momento (kg·m)</th><th>Comentário</th></tr>
@@ -59,7 +95,23 @@
         <tr><td>Landing Weight</td><td id="landingWeight">0</td><td id="momentLanding">0</td><td>MAC: <span id="macLanding">0</span>%</td></tr>
     </table>
 
-    
+<!-- Script para selecionar valor automaticamente e bloquear caracteres não numéricos -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('input[type="number"]').forEach(input => {
+      input.addEventListener('focus', function () {
+        this.select();
+      });
+      input.addEventListener('keypress', function (e) {
+        const char = String.fromCharCode(e.which);
+        if (!/[\d.]/.test(char)) {
+          e.preventDefault();
+        }
+      });
+    });
+  });
+</script>
+  <!-- cálculo do mass and balance  -->  
 <script>
 function calculate() {
     const men = parseInt(document.getElementById('men').value) || 0;

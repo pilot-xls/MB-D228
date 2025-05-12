@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+	<link rel="manifest" href="manifest.json">
+	<meta name="theme-color" content="#0d0d0d">
+	<link rel="apple-touch-icon" href="icone.png">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta charset="UTF-8">
+    <title>Mass & Balance Dornier 228</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        table { border-collapse: collapse; margin-bottom: 30px; width: 100%; max-width: 600px; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+        th { background-color: #f2f2f2; }
+        input[type=number] { width: 80px; }
+        .highlight { color: red; font-weight: bold; }
+    .limit-check.exceeded { background-color: #ffcccc; color: red; font-weight: bold; }
+    </style>
+</head>
+
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('service-worker.js')
+      .then(() => console.log("Service Worker registado"))
+      .catch(err => console.error("Erro ao registar SW:", err));
+  }
+</script>
+
+<body>
+    <h2>Cálculo do Payload</h2>
+    <table>
+        <tr><th>Tipo</th><th>Nº Passageiros</th><th>Peso total (kg)</th></tr>
+        <tr><td>Homens (86kg + 10kg)</td><td><input type="number" id="men" value="0" oninput="calculate()" onchange="calculate()"></td><td id="menWeight">0</td></tr>
+        <tr><td>Mulheres (68kg + 10kg)</td><td><input type="number" id="women" value="0" oninput="calculate()" onchange="calculate()"></td><td id="womenWeight">0</td></tr>
+        <tr><td>Crianças (35kg)</td><td><input type="number" id="children" value="0" oninput="calculate()" onchange="calculate()"></td><td id="childrenWeight">0</td></tr>
+        <tr><td>Bagagem extra (kg)</td><td colspan="2"><input type="number" id="extraBag" value="0" oninput="calculate()" onchange="calculate()"></td></tr>
+        <tr><td><strong>Payload total (kg)</strong></td><td colspan="2" id="totalPayload">0</td></tr>
+    </table>
+
+    <h2>Conversor Kg &harr; Lb</h2>
+    <table>
+        <tr><td>Kg para lb</td><td><input type="number" id="kg" value="0" oninput="convertKgToLb()" onchange="convertKgToLb()"></td><td id="toLb">0</td></tr>
+        <tr><td>Lb para kg</td><td><input type="number" id="lb" value="0" oninput="convertLbToKg()" onchange="convertLbToKg()"></td><td id="toKg">0</td></tr>
+    </table>
+
+    <h2>Mass & Balance</h2>
+    <table>
+        <tr><th>Item</th><th>Peso (kg)</th><th>Momento (kg·m)</th><th>Comentário</th></tr>
+        <tr><td>Basic weight</td><td>3643</td><td>28051.1</td><td>Fixo</td></tr>
+        <tr><td>Pilotos</td><td><input type="number" id="pilots" value="0" oninput="calculate()" onchange="calculate()"></td><td id="momentPilots">0</td><td>ARM fixo = 4.21</td></tr>
+        <tr><td>Payload</td><td><input type="number" id="manualPayload" value="0" oninput="calculate()" onchange="calculate()"></td><td id="momentPayload">0</td><td>ARM = 8.7 <span id="maxFuelNote" class="highlight"></span></td></tr>
+        <tr><td>ZFW</td><td id="zfw">0</td><td id="momentZfw">0</td><td></td></tr>
+        <tr><td>Fuel loading</td><td><input type="number" id="fuel" value="0" oninput="calculate()" onchange="calculate()"></td><td id="momentFuel">0</td><td>ARM = 7.936 <span id="maxPayloadNote" class="highlight"></span></td></tr>
+        <tr id="rampRow"><td>Ramp Weight</td><td id="rampWeight" class="limit-check">0</td><td id="momentRamp">0</td><td></td></tr>
+        <tr><td>Fuel taxi</td><td><input type="number" id="fuelTaxi" value="0" oninput="calculate()" onchange="calculate()"></td><td id="momentTaxi">0</td><td>ARM = 7.936</td></tr>
+        <tr id="takeoffRow"><td>Take-off Weight</td><td id="takeoffWeight" class="limit-check">0</td><td id="momentTakeoff">0</td><td>MAC: <span id="macTakeoff">0</span>%</td></tr>
+        <tr><td>Fuel to destination</td><td><input type="number" id="fuelDest" value="0" oninput="calculate()" onchange="calculate()"></td><td id="momentDest">0</td><td>ARM = 7.936</td></tr>
+        <tr><td>Landing Weight</td><td id="landingWeight">0</td><td id="momentLanding">0</td><td>MAC: <span id="macLanding">0</span>%</td></tr>
+    </table>
+
+    
+<script>
+function calculate() {
+    const men = parseInt(document.getElementById('men').value) || 0;
+    const women = parseInt(document.getElementById('women').value) || 0;
+    const children = parseInt(document.getElementById('children').value) || 0;
+    const extraBag = parseFloat(document.getElementById('extraBag').value) || 0;
+    const pilots = parseFloat(document.getElementById('pilots').value) || 0;
+    const manualPayload = parseFloat(document.getElementById('manualPayload').value) || 0;
+    const fuel = parseFloat(document.getElementById('fuel').value) || 0;
+    const fuelTaxi = parseFloat(document.getElementById('fuelTaxi').value) || 0;
+    const fuelDest = parseFloat(document.getElementById('fuelDest').value) || 0;
+
+    const payload = men * 96 + women * 78 + children * 35 + extraBag;
+
+    document.getElementById('menWeight').innerText = men * 96;
+    document.getElementById('womenWeight').innerText = women * 78;
+    document.getElementById('childrenWeight').innerText = children * 35;
+    document.getElementById('totalPayload').innerText = payload;
+
+    const momentPilots = pilots * 4.21;
+    const momentPayload = manualPayload * 8.7;
+    const momentFuel = fuel * 7.936;
+    const momentTaxi = fuelTaxi * 7.936;
+    const momentDest = fuelDest * 7.936;
+
+    const zfw = 3643 + pilots + manualPayload;
+    const momentZfw = 28051.1 + momentPilots + momentPayload;
+    const rampWeight = zfw + fuel;
+    const momentRamp = momentZfw + momentFuel;
+    const takeoffWeight = rampWeight - fuelTaxi;
+    const momentTakeoff = momentRamp - momentTaxi;
+    const landingWeight = takeoffWeight - fuelDest;
+    const momentLanding = momentTakeoff - momentDest;
+
+    const macTakeoff = ((momentTakeoff / takeoffWeight - 7.26) / 2.042) * 100;
+    const macLanding = ((momentLanding / landingWeight - 7.26) / 2.042) * 100;
+
+    document.getElementById('momentPilots').innerText = momentPilots.toFixed(1);
+    document.getElementById('momentPayload').innerText = momentPayload.toFixed(1);
+    document.getElementById('zfw').innerText = zfw.toFixed(1);
+    document.getElementById('momentZfw').innerText = momentZfw.toFixed(1);
+    document.getElementById('momentFuel').innerText = momentFuel.toFixed(1);
+    document.getElementById('rampWeight').innerText = rampWeight.toFixed(1);
+    document.getElementById('momentRamp').innerText = momentRamp.toFixed(1);
+    document.getElementById('momentTaxi').innerText = momentTaxi.toFixed(1);
+    document.getElementById('takeoffWeight').innerText = takeoffWeight.toFixed(1);
+    document.getElementById('momentTakeoff').innerText = momentTakeoff.toFixed(1);
+    document.getElementById('macTakeoff').innerText = macTakeoff.toFixed(1);
+    document.getElementById('momentDest').innerText = momentDest.toFixed(1);
+    document.getElementById('landingWeight').innerText = landingWeight.toFixed(1);
+    document.getElementById('momentLanding').innerText = momentLanding.toFixed(1);
+    document.getElementById('macLanding').innerText = macLanding.toFixed(1);
+
+    // Avisos
+    let maxPayload = 5730 - (3643 + pilots + fuel);
+    let maxFuel = 5730 - (3643 + pilots + manualPayload);
+    document.getElementById('maxPayloadNote').innerText = maxPayload > 0 ? ` | Máx Payload: ${maxPayload.toFixed(0)} kg` : " | Excede limite!";
+    document.getElementById('maxFuelNote').innerText = maxFuel > 0 ? ` | Máx Fuel: ${maxFuel.toFixed(0)} kg` : " | Excede limite!";
+
+    // Realce visual se peso excedido
+
+    document.getElementById('rampWeight').classList.toggle('exceeded', rampWeight > 5730);
+    document.getElementById('takeoffWeight').classList.toggle('exceeded', takeoffWeight > 5700);
+
+    document.getElementById('rampRow').style.backgroundColor = rampWeight > 5730 ? '#ffcccc' : '';
+    document.getElementById('takeoffRow').style.backgroundColor = takeoffWeight > 5700 ? '#ffcccc' : '';
+}
+
+function convertKgToLb() {
+    const kg = parseFloat(document.getElementById('kg').value) || 0;
+    document.getElementById('toLb').innerText = (kg * 2.20462).toFixed(1);
+}
+
+function convertLbToKg() {
+    const lb = parseFloat(document.getElementById('lb').value) || 0;
+    document.getElementById('toKg').innerText = (lb / 2.20462).toFixed(1);
+}
+
+calculate();
+</script>
+</body>
+</html>

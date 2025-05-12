@@ -1,11 +1,9 @@
-const CACHE_NAME = 'calc-cache-v1';
+const CACHE_NAME = 'calc-cache-v2';
 const FILES_TO_CACHE = [
-  '/',
-  '/index.html',
-  '/style.css',
-  '/script.js',
-  '/icone.png',
-  '/manifest.json'
+  '/MB-D228/',
+  '/MB-D228/index.html',
+  '/MB-D228/icone.png',
+  '/MB-D228/manifest.json'
 ];
 
 self.addEventListener('install', (event) => {

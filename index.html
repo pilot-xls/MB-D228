@@ -2,24 +2,27 @@
 <html lang="pt">
 <head>
   <meta charset="UTF-8">
-  <title>Mass & Balance Dornier 228</title>
+  <title>Mass & Balance</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
-    body { font-family: Arial, sans-serif; padding: 20px; }
-    table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+    body { font-family: Arial, sans-serif; padding: 20px; max-width: 900px; margin: auto; }
+    table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 14px; }
     th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
     th { background-color: #f2f2f2; }
     input[type=number] {
       width: 100%;
-      font-size: 16px;
+      font-size: 14px;
       padding: 4px;
       box-sizing: border-box;
     }
     select {
       width: 100%;
-      font-size: 16px;
+      font-size: 14px;
       margin-bottom: 20px;
       padding: 6px;
+    }
+    .gray-row {
+      background-color: #f0f0f0;
     }
   </style>
 </head>
@@ -38,11 +41,25 @@
   <tr><td><strong>Payload total (kg)</strong></td><td colspan="2" id="totalPayload">0</td></tr>
 </table>
 
+<h2>Conversor Kg ↔ Lb</h2>
+<table>
+  <tr><td>Kg para lb</td><td><input type="number" id="kg" value="0" oninput="convertKgToLb()"></td><td id="toLb">0</td></tr>
+  <tr><td>Lb para kg</td><td><input type="number" id="lb" value="0" oninput="convertLbToKg()"></td><td id="toKg">0</td></tr>
+</table>
+
 <h2>Mass & Balance</h2>
 <table>
   <tr><th>Item</th><th>Peso (kg)</th><th>Momento</th></tr>
   <tr><td>Peso Básico</td><td id="basicWeight">0</td><td id="basicMoment">0</td></tr>
+  <tr><td>Pilotos</td><td><input type="number" id="pilots" value="0" oninput="calculate()"></td><td id="momentPilots">0</td></tr>
   <tr><td>Payload</td><td id="payloadWeight">0</td><td id="payloadMoment">0</td></tr>
+  <tr class="gray-row"><td>ZFW</td><td id="zfw">0</td><td id="momentZfw">0</td></tr>
+  <tr><td>Fuel loading</td><td><input type="number" id="fuel" value="0" oninput="calculate()"></td><td id="momentFuel">0</td></tr>
+  <tr class="gray-row"><td>Ramp Weight</td><td id="rampWeight">0</td><td id="momentRamp">0</td></tr>
+  <tr><td>Fuel taxi</td><td><input type="number" id="fuelTaxi" value="0" oninput="calculate()"></td><td id="momentTaxi">0</td></tr>
+  <tr class="gray-row"><td>Take-off Weight</td><td id="takeoffWeight">0</td><td id="momentTakeoff">0</td></tr>
+  <tr><td>Fuel to destination</td><td><input type="number" id="fuelDest" value="0" oninput="calculate()"></td><td id="momentDest">0</td></tr>
+  <tr class="gray-row"><td>Landing Weight</td><td id="landingWeight">0</td><td id="momentLanding">0</td></tr>
 </table>
 
 <script>
@@ -68,6 +85,16 @@ function preencherDropdown() {
   });
 }
 
+function convertKgToLb() {
+  const kg = parseFloat(document.getElementById("kg").value) || 0;
+  document.getElementById("toLb").innerText = (kg * 2.20462).toFixed(2);
+}
+
+function convertLbToKg() {
+  const lb = parseFloat(document.getElementById("lb").value) || 0;
+  document.getElementById("toKg").innerText = (lb / 2.20462).toFixed(2);
+}
+
 function calculate() {
   const defs = getDefs();
   const pesoHomem = defs.pesoHomem || 96;
@@ -80,28 +107,55 @@ function calculate() {
   const selectedIndex = select ? select.selectedIndex : 0;
   const aviao = avioes[selectedIndex] || { peso: 3643, momento: 28051.1 };
 
-  if (select) {
-    localStorage.setItem('aviaoSelecionadoIndex', selectedIndex);
-  }
+  if (select) localStorage.setItem('aviaoSelecionadoIndex', selectedIndex);
 
   const men = parseInt(document.getElementById("men").value) || 0;
   const women = parseInt(document.getElementById("women").value) || 0;
   const children = parseInt(document.getElementById("children").value) || 0;
   const extraBag = parseFloat(document.getElementById("extraBag").value) || 0;
+  const pilots = parseFloat(document.getElementById("pilots").value) || 0;
+  const fuel = parseFloat(document.getElementById("fuel").value) || 0;
+  const fuelTaxi = parseFloat(document.getElementById("fuelTaxi").value) || 0;
+  const fuelDest = parseFloat(document.getElementById("fuelDest").value) || 0;
 
-  const totalPayload = (men * pesoHomem) + (women * pesoMulher) + (children * pesoCrianca) + extraBag;
+  const payload = men * pesoHomem + women * pesoMulher + children * pesoCrianca + extraBag;
 
   document.getElementById("menWeight").innerText = men * pesoHomem;
   document.getElementById("womenWeight").innerText = women * pesoMulher;
   document.getElementById("childrenWeight").innerText = children * pesoCrianca;
-  document.getElementById("totalPayload").innerText = totalPayload;
-
-  const payloadMoment = totalPayload * 8.7; // braço médio de exemplo
-  document.getElementById("payloadWeight").innerText = totalPayload;
-  document.getElementById("payloadMoment").innerText = payloadMoment.toFixed(1);
+  document.getElementById("totalPayload").innerText = payload;
 
   document.getElementById("basicWeight").innerText = aviao.peso;
   document.getElementById("basicMoment").innerText = aviao.momento;
+
+  const momentPilots = pilots * 4.21;
+  const momentPayload = payload * 8.7;
+  const zfw = aviao.peso + pilots + payload;
+  const momentZfw = aviao.momento + momentPilots + momentPayload;
+  const momentFuel = fuel * 7.936;
+  const rampWeight = zfw + fuel;
+  const momentRamp = momentZfw + momentFuel;
+  const momentTaxi = fuelTaxi * 7.936;
+  const takeoffWeight = rampWeight - fuelTaxi;
+  const momentTakeoff = momentRamp - momentTaxi;
+  const momentDest = fuelDest * 7.936;
+  const landingWeight = takeoffWeight - fuelDest;
+  const momentLanding = momentTakeoff - momentDest;
+
+  document.getElementById("momentPilots").innerText = momentPilots.toFixed(1);
+  document.getElementById("payloadWeight").innerText = payload;
+  document.getElementById("payloadMoment").innerText = momentPayload.toFixed(1);
+  document.getElementById("zfw").innerText = zfw;
+  document.getElementById("momentZfw").innerText = momentZfw.toFixed(1);
+  document.getElementById("momentFuel").innerText = momentFuel.toFixed(1);
+  document.getElementById("rampWeight").innerText = rampWeight;
+  document.getElementById("momentRamp").innerText = momentRamp.toFixed(1);
+  document.getElementById("momentTaxi").innerText = momentTaxi.toFixed(1);
+  document.getElementById("takeoffWeight").innerText = takeoffWeight;
+  document.getElementById("momentTakeoff").innerText = momentTakeoff.toFixed(1);
+  document.getElementById("momentDest").innerText = momentDest.toFixed(1);
+  document.getElementById("landingWeight").innerText = landingWeight;
+  document.getElementById("momentLanding").innerText = momentLanding.toFixed(1);
 }
 
 document.querySelectorAll("input").forEach(i => i.addEventListener("input", calculate));

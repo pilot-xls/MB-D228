@@ -1,5 +1,5 @@
 // Nome da cache (altera para forçar atualização quando modificares ficheiros)
-const CACHE_NAME = 'calc-cache-v2';
+const CACHE_NAME = 'calc-cache-v3';
 
 // Lista de ficheiros a guardar para acesso offline
 const FILES_TO_CACHE = [
@@ -27,5 +27,20 @@ self.addEventListener('fetch', (event) => {
         // Se estiver na cache, usa o cache. Caso contrário, faz pedido à net.
         return response || fetch(event.request);
       })
+  );
+});
+//Apaga as caches antigas automaticamente
+self.addEventListener('activate', (event) => {
+  const allowedCaches = [CACHE_NAME];
+  event.waitUntil(
+    caches.keys().then(keys => {
+      return Promise.all(
+        keys.map(key => {
+          if (!allowedCaches.includes(key)) {
+            return caches.delete(key);
+          }
+        })
+      );
+    })
   );
 });

@@ -63,8 +63,8 @@
     <h2>Cálculo do Payload</h2>
     <table>
         <tr><th>Tipo</th><th>Nº Passageiros</th><th>Peso total (kg)</th></tr>
-        <tr><td>Homens (96kg)</td><td><input type="number" inputmode="decimal" pattern="[0-9]*" id="men" value="0" oninput="calculate()" onchange="calculate()"></td><td id="menWeight">0</td></tr>
-        <tr><td>Mulheres (78kg)</td><td><input type="number" inputmode="decimal" pattern="[0-9]*" id="women" value="0" oninput="calculate()" onchange="calculate()"></td><td id="womenWeight">0</td></tr>
+        <tr><td>Homens (86kg)</td><td><input type="number" inputmode="decimal" pattern="[0-9]*" id="men" value="0" oninput="calculate()" onchange="calculate()"></td><td id="menWeight">0</td></tr>
+        <tr><td>Mulheres (68kg)</td><td><input type="number" inputmode="decimal" pattern="[0-9]*" id="women" value="0" oninput="calculate()" onchange="calculate()"></td><td id="womenWeight">0</td></tr>
         <tr><td>Crianças (35kg)</td><td><input type="number" inputmode="decimal" pattern="[0-9]*" id="children" value="0" oninput="calculate()" onchange="calculate()"></td><td id="childrenWeight">0</td></tr>
         <tr><td>Bagagem extra (kg)</td><td colspan="2"><input type="number" inputmode="decimal" pattern="[0-9]*" id="extraBag" value="0" oninput="calculate()" onchange="calculate()"></td></tr>
         <tr><td><strong>Payload total (kg)</strong></td><td colspan="2" id="totalPayload">0</td></tr>
@@ -130,10 +130,10 @@ function calculate() {
     const fuelTaxi = parseFloat(document.getElementById('fuelTaxi').value) || 0;
     const fuelDest = parseFloat(document.getElementById('fuelDest').value) || 0;
 
-    const payload = men * 96 + women * 78 + children * 35 + extraBag;
+    const payload = men * 86 + women * 68 + children * 35 + extraBag;
 
-    document.getElementById('menWeight').innerText = men * 96;
-    document.getElementById('womenWeight').innerText = women * 78;
+    document.getElementById('menWeight').innerText = men * 86;
+    document.getElementById('womenWeight').innerText = women * 68;
     document.getElementById('childrenWeight').innerText = children * 35;
     document.getElementById('totalPayload').innerText = payload;
 

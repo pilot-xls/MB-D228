@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-    <!-- Meta e links para comportamento de app e aparência em mobile -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#0d0d0d">
     <link rel="apple-touch-icon" href="icone.png">
@@ -10,8 +9,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="UTF-8">
     <title>Mass & Balance Dornier 228</title>
-
-    <!-- Estilos CSS ajustados para ecrã de telemóvel e melhor usabilidade -->
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -51,7 +48,6 @@
     </style>
 </head>
 
-<!-- Registo do Service Worker para funcionamento offline -->
 <script>
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('service-worker.js')
@@ -61,61 +57,57 @@
 </script>
 
 <body>
-    <!-- Tabela para calcular o peso total de passageiros e bagagem -->
     <h2>Cálculo do Payload</h2>
     <table>
         <tr><th>Tipo</th><th>Nº Passageiros</th><th>Peso total (kg)</th></tr>
-        <tr><td>Homens (96kg)</td><td><input type="number" id="men" value="0" oninput="calculate()" onchange="calculate()"></td><td id="menWeight">0</td></tr>
-        <tr><td>Mulheres (78kg)</td><td><input type="number" id="women" value="0" oninput="calculate()" onchange="calculate()"></td><td id="womenWeight">0</td></tr>
-        <tr><td>Crianças (35kg)</td><td><input type="number" id="children" value="0" oninput="calculate()" onchange="calculate()"></td><td id="childrenWeight">0</td></tr>
-        <tr><td>Bagagem extra (kg)</td><td colspan="2"><input type="number" id="extraBag" value="0" oninput="calculate()" onchange="calculate()"></td></tr>
+        <tr><td>Homens (96kg)</td><td><input type="number" inputmode="numeric" pattern="[0-9]*" id="men" value="0" oninput="calculate()" onchange="calculate()"></td><td id="menWeight">0</td></tr>
+        <tr><td>Mulheres (78kg)</td><td><input type="number" inputmode="numeric" pattern="[0-9]*" id="women" value="0" oninput="calculate()" onchange="calculate()"></td><td id="womenWeight">0</td></tr>
+        <tr><td>Crianças (35kg)</td><td><input type="number" inputmode="numeric" pattern="[0-9]*" id="children" value="0" oninput="calculate()" onchange="calculate()"></td><td id="childrenWeight">0</td></tr>
+        <tr><td>Bagagem extra (kg)</td><td colspan="2"><input type="number" inputmode="numeric" pattern="[0-9]*" id="extraBag" value="0" oninput="calculate()" onchange="calculate()"></td></tr>
         <tr><td><strong>Payload total (kg)</strong></td><td colspan="2" id="totalPayload">0</td></tr>
     </table>
 
-    <!-- Tabela para conversão de unidades entre kg e lb -->
     <h2>Conversor Kg &harr; Lb</h2>
     <table>
-        <tr><td>Kg para lb</td><td><input type="number" id="kg" value="0" oninput="convertKgToLb()" onchange="convertKgToLb()"></td><td id="toLb">0</td></tr>
-        <tr><td>Lb para kg</td><td><input type="number" id="lb" value="0" oninput="convertLbToKg()" onchange="convertLbToKg()"></td><td id="toKg">0</td></tr>
+        <tr><td>Kg para lb</td><td><input type="number" inputmode="numeric" pattern="[0-9]*" id="kg" value="0" oninput="convertKgToLb()" onchange="convertKgToLb()"></td><td id="toLb">0</td></tr>
+        <tr><td>Lb para kg</td><td><input type="number" inputmode="numeric" pattern="[0-9]*" id="lb" value="0" oninput="convertLbToKg()" onchange="convertLbToKg()"></td><td id="toKg">0</td></tr>
     </table>
 
-    <!-- Tabela para cálculo de massa e balanceamento da aeronave -->
     <h2>Mass & Balance</h2>
     <table>
         <tr><th>Item</th><th>Peso (kg)</th><th>Momento (kg·m)</th><th>Comentário</th></tr>
         <tr><td>Basic weight</td><td>3643</td><td>28051.1</td><td>Fixo</td></tr>
-        <tr><td>Pilotos</td><td><input type="number" id="pilots" value="0" oninput="calculate()" onchange="calculate()"></td><td id="momentPilots">0</td><td>ARM fixo = 4.21</td></tr>
-        <tr><td>Payload</td><td><input type="number" id="manualPayload" value="0" oninput="calculate()" onchange="calculate()"></td><td id="momentPayload">0</td><td>ARM = 8.7 <span id="maxFuelNote" class="highlight"></span></td></tr>
+        <tr><td>Pilotos</td><td><input type="number" inputmode="numeric" pattern="[0-9]*" id="pilots" value="0" oninput="calculate()" onchange="calculate()"></td><td id="momentPilots">0</td><td>ARM fixo = 4.21</td></tr>
+        <tr><td>Payload</td><td><input type="number" inputmode="numeric" pattern="[0-9]*" id="manualPayload" value="0" oninput="calculate()" onchange="calculate()"></td><td id="momentPayload">0</td><td>ARM = 8.7 <span id="maxFuelNote" class="highlight"></span></td></tr>
         <tr><td>ZFW</td><td id="zfw">0</td><td id="momentZfw">0</td><td></td></tr>
-        <tr><td>Fuel loading</td><td><input type="number" id="fuel" value="0" oninput="calculate()" onchange="calculate()"></td><td id="momentFuel">0</td><td>ARM = 7.936 <span id="maxPayloadNote" class="highlight"></span></td></tr>
+        <tr><td>Fuel loading</td><td><input type="number" inputmode="numeric" pattern="[0-9]*" id="fuel" value="0" oninput="calculate()" onchange="calculate()"></td><td id="momentFuel">0</td><td>ARM = 7.936 <span id="maxPayloadNote" class="highlight"></span></td></tr>
         <tr id="rampRow"><td>Ramp Weight</td><td id="rampWeight" class="limit-check">0</td><td id="momentRamp">0</td><td></td></tr>
-        <tr><td>Fuel taxi</td><td><input type="number" id="fuelTaxi" value="0" oninput="calculate()" onchange="calculate()"></td><td id="momentTaxi">0</td><td>ARM = 7.936</td></tr>
+        <tr><td>Fuel taxi</td><td><input type="number" inputmode="numeric" pattern="[0-9]*" id="fuelTaxi" value="0" oninput="calculate()" onchange="calculate()"></td><td id="momentTaxi">0</td><td>ARM = 7.936</td></tr>
         <tr id="takeoffRow"><td>Take-off Weight</td><td id="takeoffWeight" class="limit-check">0</td><td id="momentTakeoff">0</td><td>MAC: <span id="macTakeoff">0</span>%</td></tr>
-        <tr><td>Fuel to destination</td><td><input type="number" id="fuelDest" value="0" oninput="calculate()" onchange="calculate()"></td><td id="momentDest">0</td><td>ARM = 7.936</td></tr>
+        <tr><td>Fuel to destination</td><td><input type="number" inputmode="numeric" pattern="[0-9]*" id="fuelDest" value="0" oninput="calculate()" onchange="calculate()"></td><td id="momentDest">0</td><td>ARM = 7.936</td></tr>
         <tr><td>Landing Weight</td><td id="landingWeight">0</td><td id="momentLanding">0</td><td>MAC: <span id="macLanding">0</span>%</td></tr>
     </table>
 
-<!-- Script para selecionar valor automaticamente e bloquear caracteres não numéricos -->
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     const inputs = Array.from(document.querySelectorAll('input[type="number"]'));
 
-    // Seleciona valor e impede letras
     inputs.forEach((input, index) => {
+      // Seleciona automaticamente o valor ao tocar
       input.addEventListener('focus', () => input.select());
 
+      // Bloqueia letras e move para próximo campo com Enter
       input.addEventListener('keypress', (e) => {
         const char = String.fromCharCode(e.which);
         if (!/[\d.]/.test(char)) e.preventDefault();
 
-        // Se carregar Enter
         if (e.key === 'Enter') {
           e.preventDefault();
           const next = inputs[index + 1];
           if (next) {
             next.focus();
           } else {
-            input.blur(); // perde o foco se for o último
+            input.blur();
           }
         }
       });

@@ -79,13 +79,13 @@
         <tr><td>Basic weight</td><td>3643</td><td>28051.1</td><td>Fixo</td></tr>
         <tr><td>Pilotos</td><td><input type="number" inputmode="decimal" pattern="[0-9]*" id="pilots" value="0" oninput="calculate()" onchange="calculate()"></td><td id="momentPilots">0</td><td>ARM fixo = 4.21</td></tr>
         <tr><td>Payload</td><td><input type="number" inputmode="decimal" pattern="[0-9]*" id="manualPayload" value="0" oninput="calculate()" onchange="calculate()"></td><td id="momentPayload">0</td><td>ARM = 8.7 <span id="maxFuelNote" class="highlight"></span></td></tr>
-        <tr><td>ZFW</td><td id="zfw">0</td><td id="momentZfw">0</td><td></td></tr>
+        <tr class="gray-row"><td>ZFW</td><td id="zfw">0</td><td id="momentZfw">0</td><td></td></tr>
         <tr><td>Fuel loading</td><td><input type="number" inputmode="decimal" pattern="[0-9]*" id="fuel" value="0" oninput="calculate()" onchange="calculate()"></td><td id="momentFuel">0</td><td>ARM = 7.936 <span id="maxPayloadNote" class="highlight"></span></td></tr>
-        <tr id="rampRow"><td>Ramp Weight</td><td id="rampWeight" class="limit-check">0</td><td id="momentRamp">0</td><td></td></tr>
+        <tr id="rampRow" class="gray-row"><td>Ramp Weight</td><td id="rampWeight" class="limit-check">0</td><td id="momentRamp">0</td><td></td></tr>
         <tr><td>Fuel taxi</td><td><input type="number" inputmode="decimal" pattern="[0-9]*" id="fuelTaxi" value="0" oninput="calculate()" onchange="calculate()"></td><td id="momentTaxi">0</td><td>ARM = 7.936</td></tr>
-        <tr id="takeoffRow"><td>Take-off Weight</td><td id="takeoffWeight" class="limit-check">0</td><td id="momentTakeoff">0</td><td>MAC: <span id="macTakeoff">0</span>%</td></tr>
+        <tr id="takeoffRow" class="gray-row"><td>Take-off Weight</td><td id="takeoffWeight" class="limit-check">0</td><td id="momentTakeoff">0</td><td>MAC: <span id="macTakeoff">0</span>%</td></tr>
         <tr><td>Fuel to destination</td><td><input type="number" inputmode="decimal" pattern="[0-9]*" id="fuelDest" value="0" oninput="calculate()" onchange="calculate()"></td><td id="momentDest">0</td><td>ARM = 7.936</td></tr>
-        <tr><td>Landing Weight</td><td id="landingWeight">0</td><td id="momentLanding">0</td><td>MAC: <span id="macLanding">0</span>%</td></tr>
+        <tr class="gray-row"><td>Landing Weight</td><td id="landingWeight">0</td><td id="momentLanding">0</td><td>MAC: <span id="macLanding">0</span>%</td></tr>
     </table>
 
 <script>

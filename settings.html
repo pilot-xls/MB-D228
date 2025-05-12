@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <title>Definições - Mass & Balance</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; max-width: 800px; margin: auto; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+    th { background-color: #f2f2f2; }
+    input, select, button { padding: 8px; font-size: 16px; }
+    input[type=number] { width: 100px; }
+    .actions button { margin: 0 5px; }
+  </style>
+</head>
+<body>
+
+  <h2>Definições de Pesos Padrão</h2>
+  <label>Peso padrão - Homem (kg): <input type="number" inputmode="decimal" pattern="[0-9]*" id="pesoHomem" value="96"></label><br>
+  <label>Peso padrão - Mulher (kg): <input type="number" inputmode="decimal" pattern="[0-9]*" id="pesoMulher" value="78"></label><br>
+  <label>Peso padrão - Criança (kg): <input type="number" inputmode="decimal" pattern="[0-9]*" id="pesoCrianca" value="35"></label><br>
+  <label>Peso padrão - Bagagem extra (kg): <input type="number" inputmode="decimal" pattern="[0-9]*" id="pesoBagagem" value="10"></label><br>
+
+  <h2>Aviões Disponíveis</h2>
+  <table>
+    <thead>
+      <tr><th>Nome</th><th>Peso Básico (kg)</th><th>Momento</th><th>Ações</th></tr>
+    </thead>
+    <tbody id="tabelaAvioes"></tbody>
+  </table>
+
+  <h3>Adicionar Novo Avião</h3>
+  <input type="text" id="novoNome" placeholder="Nome do avião">
+  <input type="number" inputmode="decimal" pattern="[0-9]*" id="novoPeso" placeholder="Peso (kg)">
+  <input type="number" inputmode="decimal" pattern="[0-9]*" id="novoMomento" placeholder="Momento">
+  <button onclick="adicionarAviao()">Adicionar Avião</button>
+
+  <br><br>
+  <button onclick="guardarDefinicoes()">Guardar Tudo</button>
+  <br><br>
+  <a href="index.html">← Voltar à Calculadora</a>
+
+  <script>
+    let listaAvioes = [];
+
+    function carregarDefinicoes() {
+      const defs = JSON.parse(localStorage.getItem("definicoesMB")) || {};
+      document.getElementById("pesoHomem").value = defs.pesoHomem || 96;
+      document.getElementById("pesoMulher").value = defs.pesoMulher || 78;
+      document.getElementById("pesoCrianca").value = defs.pesoCrianca || 35;
+      document.getElementById("pesoBagagem").value = defs.pesoBagagem || 10;
+      listaAvioes = defs.avioes || [];
+      renderAvioes();
+    }
+
+    function renderAvioes() {
+      const tabela = document.getElementById("tabelaAvioes");
+      tabela.innerHTML = "";
+      listaAvioes.forEach((aviao, i) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td><input type="text" value="${aviao.nome}" onchange="atualizarAviao(${i}, 'nome', this.value)"></td>
+          <td><input type="number" inputmode="decimal" pattern="[0-9]*" value="${aviao.peso}" onchange="atualizarAviao(${i}, 'peso', this.value)"></td>
+          <td><input type="number" inputmode="decimal" pattern="[0-9]*" value="${aviao.momento}" onchange="atualizarAviao(${i}, 'momento', this.value)"></td>
+          <td class="actions"><button onclick="removerAviao(${i})">Remover</button></td>
+        `;
+        tabela.appendChild(row);
+      });
+      aplicarMelhoriasInputs();
+    }
+
+    function atualizarAviao(index, campo, valor) {
+      listaAvioes[index][campo] = campo === 'peso' || campo === 'momento' ? parseFloat(valor) : valor;
+    }
+
+    function removerAviao(index) {
+      listaAvioes.splice(index, 1);
+      renderAvioes();
+    }
+
+    function adicionarAviao() {
+      const nome = document.getElementById("novoNome").value;
+      const peso = parseFloat(document.getElementById("novoPeso").value);
+      const momento = parseFloat(document.getElementById("novoMomento").value);
+      if (!nome || isNaN(peso) || isNaN(momento)) {
+        alert("Preenche todos os campos do novo avião.");
+        return;
+      }
+      listaAvioes.push({ nome, peso, momento });
+      document.getElementById("novoNome").value = "";
+      document.getElementById("novoPeso").value = "";
+      document.getElementById("novoMomento").value = "";
+      renderAvioes();
+    }
+
+    function guardarDefinicoes() {
+      const definicoes = {
+        pesoHomem: parseFloat(document.getElementById("pesoHomem").value),
+        pesoMulher: parseFloat(document.getElementById("pesoMulher").value),
+        pesoCrianca: parseFloat(document.getElementById("pesoCrianca").value),
+        pesoBagagem: parseFloat(document.getElementById("pesoBagagem").value),
+        avioes: listaAvioes
+      };
+      localStorage.setItem("definicoesMB", JSON.stringify(definicoes));
+      alert("Definições guardadas com sucesso!");
+    }
+
+    function aplicarMelhoriasInputs() {
+      const inputs = Array.from(document.querySelectorAll('input[type="number"]'));
+      inputs.forEach((input, index) => {
+        input.addEventListener('focus', () => input.select());
+        input.addEventListener('keypress', (e) => {
+          const char = String.fromCharCode(e.which);
+          if (!/[\\d.]/.test(char)) e.preventDefault();
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            const next = inputs[index + 1];
+            if (next) next.focus();
+            else input.blur();
+          }
+        });
+      });
+    }
+
+    window.onload = () => {
+      carregarDefinicoes();
+      aplicarMelhoriasInputs();
+    };
+  </script>
+
+</body>
+</html>

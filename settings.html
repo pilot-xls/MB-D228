@@ -17,8 +17,8 @@
 <body>
 
   <h2>Definições de Pesos Padrão</h2>
-  <label>Peso padrão - Homem (kg): <input type="number" inputmode="decimal" pattern="[0-9]*" id="pesoHomem" value="96"></label><br>
-  <label>Peso padrão - Mulher (kg): <input type="number" inputmode="decimal" pattern="[0-9]*" id="pesoMulher" value="78"></label><br>
+  <label>Peso padrão - Homem (kg): <input type="number" inputmode="decimal" pattern="[0-9]*" id="pesoHomem" value="86"></label><br>
+  <label>Peso padrão - Mulher (kg): <input type="number" inputmode="decimal" pattern="[0-9]*" id="pesoMulher" value="68"></label><br>
   <label>Peso padrão - Criança (kg): <input type="number" inputmode="decimal" pattern="[0-9]*" id="pesoCrianca" value="35"></label><br>
   <label>Peso padrão - Bagagem extra (kg): <input type="number" inputmode="decimal" pattern="[0-9]*" id="pesoBagagem" value="10"></label><br>
 
@@ -46,8 +46,8 @@
 
     function carregarDefinicoes() {
       const defs = JSON.parse(localStorage.getItem("definicoesMB")) || {};
-      document.getElementById("pesoHomem").value = defs.pesoHomem || 96;
-      document.getElementById("pesoMulher").value = defs.pesoMulher || 78;
+      document.getElementById("pesoHomem").value = defs.pesoHomem || 86;
+      document.getElementById("pesoMulher").value = defs.pesoMulher || 68;
       document.getElementById("pesoCrianca").value = defs.pesoCrianca || 35;
       document.getElementById("pesoBagagem").value = defs.pesoBagagem || 10;
       listaAvioes = defs.avioes || [];
@@ -112,7 +112,7 @@
         input.addEventListener('focus', () => input.select());
         input.addEventListener('keypress', (e) => {
           const char = String.fromCharCode(e.which);
-          if (!/[\\d.]/.test(char)) e.preventDefault();
+          if (!/[0-9.,]/.test(char)) e.preventDefault();
           if (e.key === 'Enter') {
             e.preventDefault();
             const next = inputs[index + 1];
@@ -124,6 +124,22 @@
     }
 
     window.onload = () => {
+      if (!localStorage.getItem("definicoesMB")) {
+        const definicoesIniciais = {
+          pesoHomem: 86,
+          pesoMulher: 68,
+          pesoCrianca: 35,
+          pesoBagagem: 10,
+          avioes: [
+            {
+              nome: "Dornier 228",
+              peso: 3643,
+              momento: 26419
+            }
+          ]
+        };
+        localStorage.setItem("definicoesMB", JSON.stringify(definicoesIniciais));
+      }
       carregarDefinicoes();
       aplicarMelhoriasInputs();
     };

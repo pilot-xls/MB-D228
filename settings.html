@@ -12,9 +12,89 @@
     input, select, button { padding: 8px; font-size: 16px; }
     input[type=number] { width: 100px; }
     .actions button { margin: 0 5px; }
+	
+	.modal {
+	  display: none;
+	  position: fixed;
+	  z-index: 2000;
+	  left: 0;
+	  top: 0;
+	  width: 100%;
+	  height: 100%;
+	  overflow: auto;
+	  background-color: rgba(0,0,0,0.4);
+	}
+
+	.modal-content {
+	  background-color: #fff;
+	  margin: 15% auto;
+	  padding: 20px;
+	  border: 1px solid #ccc;
+	  width: 260px;
+	  text-align: center;
+	  border-radius: 8px;
+	  box-shadow: 0 0 10px rgba(0,0,0,0.25);
+	}
+
+	.close {
+	  color: #aaa;
+	  float: right;
+	  font-size: 24px;
+	  font-weight: bold;
+	  cursor: pointer;
+	}
+
+	.close:hover {
+	  color: #000;
+	}
+
+	.top-buttons {
+	  position: fixed;
+	  top: 10px;
+	  right: 10px;
+	  display: flex;
+	  gap: 10px;
+	  z-index: 3000; /* maior que o modal */
+	}
+
+	.top-buttons button {
+	  background: #f2f2f2;
+	  border: none;
+	  border-radius: 6px;
+	  padding: 8px 40px;
+	  font-size: 18px;
+	  cursor: pointer;
+	  font-weight: bold;
+	  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+	}
+
+	.top-buttons button:hover {
+	  background: #e2e2e2;
+	}
+
+	
   </style>
+  
 </head>
 <body>
+
+	<!-- Botão no topo -->
+	<div class="top-buttons">
+	  <button onclick="location.href='index.html'" title="Voltar para a Calculadora">⬅️</button>
+	  <button onclick="abrirModalQR()" title="Partilhar App">📲</button>
+	</div>
+
+
+	<!-- Modal do QR code -->
+	<div id="modalQR" class="modal">
+	  <div class="modal-content">
+		<span class="close" onclick="fecharModalQR()">&times;</span>
+		<h3>📲 Partilhar App</h3>
+		<p>Aponta a câmara para o QR code:</p>
+		<img src="qr_mb_d228.png" alt="QR Code" style="width: 200px; height: 200px; border: 1px solid #ccc; background: white; padding: 10px;">
+	  </div>
+	</div>
+
 
   <h2>Definições de Pesos Padrão</h2>
   <label>Peso padrão - Homem (kg): <input type="number" inputmode="decimal" pattern="[0-9]*" id="pesoHomem" value="86"></label><br>
@@ -39,7 +119,10 @@
   <br><br>
   <button onclick="guardarDefinicoes()">Guardar Tudo</button>
   <br><br>
-  <a href="index.html">← Voltar à Calculadora</a>
+  
+
+
+
 
   <script>
     let listaAvioes = [];
@@ -143,6 +226,24 @@
       carregarDefinicoes();
       aplicarMelhoriasInputs();
     };
+	
+	function abrirModalQR() {
+	  document.getElementById("modalQR").style.display = "block";
+	}
+
+	function fecharModalQR() {
+	  document.getElementById("modalQR").style.display = "none";
+	}
+
+	// Fechar ao clicar fora do modal
+	window.onclick = function(event) {
+	  const modal = document.getElementById("modalQR");
+	  if (event.target === modal) {
+		modal.style.display = "none";
+	  }
+	}
+
+	
   </script>
 
 </body>

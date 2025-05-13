@@ -84,6 +84,8 @@
       .catch(err => console.error("Erro ao registar SW:", err));
   }
 </script>
+	
+<script src="update-checker.js"></script>
 
 <body>
     <h2>Cálculo do Payload</h2>
@@ -294,15 +296,12 @@ window.onload = () => {
   document.querySelectorAll("input").forEach(i => i.addEventListener("input", calculate));
 };
 
-
-
 </script>
 
 <div class="settings-link">
   <a href="settings.html">⚙️ Settings</a>
 </div>
 	
-<script src="update-checker.js"></script>
 
 </body>
 

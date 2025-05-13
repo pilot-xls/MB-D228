@@ -33,7 +33,7 @@ function mostrarBannerDeAtualizacao() {
   btn.style.background = '#000';
   btn.style.color = '#fff';
   btn.style.border = 'none';
-  btn.style.padding = '6px 12px';
+  btn.style.padding = '6px 20px';
   btn.style.borderRadius = '4px';
   btn.style.cursor = 'pointer';
 

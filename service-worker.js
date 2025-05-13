@@ -5,9 +5,12 @@ const CACHE_NAME = 'calc-cache-v7';
 const FILES_TO_CACHE = [
   '/MB-D228/',
   '/MB-D228/index.html',
+  '/MB-D228/settings.html',
   '/MB-D228/icone.png',
-  '/MB-D228/manifest.json'
+  '/MB-D228/manifest.json',
+  '/MB-D228/service-worker.js'
 ];
+
 
 // Evento de instalação: corre quando o SW é instalado pela primeira vez
 self.addEventListener('install', (event) => {

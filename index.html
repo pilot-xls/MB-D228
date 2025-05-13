@@ -270,9 +270,12 @@ function calculate() {
 
     document.getElementById('rampWeight').classList.toggle('exceeded', rampWeight > 5730);
     document.getElementById('takeoffWeight').classList.toggle('exceeded', takeoffWeight > 5700);
+	document.getElementById('landingWeight').classList.toggle('exceeded', landingWeight > 5700);
+
 
     document.getElementById('rampRow').style.backgroundColor = rampWeight > 5730 ? '#ffcccc' : '';
     document.getElementById('takeoffRow').style.backgroundColor = takeoffWeight > 5700 ? '#ffcccc' : '';
+	document.getElementById('landingRow').style.backgroundColor = landingWeight > 5700 ? '#ffcccc' : '';
 }
 
 function convertKgToLb() {

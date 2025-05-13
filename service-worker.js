@@ -1,5 +1,5 @@
 // Nome da cache (altera para forçar atualização quando modificares ficheiros)
-const CACHE_NAME = 'calc-cache-v13';
+const CACHE_NAME = 'calc-cache-v14';
 
 // Lista de ficheiros a guardar para acesso offline
 const FILES_TO_CACHE = [

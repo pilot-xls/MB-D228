@@ -7,85 +7,18 @@
     <link rel="apple-touch-icon" href="icone.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="D228">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="UTF-8">
     <title>Mass & Balance Dornier 228</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 10px;
-            padding: 0;
-            max-width: 100vw;
-            overflow-x: hidden;
-        }
-        table {
-            border-collapse: collapse;
-            margin-bottom: 30px;
-            width: 100%;
-            font-size: 14px;
-        }
-        th, td {
-            border: 1px solid #ccc;
-            padding: 8px;
-            text-align: center;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        input[type=number] {
-            width: 100%;
-            box-sizing: border-box;
-            font-size: 16px;
-            text-align: center;
-        }
-        .highlight {
-            color: red;
-            font-weight: bold;
-        }
-        .limit-check.exceeded {
-            background-color: #ffcccc;
-            color: red;
-            font-weight: bold;
-        }
-        .gray-row {
-            background-color: #f0f0f0;
-        }
-
-        .settings-link {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 16px;
-            background: #f2f2f2;
-            padding: 6px 10px;
-            border-radius: 6px;
-            text-decoration: none;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-            z-index: 1000;
-        }
-
-        .settings-link a {
-            color: #333;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        .settings-link a:hover {
-            color: #000;
-            text-decoration: underline;
-        }
-    </style>
+    
+    <!-- CSS separado -->
+    <link rel="stylesheet" href="design.css">
+    
+    <!-- Atualização automática -->
     <script src="auto-update.js" defer></script>
+    <!-- Lógica principal da app -->
+    <script src="main.js" defer></script>
 </head>
-
-<script>
-if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('service-worker.js')
-        .then(() => console.log("Service Worker registado"))
-        .catch(err => console.error("Erro ao registar SW:", err));
-}
-</script>
 
 <body>
 <h2>Cálculo do Payload</h2>
@@ -290,6 +223,5 @@ window.onload = () => {
   });
 </script>
 
-    
 </body>
 </html>

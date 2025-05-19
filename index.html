@@ -1,227 +1,80 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-    <script src="app-version.js"></script>
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#0d0d0d">
-    <link rel="apple-touch-icon" href="icone.png">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta charset="UTF-8">
-    <title>Mass & Balance Dornier 228</title>
-    
-    <!-- CSS separado -->
-    <link rel="stylesheet" href="design.css">
-    
-    <!-- Atualização automática -->
-    <script src="auto-update.js" defer></script>
-    <!-- Lógica principal da app -->
-    <script src="main.js" defer></script>
+  <meta charset="UTF-8">
+  <title>Mass & Balance Dornier 228</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0d0d0d">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icone.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+  <!-- CSS separado -->
+  <link rel="stylesheet" href="design.css">
+
+  <!-- Atualização automática -->
+  <script src="auto-update.js" defer></script>
+
+  <!-- Versão da App -->
+  <script src="app-version.js" defer></script>
+
+  <!-- Lógica principal -->
+  <script src="main.js" defer></script>
+
+  <script>
+    // Registo do Service Worker
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js')
+        .then(() => console.log("✅ Service Worker registado"))
+        .catch(err => console.error("❌ Erro no SW:", err));
+    }
+  </script>
 </head>
 
 <body>
-<h2>Cálculo do Payload</h2>
-<table>
+
+  <!-- Link para definições -->
+  <div class="settings-link">
+    <a href="settings.html">⚙️ Settings</a>
+  </div>
+
+  <!-- Secção: Cálculo de Payload -->
+  <h2>Cálculo do Payload</h2>
+  <table>
     <tr><th>Tipo</th><th>Nº Passageiros</th><th>Peso total (kg)</th></tr>
-    <tr><td id="labelHomens">Homens</td><td><input type="number" inputmode="decimal" pattern="[0-9]*" id="men" value="0" oninput="calculate()" onchange="calculate()"></td><td id="menWeight">0</td></tr>
-    <tr><td id="labelMulheres">Mulheres</td><td><input type="number" inputmode="decimal" pattern="[0-9]*" id="women" value="0" oninput="calculate()" onchange="calculate()"></td><td id="womenWeight">0</td></tr>
-    <tr><td id="labelCriancas">Crianças</td><td><input type="number" inputmode="decimal" pattern="[0-9]*" id="children" value="0" oninput="calculate()" onchange="calculate()"></td><td id="childrenWeight">0</td></tr>
-    <tr><td id="labelBagagem">Bagagem extra</td><td colspan="2"><input type="number" inputmode="decimal" pattern="[0-9]*" id="extraBag" value="0" oninput="calculate()" onchange="calculate()"></td></tr>
+    <tr><td id="labelHomens">Homens</td><td><input type="number" id="men" value="0"></td><td id="menWeight">0</td></tr>
+    <tr><td id="labelMulheres">Mulheres</td><td><input type="number" id="women" value="0"></td><td id="womenWeight">0</td></tr>
+    <tr><td id="labelCriancas">Crianças</td><td><input type="number" id="children" value="0"></td><td id="childrenWeight">0</td></tr>
+    <tr><td id="labelBagagem">Bagagem extra</td><td colspan="2"><input type="number" id="extraBag" value="0"></td></tr>
     <tr><td><strong>Payload total (kg)</strong></td><td colspan="2" id="totalPayload">0</td></tr>
-</table>
+  </table>
 
-<h2>Conversor Kg &harr; Lb</h2>
-<table>
-    <tr><td>Kg para lb</td><td><input type="number" id="kg" value="0" oninput="convertKgToLb()" onchange="convertKgToLb()"></td><td id="toLb">0</td></tr>
-    <tr><td>Lb para kg</td><td><input type="number" id="lb" value="0" oninput="convertLbToKg()" onchange="convertLbToKg()"></td><td id="toKg">0</td></tr>
-</table>
+  <!-- Secção: Conversor de unidades -->
+  <h2>Conversor Kg &harr; Lb</h2>
+  <table>
+    <tr><td>Kg para lb</td><td><input type="number" id="kg" value="0"></td><td id="toLb">0</td></tr>
+    <tr><td>Lb para kg</td><td><input type="number" id="lb" value="0"></td><td id="toKg">0</td></tr>
+  </table>
 
-<h2>
-  Mass & Balance
-  <select id="aviaoSelecionado" onchange="calculate()" style="font-size: 14px; margin-left: 10px;"></select>
-</h2>
-<table>
+  <!-- Secção: Mass & Balance -->
+  <h2>
+    Mass & Balance
+    <select id="aviaoSelecionado" style="font-size: 14px; margin-left: 10px;"></select>
+  </h2>
+  <table>
     <tr><th>Item</th><th>Peso (kg)</th><th>Momento (kg·m)</th><th>Comentário</th></tr>
     <tr><td>Basic weight</td><td id="basicWeight">0</td><td id="basicMoment">0</td><td></td></tr>
-    <tr><td>Pilotos</td><td><input type="number" id="pilots" value="150" oninput="calculate()" onchange="calculate()"></td><td id="momentPilots">0</td><td>ARM fixo = 4.21</td></tr>
-    <tr><td>Payload</td><td><input type="number" id="manualPayload" value="0" oninput="calculate()" onchange="calculate()"></td><td id="momentPayload">0</td><td>ARM = 8.7 <span id="maxFuelNote" class="highlight"></span></td></tr>
+    <tr><td>Pilotos</td><td><input type="number" id="pilots" value="150"></td><td id="momentPilots">0</td><td>ARM fixo = 4.21</td></tr>
+    <tr><td>Payload</td><td><input type="number" id="manualPayload" value="0"></td><td id="momentPayload">0</td><td>ARM = 8.7 <span id="maxFuelNote" class="highlight"></span></td></tr>
     <tr class="gray-row"><td>ZFW</td><td id="zfw">0</td><td id="momentZfw">0</td><td></td></tr>
-    <tr><td>Fuel loading</td><td><input type="number" id="fuel" value="0" oninput="calculate()" onchange="calculate()"></td><td id="momentFuel">0</td><td>ARM = 7.936 <span id="maxPayloadNote" class="highlight"></span></td></tr>
+    <tr><td>Fuel loading</td><td><input type="number" id="fuel" value="0"></td><td id="momentFuel">0</td><td>ARM = 7.936 <span id="maxPayloadNote" class="highlight"></span></td></tr>
     <tr id="rampRow" class="gray-row"><td>Ramp Weight</td><td id="rampWeight" class="limit-check">0</td><td id="momentRamp">0</td><td></td></tr>
-    <tr><td>Fuel taxi</td><td><input type="number" id="fuelTaxi" value="30" oninput="calculate()" onchange="calculate()"></td><td id="momentTaxi">0</td><td>ARM = 7.936</td></tr>
+    <tr><td>Fuel taxi</td><td><input type="number" id="fuelTaxi" value="30"></td><td id="momentTaxi">0</td><td>ARM = 7.936</td></tr>
     <tr id="takeoffRow" class="gray-row"><td>Take-off Weight</td><td id="takeoffWeight" class="limit-check">0</td><td id="momentTakeoff">0</td><td>MAC: <span id="macTakeoff">0</span>%</td></tr>
-    <tr><td>Fuel to destination</td><td><input type="number" id="fuelDest" value="0" oninput="calculate()" onchange="calculate()"></td><td id="momentDest">0</td><td>ARM = 7.936</td></tr>
+    <tr><td>Fuel to destination</td><td><input type="number" id="fuelDest" value="0"></td><td id="momentDest">0</td><td>ARM = 7.936</td></tr>
     <tr id="landingRow" class="gray-row"><td>Landing Weight</td><td id="landingWeight">0</td><td id="momentLanding">0</td><td>MAC: <span id="macLanding">0</span>%</td></tr>
-</table>
-
-<script>
-function getDefs() {
-    return JSON.parse(localStorage.getItem('definicoesMB')) || {};
-}
-
-function preencherDropdown() {
-    const defs = getDefs();
-    const select = document.getElementById("aviaoSelecionado");
-    if (!select) return;
-
-    const avioes = defs.avioes || [];
-    const ultimaSelecao = parseInt(localStorage.getItem('aviaoSelecionadoIndex')) || 0;
-
-    select.innerHTML = "";
-    avioes.forEach((aviao, index) => {
-        const opt = document.createElement("option");
-        opt.value = index;
-        opt.text = `${aviao.nome} (${aviao.peso} kg)`;
-        if (index === ultimaSelecao) opt.selected = true;
-        select.appendChild(opt);
-    });
-}
-
-function calculate() {
-    const defs = getDefs();
-    const pesoHomem = defs.pesoHomem || 86;
-    const pesoMulher = defs.pesoMulher || 68;
-    const pesoCrianca = defs.pesoCrianca || 35;
-    const pesoBagagem = defs.pesoBagagem || 10;
-
-    document.getElementById("labelHomens").innerText = `Homens (${pesoHomem}kg)`;
-    document.getElementById("labelMulheres").innerText = `Mulheres (${pesoMulher}kg)`;
-    document.getElementById("labelCriancas").innerText = `Crianças (${pesoCrianca}kg)`;
-    document.getElementById("labelBagagem").innerText = `Bagagem extra (${pesoBagagem}kg)`;
-
-    const avioes = defs.avioes || [];
-    const select = document.getElementById("aviaoSelecionado");
-    const selectedIndex = select ? select.selectedIndex : 0;
-    const aviao = avioes[selectedIndex];
-    if (!aviao) return;
-
-    localStorage.setItem('aviaoSelecionadoIndex', selectedIndex);
-
-    const men = parseInt(document.getElementById('men').value) || 0;
-    const women = parseInt(document.getElementById('women').value) || 0;
-    const children = parseInt(document.getElementById('children').value) || 0;
-    const extraBag = parseFloat(document.getElementById('extraBag').value) || 0;
-
-    const pilots = parseFloat(document.getElementById('pilots').value) || 0;
-    const manualPayload = parseFloat(document.getElementById('manualPayload').value) || 0;
-    const fuel = parseFloat(document.getElementById('fuel').value) || 0;
-    const fuelTaxi = parseFloat(document.getElementById('fuelTaxi').value) || 0;
-    const fuelDest = parseFloat(document.getElementById('fuelDest').value) || 0;
-
-    const payload = men * pesoHomem + women * pesoMulher + children * pesoCrianca + extraBag;
-
-    document.getElementById('menWeight').innerText = men * pesoHomem;
-    document.getElementById('womenWeight').innerText = women * pesoMulher;
-    document.getElementById('childrenWeight').innerText = children * pesoCrianca;
-    document.getElementById('totalPayload').innerText = payload + men * pesoBagagem + women * pesoBagagem;
-
-    const momentPilots = pilots * 4.21;
-    const momentPayload = manualPayload * 8.7;
-    const momentFuel = fuel * 7.936;
-    const momentTaxi = fuelTaxi * 7.936;
-    const momentDest = fuelDest * 7.936;
-
-    const zfw = aviao.peso + pilots + manualPayload;
-    const momentZfw = aviao.momento + momentPilots + momentPayload;
-    const rampWeight = zfw + fuel;
-    const momentRamp = momentZfw + momentFuel;
-    const takeoffWeight = rampWeight - fuelTaxi;
-    const momentTakeoff = momentRamp - momentTaxi;
-    const landingWeight = takeoffWeight - fuelDest;
-    const momentLanding = momentTakeoff - momentDest;
-
-    const macTakeoff = ((momentTakeoff / takeoffWeight - 7.26) / 2.042) * 100;
-    const macLanding = ((momentLanding / landingWeight - 7.26) / 2.042) * 100;
-
-    document.getElementById("basicWeight").innerText = aviao.peso;
-    document.getElementById("basicMoment").innerText = aviao.momento;
-    document.getElementById('momentPilots').innerText = momentPilots.toFixed(1);
-    document.getElementById('momentPayload').innerText = momentPayload.toFixed(1);
-    document.getElementById('zfw').innerText = zfw.toFixed(1);
-    document.getElementById('momentZfw').innerText = momentZfw.toFixed(1);
-    document.getElementById('momentFuel').innerText = momentFuel.toFixed(1);
-    document.getElementById('rampWeight').innerText = rampWeight.toFixed(1);
-    document.getElementById('momentRamp').innerText = momentRamp.toFixed(1);
-    document.getElementById('momentTaxi').innerText = momentTaxi.toFixed(1);
-    document.getElementById('takeoffWeight').innerText = takeoffWeight.toFixed(1);
-    document.getElementById('momentTakeoff').innerText = momentTakeoff.toFixed(1);
-    document.getElementById('macTakeoff').innerText = macTakeoff.toFixed(1);
-    document.getElementById('momentDest').innerText = momentDest.toFixed(1);
-    document.getElementById('landingWeight').innerText = landingWeight.toFixed(1);
-    document.getElementById('momentLanding').innerText = momentLanding.toFixed(1);
-    document.getElementById('macLanding').innerText = macLanding.toFixed(1);
-
-    // Avisos
-    let maxPayload = 5730 - (aviao.peso + pilots + fuel);
-    const effectivePayload = manualPayload > 0 ? manualPayload : payload;
-    let maxFuel = 5730 - (aviao.peso + pilots + effectivePayload);
-
-    document.getElementById('maxPayloadNote').innerText = maxPayload > 0
-        ? ` | Máx Payload: ${maxPayload.toFixed(0)} kg`
-        : " | Excede limite!";
-
-    document.getElementById('maxFuelNote').innerHTML = maxFuel > 0
-        ? `<small> | Máx Fuel: ${maxFuel.toFixed(0)} kg (${(maxFuel * 2.20462).toFixed(0)} lb)</small>`
-        : "<small> | Excede limite!</small>";
-
-    // Destacar pesos excedidos
-    document.getElementById('rampWeight').classList.toggle('exceeded', rampWeight > 5730);
-    document.getElementById('takeoffWeight').classList.toggle('exceeded', takeoffWeight > 5700);
-    document.getElementById('landingWeight').classList.toggle('exceeded', landingWeight > 5700);
-
-    document.getElementById('rampRow').style.backgroundColor = rampWeight > 5730 ? '#ffcccc' : '';
-    document.getElementById('takeoffRow').style.backgroundColor = takeoffWeight > 5700 ? '#ffcccc' : '';
-    document.getElementById('landingRow').style.backgroundColor = landingWeight > 5700 ? '#ffcccc' : '';
-}
-
-function convertKgToLb() {
-    const kg = parseFloat(document.getElementById('kg').value) || 0;
-    document.getElementById('toLb').innerText = (kg * 2.20462).toFixed(1);
-}
-
-function convertLbToKg() {
-    const lb = parseFloat(document.getElementById('lb').value) || 0;
-    document.getElementById('toKg').innerText = (lb / 2.20462).toFixed(1);
-}
-
-window.onload = () => {
-    preencherDropdown();
-    calculate();
-    document.querySelectorAll("input").forEach(i => i.addEventListener("input", calculate));
-};
-</script>
-
-<div class="settings-link">
-    <a href="settings.html">⚙️ Settings</a>
-</div>
-
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const inputs = Array.from(document.querySelectorAll('input[type="number"]'));
-
-    inputs.forEach((input, index) => {
-      // Selecionar automaticamente o conteúdo ao focar
-      input.addEventListener('focus', () => input.select());
-
-      // Navegação com Enter
-      input.addEventListener('keypress', (e) => {
-        const char = String.fromCharCode(e.which);
-        if (!/[0-9.]/.test(char)) e.preventDefault();
-
-        if (e.key === 'Enter') {
-          e.preventDefault();
-          const next = inputs[index + 1];
-          if (next) {
-            next.focus();
-          } else {
-            input.blur();
-          }
-        }
-      });
-    });
-  });
-</script>
+  </table>
 
 </body>
 </html>

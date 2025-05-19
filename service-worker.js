@@ -47,3 +47,10 @@ self.addEventListener('activate', (event) => {
     })
   );
 });
+// Permitir update imediato quando o utilizador clica em "Atualizar agora"
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.action === 'skipWaiting') {
+    self.skipWaiting();
+  }
+});
+

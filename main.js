@@ -136,14 +136,17 @@ window.onload = () => {
   preencherDropdown();
   calculate();
 
-  // Selecionar automaticamente os valores nos inputs e navega com Enter
+  document.addEventListener('DOMContentLoaded', () => {
   const inputs = Array.from(document.querySelectorAll('input[type="number"]'));
+
   inputs.forEach((input, index) => {
+    // Seleciona todo o conteúdo ao focar
     input.addEventListener('focus', () => input.select());
 
+    // Previne letras e ativa Enter para ir para o próximo campo
     input.addEventListener('keypress', (e) => {
       const char = String.fromCharCode(e.which);
-      if (!/[0-9.]/.test(char)) e.preventDefault();
+      if (!/[0-9.,]/.test(char)) e.preventDefault();
 
       if (e.key === 'Enter') {
         e.preventDefault();
@@ -152,6 +155,9 @@ window.onload = () => {
         else input.blur();
       }
     });
+  });
+});
+
 
     input.addEventListener('input', calculate);
   });

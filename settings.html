@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <title>Definições - Mass & Balance</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    input, select, button {
+      padding: 8px;
+      font-size: 16px;
+    }
+
+    input[type=number] {
+      width: 100px;
+    }
+
+    .actions button {
+      margin: 0 5px;
+    }
+
+    /* Botões no topo */
+    .top-buttons {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      display: flex;
+      gap: 10px;
+      z-index: 3000;
+    }
+
+    .top-buttons button {
+      background: #f2f2f2;
+      border: none;
+      border-radius: 6px;
+      padding: 8px 40px;
+      font-size: 18px;
+      cursor: pointer;
+      font-weight: bold;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .top-buttons button:hover {
+      background: #e2e2e2;
+    }
+
+    h2 {
+      margin-top: 60px;
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 2000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.4);
+    }
+
+    .modal-content {
+      background-color: #fff;
+      margin: 15% auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      width: 260px;
+      text-align: center;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.25);
+    }
+
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 24px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .close:hover {
+      color: #000;
+    }
+  </style>
+
+  <!-- Força o check de versão a cada hora -->
+  <script src="auto-update.js" defer></script>
+</head>
+
+<body>
+
+  <!-- Botões fixos no canto superior direito -->
+  <div class="top-buttons">
+    <button onclick="location.href='index.html'" title="Voltar para a Calculadora">⬅️</button>
+    <button onclick="abrirModalQR()" title="Partilhar App">📲</button>
+  </div>
+
+  <!-- Modal com o QR Code -->
+  <div id="modalQR" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="fecharModalQR()">&times;</span>
+      <h3>📲 Partilhar App</h3>
+      <p>Aponta a câmara para o QR code:</p>
+      <img src="qr_mb_d228.png" alt="QR Code" style="width: 200px; height: 200px; border: 1px solid #ccc; background: white; padding: 10px;">
+    </div>
+  </div>
+
+  <!-- Definições -->
+  <h2>Definições de Pesos Padrão</h2>
+  <label>Peso padrão - Homem (kg): <input type="number" id="pesoHomem" value="86"></label><br>
+  <label>Peso padrão - Mulher (kg): <input type="number" id="pesoMulher" value="68"></label><br>
+  <label>Peso padrão - Criança (kg): <input type="number" id="pesoCrianca" value="35"></label><br>
+  <label>Peso padrão - Bagagem extra (kg): <input type="number" id="pesoBagagem" value="10"></label><br>
+
+  <!-- Tabela de aviões -->
+  <h2>Aviões Disponíveis</h2>
+  <table>
+    <thead>
+      <tr><th>Nome</th><th>Peso Básico (kg)</th><th>Momento</th><th>Ações</th></tr>
+    </thead>
+    <tbody id="tabelaAvioes"></tbody>
+  </table>
+
+  <!-- Adicionar avião -->
+  <h3>Adicionar Novo Avião</h3>
+  <input type="text" id="novoNome" placeholder="Nome do avião">
+  <input type="number" id="novoPeso" placeholder="Peso (kg)">
+  <input type="number" id="novoMomento" placeholder="Momento">
+  <button onclick="adicionarAviao()">Adicionar Avião</button>
+
+  <br><br>
+  <button onclick="guardarDefinicoes()">Guardar Tudo</button>
+  <br><br>
+
+  <!-- Mostra versão -->
+  <footer style="text-align: right; margin-top: 30px; font-size: 12px; color: #888;">
+    <span id="versaoApp"></span>
+  </footer>
+
+  <!-- Scripts principais -->
+  <script>
+    let listaAvioes = [];
+
+    function carregarDefinicoes() {
+      const defs = JSON.parse(localStorage.getItem("definicoesMB")) || {};
+      document.getElementById("pesoHomem").value = defs.pesoHomem || 86;
+      document.getElementById("pesoMulher").value = defs.pesoMulher || 68;
+      document.getElementById("pesoCrianca").value = defs.pesoCrianca || 35;
+      document.getElementById("pesoBagagem").value = defs.pesoBagagem || 10;
+      listaAvioes = defs.avioes || [];
+      renderAvioes();
+    }
+
+    function renderAvioes() {
+      const tabela = document.getElementById("tabelaAvioes");
+      tabela.innerHTML = "";
+      listaAvioes.forEach((aviao, i) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td><input type="text" value="${aviao.nome}" onchange="atualizarAviao(${i}, 'nome', this.value)"></td>
+          <td><input type="number" value="${aviao.peso}" onchange="atualizarAviao(${i}, 'peso', this.value)"></td>
+          <td><input type="number" value="${aviao.momento}" onchange="atualizarAviao(${i}, 'momento', this.value)"></td>
+          <td class="actions"><button onclick="removerAviao(${i})">Remover</button></td>
+        `;
+        tabela.appendChild(row);
+      });
+    }
+
+    function atualizarAviao(index, campo, valor) {
+      listaAvioes[index][campo] = campo === 'peso' || campo === 'momento' ? parseFloat(valor) : valor;
+    }
+
+    function removerAviao(index) {
+      listaAvioes.splice(index, 1);
+      renderAvioes();
+    }
+
+    function adicionarAviao() {
+      const nome = document.getElementById("novoNome").value;
+      const peso = parseFloat(document.getElementById("novoPeso").value);
+      const momento = parseFloat(document.getElementById("novoMomento").value);
+      if (!nome || isNaN(peso) || isNaN(momento)) {
+        alert("Preenche todos os campos do novo avião.");
+        return;
+      }
+      listaAvioes.push({ nome, peso, momento });
+      document.getElementById("novoNome").value = "";
+      document.getElementById("novoPeso").value = "";
+      document.getElementById("novoMomento").value = "";
+      renderAvioes();
+    }
+
+    function guardarDefinicoes() {
+      const definicoes = {
+        pesoHomem: parseFloat(document.getElementById("pesoHomem").value),
+        pesoMulher: parseFloat(document.getElementById("pesoMulher").value),
+        pesoCrianca: parseFloat(document.getElementById("pesoCrianca").value),
+        pesoBagagem: parseFloat(document.getElementById("pesoBagagem").value),
+        avioes: listaAvioes
+      };
+      localStorage.setItem("definicoesMB", JSON.stringify(definicoes));
+      alert("Definições guardadas com sucesso!");
+    }
+
+    function abrirModalQR() {
+      document.getElementById("modalQR").style.display = "block";
+    }
+
+    function fecharModalQR() {
+      document.getElementById("modalQR").style.display = "none";
+    }
+
+    // Fechar modal ao clicar fora
+    window.onclick = function(event) {
+      const modal = document.getElementById("modalQR");
+      if (event.target === modal) {
+        modal.style.display = "none";
+      }
+    }
+
+    // Carrega valores padrão se for a primeira vez
+    window.onload = () => {
+      if (!localStorage.getItem("definicoesMB")) {
+        const definicoesIniciais = {
+          pesoHomem: 86,
+          pesoMulher: 68,
+          pesoCrianca: 35,
+          pesoBagagem: 10,
+          avioes: [{ nome: "Dornier 228", peso: 3643, momento: 26419 }]
+        };
+        localStorage.setItem("definicoesMB", JSON.stringify(definicoesIniciais));
+      }
+      carregarDefinicoes();
+    };
+  </script>
+
+  <!-- Versão da aplicação -->
+  <script src="app-version.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (typeof APP_VERSION !== 'undefined') {
+        document.getElementById('versaoApp').innerText = 'Versão: ' + APP_VERSION;
+      }
+    });
+  </script>
+
+</body>
+</html>

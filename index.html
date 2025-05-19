@@ -263,5 +263,33 @@ window.onload = () => {
     <a href="settings.html">⚙️ Settings</a>
 </div>
 
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const inputs = Array.from(document.querySelectorAll('input[type="number"]'));
+
+    inputs.forEach((input, index) => {
+      // Selecionar automaticamente o conteúdo ao focar
+      input.addEventListener('focus', () => input.select());
+
+      // Navegação com Enter
+      input.addEventListener('keypress', (e) => {
+        const char = String.fromCharCode(e.which);
+        if (!/[0-9.]/.test(char)) e.preventDefault();
+
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          const next = inputs[index + 1];
+          if (next) {
+            next.focus();
+          } else {
+            input.blur();
+          }
+        }
+      });
+    });
+  });
+</script>
+
+    
 </body>
 </html>

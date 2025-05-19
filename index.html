@@ -100,8 +100,8 @@ if ('serviceWorker' in navigator) {
 
 <h2>Conversor Kg &harr; Lb</h2>
 <table>
-    <tr><td>Kg para lb</td><td><input type="number" id="kg" value="0" oninput="convertKgToLb()" onchange="convertKgToLb()"></td><td id="toLb">0</td></tr>
-    <tr><td>Lb para kg</td><td><input type="number" id="lb" value="0" oninput="convertLbToKg()" onchange="convertLbToKg()"></td><td id="toKg">0</td></tr>
+    <tr><td>Kg para lb</td><td><input type="number" inputmode="decimal" pattern="[0-9]*" id="kg" value="0" oninput="convertKgToLb()" onchange="convertKgToLb()"></td><td id="toLb">0</td></tr>
+    <tr><td>Lb para kg</td><td><input type="number" inputmode="decimal" pattern="[0-9]*" id="lb" value="0" oninput="convertLbToKg()" onchange="convertLbToKg()"></td><td id="toKg">0</td></tr>
 </table>
 
 <h2>
@@ -111,15 +111,15 @@ if ('serviceWorker' in navigator) {
 <table>
     <tr><th>Item</th><th>Peso (kg)</th><th>Momento (kg·m)</th><th>Comentário</th></tr>
     <tr><td>Basic weight</td><td id="basicWeight">0</td><td id="basicMoment">0</td><td></td></tr>
-    <tr><td>Pilotos</td><td><input type="number" id="pilots" value="150" oninput="calculate()" onchange="calculate()"></td><td id="momentPilots">0</td><td>ARM fixo = 4.21</td></tr>
-    <tr><td>Payload</td><td><input type="number" id="manualPayload" value="0" oninput="calculate()" onchange="calculate()"></td><td id="momentPayload">0</td><td>ARM = 8.7 <span id="maxFuelNote" class="highlight"></span></td></tr>
+    <tr><td>Pilotos</td><td><input type="number" inputmode="number" pattern="[0-9]*" id="pilots" value="150" oninput="calculate()" onchange="calculate()"></td><td id="momentPilots">0</td><td>ARM fixo = 4.21</td></tr>
+    <tr><td>Payload</td><td><input type="number" inputmode="number" pattern="[0-9]*" id="manualPayload" value="0" oninput="calculate()" onchange="calculate()"></td><td id="momentPayload">0</td><td>ARM = 8.7 <span id="maxFuelNote" class="highlight"></span></td></tr>
     <tr class="gray-row"><td>ZFW</td><td id="zfw">0</td><td id="momentZfw">0</td><td></td></tr>
-    <tr><td>Fuel loading</td><td><input type="number" id="fuel" value="0" oninput="calculate()" onchange="calculate()"></td><td id="momentFuel">0</td><td>ARM = 7.936 <span id="maxPayloadNote" class="highlight"></span></td></tr>
+    <tr><td>Fuel loading</td><td><input type="number" inputmode="number" pattern="[0-9]*" id="fuel" value="0" oninput="calculate()" onchange="calculate()"></td><td id="momentFuel">0</td><td>ARM = 7.936 <span id="maxPayloadNote" class="highlight"></span></td></tr>
     <tr id="rampRow" class="gray-row"><td>Ramp Weight</td><td id="rampWeight" class="limit-check">0</td><td id="momentRamp">0</td><td></td></tr>
-    <tr><td>Fuel taxi</td><td><input type="number" id="fuelTaxi" value="30" oninput="calculate()" onchange="calculate()"></td><td id="momentTaxi">0</td><td>ARM = 7.936</td></tr>
+    <tr><td>Fuel taxi</td><td><input type="number" inputmode="number" pattern="[0-9]*" id="fuelTaxi" value="30" oninput="calculate()" onchange="calculate()"></td><td id="momentTaxi">0</td><td>ARM = 7.936</td></tr>
     <tr id="takeoffRow" class="gray-row"><td>Take-off Weight</td><td id="takeoffWeight" class="limit-check">0</td><td id="momentTakeoff">0</td><td>MAC: <span id="macTakeoff">0</span>%</td></tr>
-    <tr><td>Fuel to destination</td><td><input type="number" id="fuelDest" value="0" oninput="calculate()" onchange="calculate()"></td><td id="momentDest">0</td><td>ARM = 7.936</td></tr>
-    <tr id="landingRow" class="gray-row"><td>Landing Weight</td><td id="landingWeight">0</td><td id="momentLanding">0</td><td>MAC: <span id="macLanding">0</span>%</td></tr>
+    <tr><td>Fuel to destination</td><td><input type="number" inputmode="number" pattern="[0-9]*" id="fuelDest" value="0" oninput="calculate()" onchange="calculate()"></td><td id="momentDest">0</td><td>ARM = 7.936</td></tr>
+    <tr class="gray-row"><td>Landing Weight</td><td id="landingWeight">0</td><td id="momentLanding">0</td><td>MAC: <span id="macLanding">0</span>%</td></tr>
 </table>
 
 <script>

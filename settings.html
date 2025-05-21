@@ -131,18 +131,19 @@
 
   <!-- Definições -->
   <h2>Definições de Pesos Padrão</h2>
+  <h2>Definições de Pesos Padrão</h2>
   <label>Peso padrão - Homem (kg): 
-  <input type="number" inputmode="numeric" pattern="[0-9]*" id="pesoHomem" value="86">
-</label><br>
-<label>Peso padrão - Mulher (kg): 
-  <input type="number" inputmode="numeric" pattern="[0-9]*" id="pesoMulher" value="68">
-</label><br>
-<label>Peso padrão - Criança (kg): 
-  <input type="number" inputmode="numeric" pattern="[0-9]*" id="pesoCrianca" value="35">
-</label><br>
-<label>Peso padrão - Bagagem extra (kg): 
-  <input type="number" inputmode="numeric" pattern="[0-9]*" id="pesoBagagem" value="10">
-</label><br>
+    <input type="number" inputmode="decimal" step="any" id="pesoHomem" value="86">
+  </label><br>
+  <label>Peso padrão - Mulher (kg): 
+    <input type="number" inputmode="decimal" step="any" id="pesoMulher" value="68">
+  </label><br>
+  <label>Peso padrão - Criança (kg): 
+    <input type="number" inputmode="decimal" step="any" id="pesoCrianca" value="35">
+  </label><br>
+  <label>Peso padrão - Bagagem extra (kg): 
+    <input type="number" inputmode="decimal" step="any" id="pesoBagagem" value="10">
+  </label><br>
 
   <!-- Tabela de aviões -->
   <h2>Aviões Disponíveis</h2>
@@ -156,7 +157,7 @@
   <!-- Adicionar avião -->
   <h3>Adicionar Novo Avião</h3>
   <input type="text" id="novoNome" placeholder="Nome do avião">
-  <input type="number" inputmode="numeric" pattern="[0-9]*" id="novoPeso" placeholder="Peso (kg)">
+  <input type="number" inputmode="decimal" step="any" id="novoPeso" placeholder="Peso (kg)">
   <input type="number" inputmode="decimal" step="any" id="novoMomento" placeholder="Momento">
   <button onclick="adicionarAviao()">Adicionar Avião</button>
 
@@ -190,8 +191,8 @@
         const row = document.createElement("tr");
         row.innerHTML = `
           <td><input type="text" value="${aviao.nome}" onchange="atualizarAviao(${i}, 'nome', this.value)"></td>
-          <td><input type="number" value="${aviao.peso}" onchange="atualizarAviao(${i}, 'peso', this.value)"></td>
-          <td><input type="number" value="${aviao.momento}" onchange="atualizarAviao(${i}, 'momento', this.value)"></td>
+          <td><input type="number" inputmode="decimal" step="any" value="${aviao.peso}" onchange="atualizarAviao(${i}, 'peso', this.value)"></td>
+          <td><input type="number" inputmode="decimal" step="any" value="${aviao.momento}" onchange="atualizarAviao(${i}, 'momento', this.value)"></td>
           <td class="actions"><button onclick="removerAviao(${i})">Remover</button></td>
         `;
         tabela.appendChild(row);

@@ -139,7 +139,7 @@ button:hover {
 }
 
 .settings-link {
-  position: fixed;
+  position: relative;
   top: 10px;
   right: 10px;
   background: var(--row-hover);

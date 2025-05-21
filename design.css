@@ -2,7 +2,7 @@
 
 /* Tema base (modo claro) */
 :root {
-  --bg: #f7fbff; /* fundo da página #ffffff=branco*/
+  --bg: #ffffff; /* fundo da página #ffffff=branco*/
   --fg: #121212;
   --accent: #1e88e5;
   --danger: #ff4d4d;

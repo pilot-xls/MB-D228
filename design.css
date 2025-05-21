@@ -2,7 +2,7 @@
 
 /* Tema base (modo claro) */
 :root {
-  --bg: #f0faff; /* fundo da página */
+  --bg: #f7fbff; /* fundo da página #ffffff=branco*/
   --fg: #121212;
   --accent: #1e88e5;
   --danger: #ff4d4d;
@@ -11,7 +11,8 @@
   --row-hover: rgba(0, 0, 0, 0.03); /* fundo para .gray-row e hover */
 }
 
-/* Tema escuro automático */
+/* 
+Tema escuro automático 
 @media (prefers-color-scheme: dark) {
   :root {
     --bg: #121212;
@@ -21,6 +22,7 @@
     --row-hover: rgba(255, 255, 255, 0.05);
   }
 }
+*/
 
 body {
   font-family: 'Manrope', sans-serif;
@@ -43,8 +45,8 @@ table {
   margin-bottom: 30px;
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-  background-color: #f7fbff; /* azul quase branco */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  background-color: #f7fbff; /* comenteario*/
 }
 /* Linha entre tabelas */
 table + table {

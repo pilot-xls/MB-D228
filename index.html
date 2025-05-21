@@ -65,11 +65,45 @@ if ('serviceWorker' in navigator) {
   <tr id="landingRow" class="gray-row"><td>Landing Weight</td><td id="landingWeight" class="limit-check">0</td><td id="momentLanding">0</td><td>MAC: <span id="macLanding">0</span>%</td></tr>
 </table>
 
+
+<!-- Seletor de tema -->
+<div style="position: fixed; bottom: 10px; right: 10px; z-index: 1000;">
+  <select id="themeSelector" onchange="trocarTema(this.value)">
+    <option value="">🌞 Claro</option>
+    <option value="theme-dark">🌚 Escuro</option>
+    <option value="theme-glass">🧊 Glass</option>
+    <option value="theme-cockpit">🟢 Cockpit</option>
+    <option value="theme-airbus">🟦 Airbus</option>
+    <option value="theme-colorido">🌈 Colorido Técnico</option>
+  </select>
+</div>
+
+<script>
+function trocarTema(tema) {
+  document.body.className = '';
+  if (tema) {
+    document.body.classList.add(tema);
+    localStorage.setItem("temaSelecionado", tema);
+  } else {
+    localStorage.removeItem("temaSelecionado");
+  }
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  const temaGuardado = localStorage.getItem("temaSelecionado");
+  if (temaGuardado) {
+    document.body.classList.add(temaGuardado);
+    document.getElementById("themeSelector").value = temaGuardado;
+  }
+});
+</script>
+
+// Dados guardados
 <script>
 function getDefs() {
     return JSON.parse(localStorage.getItem('definicoesMB')) || {};
 }
-
+// preenche avioes guardados no dropdown
 function preencherDropdown() {
     const defs = getDefs();
     const select = document.getElementById("aviaoSelecionado");

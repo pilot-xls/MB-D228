@@ -179,3 +179,29 @@ button:hover {
     font-size: 18px;
   }
 }
+
+.top-buttons {
+  position: relative;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  gap: 10px;
+  z-index: 3000;
+}
+
+.top-buttons button {
+  background: var(--input-bg);
+  border: none;
+  border-radius: 6px;
+  padding: 8px 40px;
+  font-size: 16px;
+  cursor: pointer;
+  font-weight: bold;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: background 0.2s;
+}
+
+.top-buttons button:hover {
+  background: #e2e2e2;
+}
+

@@ -1,17 +1,37 @@
-/* Fonte moderna (Manrope) */
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;600&display=swap');
+
+/* Aplica automaticamente modo escuro/claro */
+:root {
+  --bg: #ffffff;
+  --fg: #121212;
+  --accent: #1e88e5;
+  --danger: #ff4d4d;
+  --safe: #2e7d32;
+  --input-bg: #f0f0f0;
+  --row-hover: rgba(0, 0, 0, 0.03);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #121212;
+    --fg: #e0e0e0;
+    --accent: #66b3ff;
+    --input-bg: #1e1e1e;
+    --row-hover: rgba(255, 255, 255, 0.05);
+  }
+}
 
 body {
   font-family: 'Manrope', sans-serif;
-  background-color: #121212;
-  color: #e0e0e0;
+  background-color: var(--bg);
+  color: var(--fg);
   margin: 0;
   padding: 20px;
   font-size: 15px;
+  transition: background-color 0.3s, color 0.3s;
 }
 
 h2, h3 {
-  color: #ffffff;
+  color: var(--fg);
   margin-top: 30px;
 }
 
@@ -19,25 +39,28 @@ table {
   width: 100%;
   border-collapse: collapse;
   margin-bottom: 30px;
-  backdrop-filter: blur(12px);
-  background-color: rgba(255, 255, 255, 0.05);
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
 th {
-  background-color: rgba(255, 255, 255, 0.08);
+  background-color: var(--row-hover);
   padding: 12px;
-  color: #ffffff;
   font-weight: 600;
+  color: var(--fg);
+  text-align: center;
 }
 
 td {
   padding: 10px;
   text-align: center;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  color: #eee;
+  border-bottom: 1px solid var(--input-bg);
+  transition: background-color 0.3s;
+}
+
+tr:focus-within {
+  background-color: var(--row-hover);
 }
 
 input[type="number"],
@@ -45,8 +68,8 @@ input[type="text"],
 select {
   width: 100%;
   padding: 8px;
-  background: rgba(255, 255, 255, 0.08);
-  color: #fff;
+  background: var(--input-bg);
+  color: var(--fg);
   border: none;
   border-bottom: 2px solid transparent;
   font-size: 15px;
@@ -59,12 +82,12 @@ input[type="number"]:focus,
 input[type="text"]:focus,
 select:focus {
   outline: none;
-  border-bottom: 2px solid #66b3ff;
-  background-color: rgba(255, 255, 255, 0.12);
+  border-bottom: 2px solid var(--accent);
+  background-color: rgba(100, 100, 255, 0.05);
 }
 
 button {
-  background-color: #1e88e5;
+  background-color: var(--accent);
   color: white;
   padding: 8px 14px;
   font-size: 14px;
@@ -78,19 +101,26 @@ button:hover {
   background-color: #1565c0;
 }
 
-.gray-row {
-  background-color: rgba(255, 255, 255, 0.03);
+.limit-check {
+  transition: background-color 0.3s, color 0.3s;
 }
-
 .limit-check.exceeded {
-  background-color: #ff4d4d !important;
+  background-color: var(--danger) !important;
+  color: white;
+  font-weight: bold;
+}
+.limit-check.safe {
+  background-color: var(--safe);
   color: white;
   font-weight: bold;
 }
 
-.limit-check.safe {
-  background-color: #2e7d32;
-  color: white;
+.gray-row {
+  background-color: var(--row-hover);
+}
+
+.highlight {
+  color: var(--danger);
   font-weight: bold;
 }
 
@@ -98,7 +128,7 @@ button:hover {
   position: fixed;
   top: 10px;
   right: 10px;
-  background: rgba(255,255,255,0.1);
+  background: var(--row-hover);
   padding: 8px 12px;
   border-radius: 8px;
   z-index: 1000;
@@ -106,10 +136,18 @@ button:hover {
 }
 
 .settings-link a {
-  color: #fff;
+  color: var(--fg);
   text-decoration: none;
   font-weight: bold;
 }
 .settings-link a:hover {
   text-decoration: underline;
+}
+
+/* Ícones Feather: aplica tamanho e alinhamento */
+.feather {
+  width: 16px;
+  height: 16px;
+  vertical-align: middle;
+  margin-right: 6px;
 }

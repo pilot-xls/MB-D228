@@ -1,104 +1,114 @@
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;600&display=swap');
 
-/* Tema base (claro) */
+/* Tema base (modo claro) */
 :root {
   --bg: #ffffff;
   --fg: #121212;
   --accent: #1e88e5;
-  --input-bg: #f0f0f0;
-  --row-hover: rgba(0, 0, 0, 0.03);
   --danger: #ff4d4d;
   --safe: #2e7d32;
+  --input-bg: #f0f0f0;
+  --row-hover: rgba(0, 0, 0, 0.03);
 }
 
-/* Escuro */
-body.theme-dark {
-  --bg: #121212;
-  --fg: #e0e0e0;
-  --accent: #66b3ff;
-  --input-bg: #1e1e1e;
-  --row-hover: rgba(255, 255, 255, 0.05);
-}
-
-/* Glass */
-body.theme-glass {
-  --bg: #101010;
-  --fg: #ffffff;
-  --accent: #00bcd4;
-  --input-bg: rgba(255, 255, 255, 0.05);
-  --row-hover: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(12px);
-}
-
-/* Cockpit */
-body.theme-cockpit {
-  --bg: #001e00;
-  --fg: #00ff00;
-  --accent: #00ffcc;
-  --input-bg: #003300;
-  --row-hover: #002200;
-}
-
-/* Airbus */
-body.theme-airbus {
-  --bg: #e9f2ff;
-  --fg: #003366;
-  --accent: #007aff;
-  --input-bg: #d6e4f5;
-  --row-hover: #cbdff0;
-}
-
-/* Colorido técnico */
-body.theme-colorido {
-  --bg: #0f172a;
-  --fg: #f8fafc;
-  --accent: #f59e0b;
-  --input-bg: #1e293b;
-  --row-hover: #334155;
+/* Tema escuro automático */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #121212;
+    --fg: #e0e0e0;
+    --accent: #66b3ff;
+    --input-bg: #1e1e1e;
+    --row-hover: rgba(255, 255, 255, 0.05);
+  }
 }
 
 body {
+  font-family: 'Manrope', sans-serif;
   background-color: var(--bg);
   color: var(--fg);
-  font-family: 'Manrope', sans-serif;
-  transition: background-color 0.3s, color 0.3s;
   margin: 0;
   padding: 20px;
+  font-size: 15px;
+  transition: background-color 0.3s, color 0.3s;
 }
 
-input, select, button {
-  background: var(--input-bg);
+h2, h3 {
   color: var(--fg);
-  border: none;
-  border-radius: 6px;
-  padding: 8px;
-  font-size: 14px;
-  transition: background 0.3s, color 0.3s;
-  text-align: center;
-}
-
-button:hover {
-  filter: brightness(1.1);
+  margin-top: 30px;
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 20px;
+  margin-bottom: 30px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
-th, td {
+th {
+  background-color: var(--row-hover);
   padding: 12px;
-  border-bottom: 1px solid var(--input-bg);
+  font-weight: 600;
+  color: var(--fg);
   text-align: center;
+}
+
+td {
+  padding: 10px;
+  text-align: center;
+  border-bottom: 1px solid var(--input-bg);
+  transition: background-color 0.3s;
 }
 
 tr:focus-within {
   background-color: var(--row-hover);
 }
 
+input[type="number"],
+input[type="text"],
+select {
+  width: 100%;
+  padding: 8px;
+  background: var(--input-bg);
+  color: var(--fg);
+  border: none;
+  border-bottom: 2px solid transparent;
+  font-size: 15px;
+  text-align: center;
+  transition: border-color 0.3s, background-color 0.3s;
+  border-radius: 6px;
+}
+
+input[type="number"]:focus,
+input[type="text"]:focus,
+select:focus {
+  outline: none;
+  border-bottom: 2px solid var(--accent);
+  background-color: rgba(100, 100, 255, 0.05);
+}
+
+button {
+  background-color: var(--accent);
+  color: white;
+  padding: 8px 14px;
+  font-size: 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #1565c0;
+}
+
+.limit-check {
+  transition: background-color 0.3s, color 0.3s;
+}
+
 .limit-check.exceeded {
-  background-color: var(--danger);
+  background-color: var(--danger) !important;
   color: white;
   font-weight: bold;
 }
@@ -106,6 +116,15 @@ tr:focus-within {
 .limit-check.safe {
   background-color: var(--safe);
   color: white;
+  font-weight: bold;
+}
+
+.gray-row {
+  background-color: var(--row-hover);
+}
+
+.highlight {
+  color: var(--danger);
   font-weight: bold;
 }
 
@@ -125,11 +144,20 @@ tr:focus-within {
   text-decoration: none;
   font-weight: bold;
 }
+
 .settings-link a:hover {
   text-decoration: underline;
 }
 
-/* MOBILE RESPONSIVE */
+/* Ícones Feather */
+.feather {
+  width: 16px;
+  height: 16px;
+  vertical-align: middle;
+  margin-right: 6px;
+}
+
+/* Suporte mobile */
 @media (max-width: 600px) {
   table, th, td {
     font-size: 13px;

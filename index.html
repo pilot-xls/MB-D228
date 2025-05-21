@@ -66,37 +66,6 @@ if ('serviceWorker' in navigator) {
 </table>
 
 
-<!-- Seletor de tema -->
-<div style="position: fixed; bottom: 10px; right: 10px; z-index: 1000;">
-  <select id="themeSelector" onchange="trocarTema(this.value)">
-    <option value="">🌞 Claro</option>
-    <option value="theme-dark">🌚 Escuro</option>
-    <option value="theme-glass">🧊 Glass</option>
-    <option value="theme-cockpit">🟢 Cockpit</option>
-    <option value="theme-airbus">🟦 Airbus</option>
-    <option value="theme-colorido">🌈 Colorido Técnico</option>
-  </select>
-</div>
-
-<script>
-function trocarTema(tema) {
-  document.body.className = '';
-  if (tema) {
-    document.body.classList.add(tema);
-    localStorage.setItem("temaSelecionado", tema);
-  } else {
-    localStorage.removeItem("temaSelecionado");
-  }
-}
-
-window.addEventListener('DOMContentLoaded', () => {
-  const temaGuardado = localStorage.getItem("temaSelecionado");
-  if (temaGuardado) {
-    document.body.classList.add(temaGuardado);
-    document.getElementById("themeSelector").value = temaGuardado;
-  }
-});
-</script>
 
 // Dados guardados
 <script>

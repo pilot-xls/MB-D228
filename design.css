@@ -79,6 +79,7 @@ input[type="number"],
 input[type="text"],
 select {
   width: 100%;
+  box-sizing: border-box;
   padding: 8px;
   background: var(--input-bg);
   color: var(--fg);

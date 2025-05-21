@@ -168,6 +168,12 @@ button:hover {
   margin-right: 6px;
 }
 
+/* Ajuste para colunas iguais na tabela de conversão */
+table#conversor td:nth-child(2),
+table#conversor td:nth-child(3) {
+  width: 50%;
+}
+
 /* Suporte mobile */
 @media (max-width: 600px) {
   table, th, td {

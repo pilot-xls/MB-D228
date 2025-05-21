@@ -43,7 +43,8 @@ table {
   margin-bottom: 30px;
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  background-color: #f7fbff; /* azul quase branco */
 }
 /* Linha entre tabelas */
 table + table {

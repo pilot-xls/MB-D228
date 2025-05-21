@@ -120,7 +120,7 @@ if ('serviceWorker' in navigator) {
   <tr><td>Fuel taxi</td><td><input type="number" inputmode="decimal" step="any" id="fuelTaxi" value="30" oninput="calculate()" onchange="calculate()"></td><td id="momentTaxi">0</td><td>ARM = 7.936</td></tr>
   <tr id="takeoffRow" class="gray-row"><td>Take-off Weight</td><td id="takeoffWeight" class="limit-check">0</td><td id="momentTakeoff">0</td><td>MAC: <span id="macTakeoff">0</span>%</td></tr>
   <tr><td>Fuel to destination</td><td><input type="number" inputmode="decimal" step="any" id="fuelDest" value="0" oninput="calculate()" onchange="calculate()"></td><td id="momentDest">0</td><td>ARM = 7.936</td></tr>
-  <tr id="landingRow" class="gray-row"><td>Landing Weight</td><td id="landingWeight">0</td><td id="momentLanding">0</td><td>MAC: <span id="macLanding">0</span>%</td></tr>
+  <tr id="landingRow" class="gray-row"><td>Landing Weight</td><td id="landingWeight" class="limit-check">0</td><td id="momentLanding">0</td><td>MAC: <span id="macLanding">0</span>%</td></tr>
 </table>
 
 <script>

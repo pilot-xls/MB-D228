@@ -2,13 +2,13 @@
 
 /* Tema base (modo claro) */
 :root {
-  --bg: #eaf6ff;
+  --bg: #f0faff; /* fundo da página */
   --fg: #121212;
   --accent: #1e88e5;
   --danger: #ff4d4d;
   --safe: #2e7d32;
-  --input-bg: #f0f0f0;
-  --row-hover: rgba(0, 0, 0, 0.03);
+  --input-bg: #f0f0f0; /* fundo dos inputs e células (#f0f0f0)=cinzento */
+  --row-hover: rgba(0, 0, 0, 0.03); /* fundo para .gray-row e hover */
 }
 
 /* Tema escuro automático */

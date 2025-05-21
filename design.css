@@ -205,3 +205,49 @@ button:hover {
   background: #e2e2e2;
 }
 
+.modal {
+  display: none; /* ESSENCIAL! Oculto por padrão */
+  position: fixed;
+  z-index: 9999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.modal-content {
+  background-color: var(--bg);
+  color: var(--fg);
+  margin: 10% auto;
+  padding: 20px;
+  border-radius: 10px;
+  width: 300px;
+  text-align: center;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.25);
+  position: relative;
+}
+
+.close {
+  position: absolute;
+  right: 12px;
+  top: 8px;
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--fg);
+  cursor: pointer;
+}
+
+.close:hover {
+  color: var(--accent);
+}
+
+.qr-image {
+  width: 200px;
+  height: 200px;
+  margin-top: 10px;
+  border-radius: 8px;
+  background: white;
+  padding: 10px;
+}
+

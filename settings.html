@@ -133,16 +133,16 @@
   <h2>Definições de Pesos Padrão</h2>
   <h2>Definições de Pesos Padrão</h2>
   <label>Peso padrão - Homem (kg): 
-    <input type="number" inputmode="decimal" step="any" id="pesoHomem" value="86">
+    <input type="number" inputmode="decimal" step="any" id="pesoHomem" value="86" onfocus="this.select()">
   </label><br>
   <label>Peso padrão - Mulher (kg): 
-    <input type="number" inputmode="decimal" step="any" id="pesoMulher" value="68">
+    <input type="number" inputmode="decimal" step="any" id="pesoMulher" value="68" onfocus="this.select()">
   </label><br>
   <label>Peso padrão - Criança (kg): 
-    <input type="number" inputmode="decimal" step="any" id="pesoCrianca" value="35">
+    <input type="number" inputmode="decimal" step="any" id="pesoCrianca" value="35" onfocus="this.select()">
   </label><br>
   <label>Peso padrão - Bagagem extra (kg): 
-    <input type="number" inputmode="decimal" step="any" id="pesoBagagem" value="10">
+    <input type="number" inputmode="decimal" step="any" id="pesoBagagem" value="10" onfocus="this.select()">
   </label><br>
 
   <!-- Tabela de aviões -->
@@ -157,8 +157,8 @@
   <!-- Adicionar avião -->
   <h3>Adicionar Novo Avião</h3>
   <input type="text" id="novoNome" placeholder="Nome do avião">
-  <input type="number" inputmode="decimal" step="any" id="novoPeso" placeholder="Peso (kg)">
-  <input type="number" inputmode="decimal" step="any" id="novoMomento" placeholder="Momento">
+  <input type="number" inputmode="decimal" step="any" id="novoPeso" placeholder="Peso (kg)" onfocus="this.select()">
+  <input type="number" inputmode="decimal" step="any" id="novoMomento" placeholder="Momento" onfocus="this.select()">
   <button onclick="adicionarAviao()">Adicionar Avião</button>
 
   <br><br>
@@ -190,9 +190,9 @@
       listaAvioes.forEach((aviao, i) => {
         const row = document.createElement("tr");
         row.innerHTML = `
-          <td><input type="text" value="${aviao.nome}" onchange="atualizarAviao(${i}, 'nome', this.value)"></td>
-          <td><input type="number" inputmode="decimal" step="any" value="${aviao.peso}" onchange="atualizarAviao(${i}, 'peso', this.value)"></td>
-          <td><input type="number" inputmode="decimal" step="any" value="${aviao.momento}" onchange="atualizarAviao(${i}, 'momento', this.value)"></td>
+          <td><input type="text" value="${aviao.nome}" onchange="atualizarAviao(${i}, 'nome', this.value)" onfocus="this.select()"></td>
+          <td><input type="number" inputmode="decimal" step="any" value="${aviao.peso}" onchange="atualizarAviao(${i}, 'peso', this.value)" onfocus="this.select()"></td>
+          <td><input type="number" inputmode="decimal" step="any" value="${aviao.momento}" onchange="atualizarAviao(${i}, 'momento', this.value)" onfocus="this.select()"></td>
           <td class="actions"><button onclick="removerAviao(${i})">Remover</button></td>
         `;
         tabela.appendChild(row);

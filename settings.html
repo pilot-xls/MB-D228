@@ -131,10 +131,18 @@
 
   <!-- Definições -->
   <h2>Definições de Pesos Padrão</h2>
-  <label>Peso padrão - Homem (kg): <input type="number" id="pesoHomem" value="86"></label><br>
-  <label>Peso padrão - Mulher (kg): <input type="number" id="pesoMulher" value="68"></label><br>
-  <label>Peso padrão - Criança (kg): <input type="number" id="pesoCrianca" value="35"></label><br>
-  <label>Peso padrão - Bagagem extra (kg): <input type="number" id="pesoBagagem" value="10"></label><br>
+  <label>Peso padrão - Homem (kg): 
+  <input type="number" inputmode="numeric" pattern="[0-9]*" id="pesoHomem" value="86">
+</label><br>
+<label>Peso padrão - Mulher (kg): 
+  <input type="number" inputmode="numeric" pattern="[0-9]*" id="pesoMulher" value="68">
+</label><br>
+<label>Peso padrão - Criança (kg): 
+  <input type="number" inputmode="numeric" pattern="[0-9]*" id="pesoCrianca" value="35">
+</label><br>
+<label>Peso padrão - Bagagem extra (kg): 
+  <input type="number" inputmode="numeric" pattern="[0-9]*" id="pesoBagagem" value="10">
+</label><br>
 
   <!-- Tabela de aviões -->
   <h2>Aviões Disponíveis</h2>
@@ -148,8 +156,8 @@
   <!-- Adicionar avião -->
   <h3>Adicionar Novo Avião</h3>
   <input type="text" id="novoNome" placeholder="Nome do avião">
-  <input type="number" id="novoPeso" placeholder="Peso (kg)">
-  <input type="number" id="novoMomento" placeholder="Momento">
+  <input type="number" inputmode="numeric" pattern="[0-9]*" id="novoPeso" placeholder="Peso (kg)">
+  <input type="number" inputmode="decimal" step="any" id="novoMomento" placeholder="Momento">
   <button onclick="adicionarAviao()">Adicionar Avião</button>
 
   <br><br>

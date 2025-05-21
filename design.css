@@ -139,6 +139,7 @@ button:hover {
 }
 
 .settings-link {
+  display: inline-block; /* <-- Limita a largura ao conteúdo */
   position: relative;
   top: 10px;
   right: 10px;

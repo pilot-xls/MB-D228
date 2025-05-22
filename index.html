@@ -338,13 +338,11 @@ function updateLdgAuto() {
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
+    // 1. Selecionar e navegar pelos inputs normais
     const inputs = Array.from(document.querySelectorAll('input[type="number"]'));
-
     inputs.forEach((input, index) => {
-      // Selecionar automaticamente o conteúdo ao focar
       input.addEventListener('focus', () => input.select());
 
-      // Navegação com Enter
       input.addEventListener('keypress', (e) => {
         const char = String.fromCharCode(e.which);
         if (!/[0-9.]/.test(char)) e.preventDefault();
@@ -360,12 +358,36 @@ function updateLdgAuto() {
         }
       });
 
-      // Se o input estiver dentro da tabela de legs, ativa updateLdgAuto
+      // 2. Se for input na tabela Legs, liga update automático
       if (input.closest('#legsTable')) {
         input.addEventListener('input', updateLdgAuto);
       }
     });
 
+    // 3. Para as células editáveis do tipo ROUTE
+    document.querySelectorAll('#legsTable td[contenteditable="true"]').forEach(cell => {
+      // Permite focar com teclado/tab
+      cell.setAttribute('tabindex', '0');
+
+      // Seleciona automaticamente o conteúdo ao focar
+      cell.addEventListener('focus', () => {
+        const range = document.createRange();
+        range.selectNodeContents(cell);
+        const sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+      });
+
+      // Atualiza ldg e overweight ao editar
+      cell.addEventListener('input', updateLdgAuto);
+    });
+
+    // 4. Atualiza logo ao abrir a app
+    preencherDropdown();
+    calculate();
+    updateLdgAuto();
+
+    // 5. Atualiza ícones feather
     feather.replace();
   });
 </script>

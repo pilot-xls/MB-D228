@@ -332,11 +332,13 @@ function prepararCelulasLeg(tr) {
     });
 
     cell.addEventListener('input', () => {
-      updateLdgAuto(); // Recalcula LDG e verifica overload
-      guardarLegs();   // Grava no localStorage
+      cell.dataset.auto = "0";        // Desativa preenchimento automático futuro
+      updateLdgAuto();                // Recalcula LDG
+      guardarLegs();                  // Grava no localStorage
     });
   });
 }
+
 
 // Grava a tabela Legs no localStorage
 function guardarLegs() {
@@ -412,12 +414,19 @@ function updateLdgAuto() {
     rows[i].querySelector(".ldg").innerText = ldg.toFixed(0);
 
     if (i + 1 < rows.length) {
-      rows[i + 1].cells[1].innerText = ldg.toFixed(0);
+      const nextDepfCell = rows[i + 1].cells[1];
+      const valorAtual = nextDepfCell.innerText.trim();
+
+      if (!valorAtual || valorAtual === "0" || !nextDepfCell.dataset.auto || nextDepfCell.dataset.auto === "1") {
+        nextDepfCell.innerText = ldg.toFixed(0);
+        nextDepfCell.dataset.auto = "1"; // marca como automático
+      }
     }
 
-    verificarPesoLinha(rows[i]); // <- aqui a verificação automática
+    verificarPesoLinha(rows[i]);
   }
 }
+
 </script>
 
 <script>

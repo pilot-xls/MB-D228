@@ -82,6 +82,13 @@ if ('serviceWorker' in navigator) {
 <hr style="margin: 30px 0; border: none; border-top: 1px solid #999;"> <!-- linha de separação de tabelas -->
     
 <h2 style="text-align: center;">Resumo de Legs</h2>
+<div style="text-align: center; margin-bottom: 10px;">
+  <label>Rota Padrão:
+    <select id="dropdownRotas" onchange="preencherLegsComRota()">
+      <option value="">-- Selecionar rota --</option>
+    </select>
+  </label>
+</div>
 <table class="route-table">
   <thead>
     <tr>
@@ -97,7 +104,40 @@ if ('serviceWorker' in navigator) {
   <tbody id="legsTable"></tbody> <!-- Começa vazio, é preenchido por JS -->
 </table>
 
-
+<script>
+    // Carrega rotas guardadas no dropdown
+    function carregarDropdownRotas() {
+      const rotas = JSON.parse(localStorage.getItem("rotasPadrao") || "[]");
+      const dropdown = document.getElementById("dropdownRotas");
+      if (!dropdown) return;
+    
+      dropdown.innerHTML = '<option value="">-- Selecionar rota --</option>';
+      rotas.forEach((r, i) => {
+        const opt = document.createElement("option");
+        opt.value = i;
+        opt.text = r.nome;
+        dropdown.appendChild(opt);
+      });
+    }
+    
+    // Preenche tabela Legs com rota escolhida
+    function preencherLegsComRota() {
+      const idx = document.getElementById("dropdownRotas").value;
+      const rotas = JSON.parse(localStorage.getItem("rotasPadrao") || "[]");
+      if (!rotas[idx]) return;
+    
+      const rota = rotas[idx];
+      document.getElementById("legsTable").innerHTML = "";
+      rota.legs.forEach(leg => {
+        criarLinhaLeg(leg.route, leg.depF, leg.payl, leg.tripF);
+      });
+      guardarLegs();
+    }
+    
+    // Adiciona esta linha ao onload ou DOMContentLoaded
+    carregarDropdownRotas();
+</script>
+    
 <script>
 function getDefs() {
     return JSON.parse(localStorage.getItem('definicoesMB')) || {};

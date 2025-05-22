@@ -94,35 +94,7 @@ if ('serviceWorker' in navigator) {
       <th>INSERIR</th>
     </tr>
   </thead>
-      <tbody id="legsTable">
-      <tr>
-        <td contenteditable="true" tabindex="0">LPCS-LPVZ</td>
-        <td contenteditable="true" tabindex="0" oninput="updateLdgAuto()">3000</td>
-        <td contenteditable="true" tabindex="0">700</td>
-        <td contenteditable="true" tabindex="0" oninput="updateLdgAuto()">500</td>
-        <td class="ldg">2500</td>
-        <td class="comentario"></td>
-        <td><button class="route-insert" onclick="inserirLeg(this)">SET</button></td>
-      </tr>
-      <tr>
-        <td contenteditable="true" tabindex="0">LPVZ-LPVR</td>
-        <td contenteditable="false">2500</td>
-        <td contenteditable="true" tabindex="0">1500</td>
-        <td contenteditable="true" tabindex="0" oninput="updateLdgAuto()">200</td>
-        <td class="ldg">2300</td>
-        <td class="comentario"></td>
-        <td><button class="route-insert" onclick="inserirLeg(this)">SET</button></td>
-      </tr>
-      <tr>
-        <td contenteditable="true" tabindex="0">LPVR-LPBG</td>
-        <td contenteditable="false">2300</td>
-        <td contenteditable="true" tabindex="0">70</td>
-        <td contenteditable="true" tabindex="0" oninput="updateLdgAuto()">300</td>
-        <td class="ldg">2000</td>
-        <td class="comentario"></td>
-        <td><button class="route-insert" onclick="inserirLeg(this)">SET</button></td>
-      </tr>
-    </tbody>
+  <tbody id="legsTable"></tbody> <!-- Começa vazio, é preenchido por JS -->
 </table>
 
 
@@ -278,6 +250,68 @@ window.onload = () => {
 </script>
 
 <script>
+    // tabela legs
+function criarLinhaLeg(route = '', depF = '', payl = '', tripF = '') {
+  const tbody = document.getElementById('legsTable');
+  const tr = document.createElement('tr');
+
+  tr.innerHTML = `
+    <td contenteditable="true" tabindex="0">${route}</td>
+    <td contenteditable="true" tabindex="0">${depF}</td>
+    <td contenteditable="true" tabindex="0">${payl}</td>
+    <td contenteditable="true" tabindex="0">${tripF}</td>
+    <td class="ldg">0</td>
+    <td class="comentario"></td>
+    <td><button class="route-insert" onclick="inserirLeg(this)">SET</button></td>
+  `;
+
+  tbody.appendChild(tr);
+  prepararCelulasLeg(tr); // Adiciona eventos às celulas
+  updateLdgAuto(); // Atualiza valores de LDG F. e verifica overload
+}
+
+// Prepara eventos nas células editáveis (seleciona, guarda, atualiza)
+function prepararCelulasLeg(tr) {
+  tr.querySelectorAll('td[contenteditable="true"]').forEach(cell => {
+    cell.setAttribute('tabindex', '0');
+
+    cell.addEventListener('focus', () => {
+      const range = document.createRange();
+      range.selectNodeContents(cell);
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+    });
+
+    cell.addEventListener('input', () => {
+      updateLdgAuto(); // Recalcula LDG e verifica overload
+      guardarLegs();   // Grava no localStorage
+    });
+  });
+}
+
+// Grava a tabela Legs no localStorage
+function guardarLegs() {
+  const linhas = [...document.querySelectorAll('#legsTable tr')];
+  const dados = linhas.map(row => ({
+    route: row.cells[0].innerText.trim(),
+    depF: row.cells[1].innerText.trim(),
+    payl: row.cells[2].innerText.trim(),
+    tripF: row.cells[3].innerText.trim()
+  }));
+  localStorage.setItem('legsData', JSON.stringify(dados));
+}
+
+// Carrega do localStorage ou cria 5 linhas vazias se não houver nada
+function carregarLegs() {
+  const dados = JSON.parse(localStorage.getItem('legsData') || '[]');
+  if (dados.length === 0) {
+    for (let i = 0; i < 5; i++) criarLinhaLeg();
+  } else {
+    dados.forEach(l => criarLinhaLeg(l.route, l.depF, l.payl, l.tripF));
+  }
+}
+    
 function inserirLeg(btn) {
   const row = btn.closest("tr");
 

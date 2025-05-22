@@ -45,11 +45,12 @@ if ('serviceWorker' in navigator) {
     <tr>
       <td><strong>Payload total (kg)</strong></td>
       <td id="totalPayload">0</td>
-      <td><button onclick="inserirPayload()">Inserir</button></td>
+      <td>
+        <button onclick="inserirPayload()" title="Inserir no Mass & Balance" style="background: none; border: none; cursor: pointer;">
+          <i data-feather="log-in"></i>
+        </button>
+      </td>
     </tr>
-
-</tr>
-
 </table>
 
 <h2>Conversor Kg &harr; Lb</h2>

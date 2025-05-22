@@ -19,7 +19,7 @@
     <button onclick="location.href='index.html'" title="Voltar para a Calculadora">⬅️</button>
     <button onclick="abrirModalQR()" title="Partilhar App">📲</button>
   </div>
-
+  
   <!-- Modal com o QR Code -->
   <div id="modalQR" class="modal">
     <div class="modal-content">
@@ -30,6 +30,8 @@
     </div>
   </div>
 
+  <hr style="margin: 30px 0; border: none; border-top: 1px solid #999;"> <!-- linha de separação de tabelas -->
+  
   <!-- Definições -->
   <h2>Definições de Pesos Padrão</h2>
   <label>Peso padrão - Homem (kg): 
@@ -44,7 +46,9 @@
   <label>Peso padrão - Bagagem extra (kg): 
     <input type="number" inputmode="decimal" step="any" id="pesoBagagem" value="10" onfocus="this.select()">
   </label><br>
-
+  
+  <hr style="margin: 30px 0; border: none; border-top: 1px solid #999;"> <!-- linha de separação de tabelas -->
+  
   <!-- Tabela de aviões -->
   <h2>Aviões Disponíveis</h2>
   <table>
@@ -54,6 +58,8 @@
     <tbody id="tabelaAvioes"></tbody>
   </table>
 
+  <hr style="margin: 30px 0; border: none; border-top: 1px solid #999;"> <!-- linha de separação de tabelas -->
+  
   <!-- Adicionar avião -->
   <h3>Adicionar Novo Avião</h3>
   <input type="text" id="novoNome" placeholder="Nome do avião">

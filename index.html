@@ -51,13 +51,17 @@ if ('serviceWorker' in navigator) {
     </tr>
 </table>
 
+<hr style="margin: 30px 0; border: none; border-top: 1px solid #999;"> <!-- linha de separação de tabelas -->
+
+    
 <h2>Conversor Kg &harr; Lb</h2>
 <table>
     <tr><td>Kg para lb</td><td><input type="number" inputmode="decimal" step="any" id="kg" value="0" oninput="convertKgToLb()" onchange="convertKgToLb()"></td><td id="toLb">0</td></tr>
     <tr><td>Lb para kg</td><td><input type="number" inputmode="decimal" step="any" id="lb" value="0" oninput="convertLbToKg()" onchange="convertLbToKg()"></td><td id="toKg">0</td></tr>
 </table>
 
-
+<hr style="margin: 30px 0; border: none; border-top: 1px solid #999;"> <!-- linha de separação de tabelas -->
+    
 <h2>
   Mass & Balance
   <select id="aviaoSelecionado" onchange="calculate()" style="font-size: 14px; margin-left: 10px;"></select>

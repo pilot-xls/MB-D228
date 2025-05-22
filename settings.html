@@ -81,7 +81,9 @@
   <button onclick="guardarRotaPadrao()">Guardar Rota</button>
   
   <h3>Rotas Guardadas</h3>
-  <ul id="listaRotas"></ul>
+  <ul id="listaRotas">
+    <!-- Vai ser preenchido dinamicamente -->
+  </ul>
 
   <hr style="margin: 30px 0; border: none; border-top: 1px solid #999;"> <!-- linha de separação de tabelas -->
   
@@ -137,15 +139,19 @@
     }
   
     function renderizarRotasGuardadas() {
-      const lista = document.getElementById('listaRotas');
-      lista.innerHTML = '';
-      rotasPadrao.forEach((rota, idx) => {
-        const li = document.createElement('li');
-        li.innerHTML = `${rota.nome} <button onclick="removerRota(${idx})">Remover</button>`;
-        lista.appendChild(li);
-      });
-    }
-  
+    const lista = document.getElementById('listaRotas');
+    lista.innerHTML = '';
+    rotasPadrao.forEach((rota, idx) => {
+      const li = document.createElement('li');
+      li.innerHTML = `
+        ${rota.nome}
+        <button onclick="editarRota(${idx})">Editar</button>
+        <button onclick="removerRota(${idx})">Remover</button>
+      `;
+      lista.appendChild(li);
+    });
+  }
+
     function removerRota(index) {
       if (confirm('Apagar esta rota definitivamente?')) {
         rotasPadrao.splice(index, 1);
@@ -155,6 +161,17 @@
     }
   
     document.addEventListener('DOMContentLoaded', renderizarRotasGuardadas);
+
+  function editarRota(index) {
+    const rota = rotasPadrao[index];
+    document.getElementById('nomeRota').value = rota.nome;
+    document.getElementById('rotaTemp').innerHTML = '';
+    rota.legs.forEach(leg => {
+      adicionarLinhaRota(leg.route, leg.depF, leg.payl, leg.tripF);
+    });
+    rotasPadrao.splice(index, 1); // remove temporariamente a rota antiga
+  }
+
   </script>
 
   
@@ -170,7 +187,7 @@
       listaAvioes = defs.avioes || [];
       renderAvioes();
     }
-
+  
     function renderAvioes() {
       const tabela = document.getElementById("tabelaAvioes");
       tabela.innerHTML = "";

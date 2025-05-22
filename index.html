@@ -83,7 +83,7 @@ if ('serviceWorker' in navigator) {
     
 <h2 style="text-align: center;">Resumo de Legs</h2>
 <div style="text-align: center; margin-bottom: 10px;">
-  <label>Rota Padrão:
+  <label>Rotas guardadas:
     <select id="dropdownRotas" onchange="preencherLegsComRota()">
       <option value="">-- Selecionar rota --</option>
     </select>
@@ -124,6 +124,15 @@ if ('serviceWorker' in navigator) {
     function preencherLegsComRota() {
       const idx = document.getElementById("dropdownRotas").value;
       const rotas = JSON.parse(localStorage.getItem("rotasPadrao") || "[]");
+    
+      if (idx === "") {
+        // Se o valor for vazio ("-- Selecionar rota --"), limpa e repõe linhas vazias
+        document.getElementById("legsTable").innerHTML = "";
+        for (let i = 0; i < 5; i++) criarLinhaLeg();
+        guardarLegs();
+        return;
+      }
+    
       if (!rotas[idx]) return;
     
       const rota = rotas[idx];
@@ -133,6 +142,7 @@ if ('serviceWorker' in navigator) {
       });
       guardarLegs();
     }
+
     
     // Adiciona esta linha ao onload ou DOMContentLoaded
     carregarDropdownRotas();

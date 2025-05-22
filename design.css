@@ -282,3 +282,9 @@ tr.overweight {
   color: white;
   font-weight: bold;
 }
+.route-table tr.overweight td {
+  background-color: var(--danger) !important;
+  color: white !important;
+  font-weight: bold;
+}
+

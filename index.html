@@ -34,8 +34,8 @@ if ('serviceWorker' in navigator) {
 <div class="settings-link">
     <a href="settings.html">⚙️ Settings</a>
 </div>
-    
-<h2>Cálculo do Payload</h2>
+
+<h2 style="text-align: center;">Cálculo do Payload</h2>
 <table>
     <tr><th>Tipo</th><th>Nº Passageiros</th><th>Peso total (kg)</th></tr>
     <tr><td id="labelHomens">Homens</td><td><input type="number" inputmode="numeric" pattern="[0-9]*" id="men" value="0" oninput="calculate()" onchange="calculate()"></td><td id="menWeight">0</td></tr>
@@ -54,7 +54,7 @@ if ('serviceWorker' in navigator) {
 <hr style="margin: 30px 0; border: none; border-top: 1px solid #999;"> <!-- linha de separação de tabelas -->
 
     
-<h2>Conversor Kg &harr; Lb</h2>
+<h2 style="text-align: center;">Conversor Kg &harr; Lb</h2>
 <table>
     <tr><td>Kg para lb</td><td><input type="number" inputmode="decimal" step="any" id="kg" value="0" oninput="convertKgToLb()" onchange="convertKgToLb()"></td><td id="toLb">0</td></tr>
     <tr><td>Lb para kg</td><td><input type="number" inputmode="decimal" step="any" id="lb" value="0" oninput="convertLbToKg()" onchange="convertLbToKg()"></td><td id="toKg">0</td></tr>
@@ -62,8 +62,7 @@ if ('serviceWorker' in navigator) {
 
 <hr style="margin: 30px 0; border: none; border-top: 1px solid #999;"> <!-- linha de separação de tabelas -->
     
-<h2>
-  Mass & Balance
+<h2 style="text-align: center;"> Mass & Balance
   <select id="aviaoSelecionado" onchange="calculate()" style="font-size: 14px; margin-left: 10px;"></select>
 </h2>
 <table>

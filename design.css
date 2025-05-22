@@ -259,3 +259,26 @@ table#conversor td:nth-child(3) {
   padding: 10px;
 }
 
+/* Estilo específico para a tabela Resumo de Legs */
+table.route-table td[contenteditable="true"] {
+  background-color: #fffbe6;
+  cursor: text;
+  border-bottom: 1px solid #ccc;
+}
+
+table.route-table .ldg {
+  background-color: #f4f4f4;
+  font-weight: bold;
+}
+
+table.route-table .comentario {
+  font-style: italic;
+  color: var(--danger);
+}
+
+/* Realce para excesso de peso à descolagem */
+tr.overweight {
+  background-color: var(--danger) !important;
+  color: white;
+  font-weight: bold;
+}

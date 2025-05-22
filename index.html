@@ -43,6 +43,9 @@ if ('serviceWorker' in navigator) {
     <tr><td id="labelCriancas">Crianças</td><td><input type="number" inputmode="numeric" pattern="[0-9]*" id="children" value="0" oninput="calculate()" onchange="calculate()"></td><td id="childrenWeight">0</td></tr>
     <tr><td id="labelBagagem">Bagagem extra</td><td colspan="2"><input type="number" inputmode="numeric" pattern="[0-9]*" id="extraBag" value="0" oninput="calculate()" onchange="calculate()"></td></tr>
     <tr><td><strong>Payload total (kg)</strong></td><td colspan="2" id="totalPayload">0</td></tr>
+    <tr><td colspan="2"><button onclick="inserirPayload()">Inserir</button></td>
+</tr>
+
 </table>
 
 <h2>Conversor Kg &harr; Lb</h2>
@@ -96,6 +99,17 @@ function preencherDropdown() {
     });
 }
 
+function inserirPayload() {
+    const payload = document.getElementById("totalPayload").textContent;
+    const destino = document.getElementById("manualPayload");
+    
+    if (destino) {
+        destino.value = payload;
+    } else {
+        alert("Campo 'massPayload' não encontrado.");
+    }
+}
+    
 function calculate() {
     const defs = getDefs();
     const pesoHomem = defs.pesoHomem || 86;

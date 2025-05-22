@@ -77,8 +77,7 @@
       <tr><th>ROUTE</th><th>DEP F. (lb)</th><th>PAYL. (kg)</th><th>TRIP F. (lb)</th><th>Remover</th></tr>
     </thead>
     <tbody id="rotaTemp"></tbody>
-  </table>
-  <button onclick="guardarRotaPadrao()">Guardar Rota</button>
+  </table>  
   
   <h3>Rotas Guardadas</h3>
   <ul id="listaRotas">
@@ -235,9 +234,37 @@
         pesoBagagem: parseFloat(document.getElementById("pesoBagagem").value),
         avioes: listaAvioes
       };
+    
+      // Captura o nome e as linhas da rota temporária
+      const nome = document.getElementById('nomeRota').value.trim();
+      const linhas = document.querySelectorAll('#rotaTemp tr');
+      const legs = [];
+    
+      linhas.forEach(row => {
+        const inputs = row.querySelectorAll('input');
+        legs.push({
+          route: inputs[0].value.trim(),
+          depF: inputs[1].value.trim(),
+          payl: inputs[2].value.trim(),
+          tripF: inputs[3].value.trim()
+        });
+      });
+    
+      // Se existir nome e pelo menos uma perna, guarda essa rota
+      if (nome && legs.length > 0) {
+        rotasPadrao.push({ nome, legs });
+        document.getElementById('rotaTemp').innerHTML = '';
+        document.getElementById('nomeRota').value = '';
+        renderizarRotasGuardadas();
+      }
+    
+      // Guarda tudo no localStorage
       localStorage.setItem("definicoesMB", JSON.stringify(definicoes));
-      alert("Definições guardadas com sucesso!");
+      localStorage.setItem("rotasPadrao", JSON.stringify(rotasPadrao));
+    
+      alert("Definições e rotas guardadas com sucesso!");
     }
+
 
     function abrirModalQR() {
       document.getElementById("modalQR").style.display = "block";

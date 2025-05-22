@@ -271,6 +271,7 @@ function convertLbToKg() {
 window.onload = () => {
     preencherDropdown();
     calculate();
+    updateLdgAuto();
     document.querySelectorAll("input").forEach(i => i.addEventListener("input", calculate));
     feather.replace();
 };

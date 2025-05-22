@@ -250,9 +250,20 @@
         });
       });
     
-      // Se existir nome e pelo menos uma perna, guarda essa rota
+      // Se existir nome e pelo menos uma perna
       if (nome && legs.length > 0) {
-        rotasPadrao.push({ nome, legs });
+        // Verifica se rota com esse nome já existe
+        const indexExistente = rotasPadrao.findIndex(r => r.nome === nome);
+    
+        if (indexExistente !== -1) {
+          if (!confirm(`Já existe uma rota chamada "${nome}". Queres substituir?`)) {
+            return; // não faz nada
+          }
+          rotasPadrao[indexExistente] = { nome, legs }; // substitui
+        } else {
+          rotasPadrao.push({ nome, legs }); // adiciona nova
+        }
+    
         document.getElementById('rotaTemp').innerHTML = '';
         document.getElementById('nomeRota').value = '';
         renderizarRotasGuardadas();
@@ -264,6 +275,7 @@
     
       alert("Definições e rotas guardadas com sucesso!");
     }
+
 
 
     function abrirModalQR() {

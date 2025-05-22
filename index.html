@@ -359,6 +359,12 @@ function updateLdgAuto() {
         }
       });
     });
+      document.querySelectorAll('#legsTable td[contenteditable="true"]').forEach(cell => {
+        cell.addEventListener('input', () => {
+          updateLdgAuto();
+        });
+      });
+      
       feather.replace();
   });
 </script>

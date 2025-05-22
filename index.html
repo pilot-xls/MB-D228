@@ -279,35 +279,45 @@ window.onload = () => {
 <script>
 function inserirLeg(btn) {
   const row = btn.closest("tr");
+
   const depFuelLb = parseFloat(row.cells[1].innerText.trim()) || 0;
   const payloadKg = parseFloat(row.cells[2].innerText.trim()) || 0;
   const tripFuelLb = parseFloat(row.cells[3].innerText.trim()) || 0;
 
-  const depFuelKg = (depFuelLb * 0.453592).toFixed(1);
-  const tripFuelKg = (tripFuelLb * 0.453592).toFixed(1);
+  const depFuelKg = depFuelLb * 0.453592;
+  const tripFuelKg = tripFuelLb * 0.453592;
 
-  const payloadInput = document.getElementById("manualPayload");
-  const fuelInput = document.getElementById("fuel");
-  const tripInput = document.getElementById("fuelDest");
+  // Preenche a tabela Mass & Balance
+  document.getElementById("manualPayload").value = payloadKg;
+  document.getElementById("fuel").value = depFuelKg.toFixed(1);
+  document.getElementById("fuelDest").value = tripFuelKg.toFixed(1);
 
-  if (payloadInput && fuelInput && tripInput) {
-    payloadInput.value = payloadKg;
-    fuelInput.value = depFuelKg;
-    tripInput.value = tripFuelKg;
-    if (typeof calculate === "function") calculate();
-  }
+  if (typeof calculate === "function") calculate();
 
-  const pilots = parseFloat(document.getElementById("pilots")?.value || "150") || 150;
-  const takeoff = parseFloat(depFuelKg) + parseFloat(payloadKg) + pilots;
+  // BEW do avião
+  const defs = JSON.parse(localStorage.getItem("definicoesMB")) || {};
+  const aviaoIndex = document.getElementById("aviaoSelecionado").selectedIndex || 0;
+  const aviao = defs.avioes?.[aviaoIndex];
+  const BEW = aviao?.peso || 0;
 
-  if (takeoff > 5700) {
+  // Pilotos da tabela Mass & Balance
+  const pilots = parseFloat(document.getElementById("pilots")?.value || "150") || 0;
+
+  // Take-off weight real
+  const takeoffKg = BEW + pilots + payloadKg + depFuelKg;
+
+  // Verificação e destaque visual
+  const comentarioCell = row.querySelector(".comentario");
+
+  if (takeoffKg > 5700) {
     row.classList.add("overweight");
-    row.querySelector(".comentario").innerText = "OVERWEIGHT AT TAKE-OFF";
+    comentarioCell.innerText = `OVERWEIGHT AT TAKE-OFF (${takeoffKg.toFixed(1)} kg)`;
   } else {
     row.classList.remove("overweight");
-    row.querySelector(".comentario").innerText = "";
+    comentarioCell.innerText = "";
   }
 }
+
 
 function updateLdgAuto() {
   const rows = document.querySelectorAll("#legsTable tr");

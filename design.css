@@ -288,3 +288,13 @@ tr.overweight {
   font-weight: bold;
 }
 
+/* ⬇️ AJUSTES FINAIS PARA A TABELA LEGS (route-table) */
+.route-table {
+  table-layout: fixed;
+  width: 100%;
+}
+.route-table td, .route-table th {
+  font-size: clamp(10px, 1.4vw, 14px);
+  word-wrap: break-word;
+}
+

@@ -287,26 +287,26 @@ function inserirLeg(btn) {
   const depFuelKg = depFuelLb * 0.453592;
   const tripFuelKg = tripFuelLb * 0.453592;
 
-  // Preenche a tabela Mass & Balance
   document.getElementById("manualPayload").value = payloadKg;
   document.getElementById("fuel").value = depFuelKg.toFixed(1);
   document.getElementById("fuelDest").value = tripFuelKg.toFixed(1);
 
   if (typeof calculate === "function") calculate();
+}
 
-  // BEW do avião
+function verificarPesoLinha(row) {
   const defs = JSON.parse(localStorage.getItem("definicoesMB")) || {};
   const aviaoIndex = document.getElementById("aviaoSelecionado").selectedIndex || 0;
   const aviao = defs.avioes?.[aviaoIndex];
   const BEW = aviao?.peso || 0;
 
-  // Pilotos da tabela Mass & Balance
   const pilots = parseFloat(document.getElementById("pilots")?.value || "150") || 0;
+  const depFuelLb = parseFloat(row.cells[1].innerText.trim()) || 0;
+  const payloadKg = parseFloat(row.cells[2].innerText.trim()) || 0;
 
-  // Take-off weight real
+  const depFuelKg = depFuelLb * 0.453592;
   const takeoffKg = BEW + pilots + payloadKg + depFuelKg;
 
-  // Verificação e destaque visual
   const comentarioCell = row.querySelector(".comentario");
 
   if (takeoffKg > 5700) {
@@ -317,7 +317,6 @@ function inserirLeg(btn) {
     comentarioCell.innerText = "";
   }
 }
-
 
 function updateLdgAuto() {
   const rows = document.querySelectorAll("#legsTable tr");
@@ -330,6 +329,8 @@ function updateLdgAuto() {
     if (i + 1 < rows.length) {
       rows[i + 1].cells[1].innerText = ldg.toFixed(0);
     }
+
+    verificarPesoLinha(rows[i]); // <- aqui a verificação automática
   }
 }
 </script>

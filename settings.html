@@ -67,10 +67,10 @@
   <input type="number" inputmode="decimal" step="any" id="novoMomento" placeholder="Momento" onfocus="this.select()">
   <button onclick="adicionarAviao()">Adicionar Avião</button>
 
-  <hr style="margin: 30px 0; border: none; border-top: 1px solid #999;">
+  <hr style="margin: 30px 0; border: none; border-top: 1px solid #999;"> <!-- linha de separação de tabelas -->
   <h2>Rotas Padrão</h2>
   
-  <label>Nome da Rota: <input type="text" id="nomeRota" placeholder="Ex: Rota Norte"></label>
+  <label>Nome da Rota: <input type="text" id="nomeRota" placeholder="Ex: RVP952/953"></label>
   <button onclick="adicionarLinhaRota()">+ Adicionar Leg</button>
   <table>
     <thead>
@@ -80,9 +80,10 @@
   </table>
   <button onclick="guardarRotaPadrao()">Guardar Rota</button>
   
-  <hr>
   <h3>Rotas Guardadas</h3>
   <ul id="listaRotas"></ul>
+
+  <hr style="margin: 30px 0; border: none; border-top: 1px solid #999;"> <!-- linha de separação de tabelas -->
   
   <br><br>
   <button onclick="guardarDefinicoes()">Guardar Tudo</button>

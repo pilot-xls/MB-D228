@@ -47,7 +47,7 @@ if ('serviceWorker' in navigator) {
       <td><strong>Payload total (kg)</strong></td>
       <td id="totalPayload">0</td>
       <td>
-        <button onclick="inserirPayload()" title="Copiar payload para Mass & Balance">Inserir</button>
+        <button onclick="inserirPayload()" title="Copiar payload para Mass & Balance">+</button>
       </td>
     </tr>
 </table>
@@ -262,7 +262,7 @@ function criarLinhaLeg(route = '', depF = '', payl = '', tripF = '') {
     <td contenteditable="true" tabindex="0">${tripF}</td>
     <td class="ldg">0</td>
     <td class="comentario"></td>
-    <td><button class="route-insert" onclick="inserirLeg(this)">Inserir</button></td>
+    <td><button class="route-insert" onclick="inserirLeg(this)">+</button></td>
   `;
 
   tbody.appendChild(tr);

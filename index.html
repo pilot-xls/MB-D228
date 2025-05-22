@@ -97,27 +97,27 @@ if ('serviceWorker' in navigator) {
   <tbody id="legsTable">
     <tr>
       <td contenteditable="true">LPCS-LPVZ</td>
-      <td contenteditable="true" oninput="updateLdgAuto()">3000</td>
-      <td contenteditable="true">700</td>
-      <td contenteditable="true" oninput="updateLdgAuto()">500</td>
+      <td><input type="number" step="any" value="3000" oninput="updateLdgAuto()"></td>
+      <td><input type="number" step="any" value="700" oninput="updateLdgAuto()"></td>
+      <td><input type="number" step="any" value="500" oninput="updateLdgAuto()"></td>
       <td class="ldg">2500</td>
       <td class="comentario"></td>
       <td><button class="route-insert" onclick="inserirLeg(this)">SET</button></td>
     </tr>
     <tr>
       <td contenteditable="true">LPVZ-LPVR</td>
-      <td contenteditable="false">2500</td>
-      <td contenteditable="true">1500</td>
-      <td contenteditable="true" oninput="updateLdgAuto()">200</td>
+      <td><input type="number" step="any" value="2500" readonly></td>
+      <td><input type="number" step="any" value="1500" oninput="updateLdgAuto()"></td>
+      <td><input type="number" step="any" value="200" oninput="updateLdgAuto()"></td>
       <td class="ldg">2300</td>
       <td class="comentario"></td>
       <td><button class="route-insert" onclick="inserirLeg(this)">SET</button></td>
     </tr>
     <tr>
       <td contenteditable="true">LPVR-LPBG</td>
-      <td contenteditable="false">2300</td>
-      <td contenteditable="true">70</td>
-      <td contenteditable="true" oninput="updateLdgAuto()">300</td>
+      <td><input type="number" step="any" value="2300" readonly></td>
+      <td><input type="number" step="any" value="70" oninput="updateLdgAuto()"></td>
+      <td><input type="number" step="any" value="300" oninput="updateLdgAuto()"></td>
       <td class="ldg">2000</td>
       <td class="comentario"></td>
       <td><button class="route-insert" onclick="inserirLeg(this)">SET</button></td>
@@ -359,16 +359,17 @@ function updateLdgAuto() {
           }
         }
       });
+
+      // Se o input estiver dentro da tabela de legs, ativa updateLdgAuto
+      if (input.closest('#legsTable')) {
+        input.addEventListener('input', updateLdgAuto);
+      }
     });
-      document.querySelectorAll('#legsTable td[contenteditable="true"]').forEach(cell => {
-        cell.addEventListener('input', () => {
-          updateLdgAuto();
-        });
-      });
-      
-      feather.replace();
+
+    feather.replace();
   });
 </script>
+
     
 </body>
 </html>

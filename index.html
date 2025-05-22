@@ -305,17 +305,16 @@ function criarLinhaLeg(route = '', depF = '', payl = '', tripF = '') {
   const tr = document.createElement('tr');
 
   tr.innerHTML = `
-    <td contenteditable="true" tabindex="0">${route}</td>
-    <td contenteditable="true" tabindex="0">${depF}</td>
-    <td contenteditable="true" tabindex="0">${payl}</td>
-    <td contenteditable="true" tabindex="0">${tripF}</td>
+    <td><input type="text" value="${route}" oninput="updateLdgAuto(); guardarLegs();"></td>
+    <td><input type="number" inputmode="decimal" step="any" value="${depF}" oninput="updateLdgAuto(); guardarLegs();"></td>
+    <td><input type="number" inputmode="decimal" step="any" value="${payl}" oninput="updateLdgAuto(); guardarLegs();"></td>
+    <td><input type="number" inputmode="decimal" step="any" value="${tripF}" oninput="updateLdgAuto(); guardarLegs();"></td>
     <td class="ldg">0</td>
-    <td><button class="route-insert" onclick="inserirLeg(this)">+</button></td>
+    <td><button onclick="inserirLeg(this)">+</button></td>
   `;
 
   tbody.appendChild(tr);
-  prepararCelulasLeg(tr); // Adiciona eventos às celulas
-  updateLdgAuto(); // Atualiza valores de LDG F. e verifica overload
+  updateLdgAuto();
 }
 
 // Prepara eventos nas células editáveis (seleciona, guarda, atualiza)

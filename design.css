@@ -297,4 +297,16 @@ tr.overweight {
   font-size: clamp(10px, 1.4vw, 14px);
   word-wrap: break-word;
 }
+.route-table input {
+  font-size: clamp(10px, 1.2vw, 14px);
+  width: 100%;
+  box-sizing: border-box;
+  padding: 6px;
+  text-align: center;
+  border: none;
+  background: transparent;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 

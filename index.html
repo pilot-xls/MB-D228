@@ -310,7 +310,6 @@ function criarLinhaLeg(route = '', depF = '', payl = '', tripF = '') {
     <td contenteditable="true" tabindex="0">${payl}</td>
     <td contenteditable="true" tabindex="0">${tripF}</td>
     <td class="ldg">0</td>
-    <td class="comentario"></td>
     <td><button class="route-insert" onclick="inserirLeg(this)">+</button></td>
   `;
 
@@ -395,10 +394,8 @@ function verificarPesoLinha(row) {
 
   if (takeoffKg > 5700) {
     row.classList.add("overweight");
-    comentarioCell.innerText = `OVERWEIGHT AT TAKE-OFF (${takeoffKg.toFixed(1)} kg)`;
   } else {
     row.classList.remove("overweight");
-    comentarioCell.innerText = "";
   }
 }
 

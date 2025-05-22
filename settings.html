@@ -67,6 +67,23 @@
   <input type="number" inputmode="decimal" step="any" id="novoMomento" placeholder="Momento" onfocus="this.select()">
   <button onclick="adicionarAviao()">Adicionar Avião</button>
 
+  <hr style="margin: 30px 0; border: none; border-top: 1px solid #999;">
+  <h2>Rotas Padrão</h2>
+  
+  <label>Nome da Rota: <input type="text" id="nomeRota" placeholder="Ex: Rota Norte"></label>
+  <button onclick="adicionarLinhaRota()">+ Adicionar Leg</button>
+  <table>
+    <thead>
+      <tr><th>ROUTE</th><th>DEP F. (lb)</th><th>PAYL. (kg)</th><th>TRIP F. (lb)</th><th>Remover</th></tr>
+    </thead>
+    <tbody id="rotaTemp"></tbody>
+  </table>
+  <button onclick="guardarRotaPadrao()">Guardar Rota</button>
+  
+  <hr>
+  <h3>Rotas Guardadas</h3>
+  <ul id="listaRotas"></ul>
+  
   <br><br>
   <button onclick="guardarDefinicoes()">Guardar Tudo</button>
   <br><br>
@@ -75,8 +92,71 @@
   <footer style="text-align: right; margin-top: 30px; font-size: 12px; color: #888;">
     <span id="versaoApp"></span>
   </footer>
-
+  
   <!-- Scripts principais -->
+
+  <script>
+    let rotasPadrao = JSON.parse(localStorage.getItem('rotasPadrao')) || [];
+  
+    function adicionarLinhaRota(route = '', depF = '', payl = '', tripF = '') {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td><input type="text" value="${route}"></td>
+        <td><input type="number" value="${depF}"></td>
+        <td><input type="number" value="${payl}"></td>
+        <td><input type="number" value="${tripF}"></td>
+        <td><button onclick="this.closest('tr').remove()">X</button></td>
+      `;
+      document.getElementById('rotaTemp').appendChild(tr);
+    }
+  
+    function guardarRotaPadrao() {
+      const nome = document.getElementById('nomeRota').value.trim();
+      if (!nome) return alert('Dá um nome à rota!');
+  
+      const linhas = document.querySelectorAll('#rotaTemp tr');
+      const legs = [];
+      linhas.forEach(row => {
+        const inputs = row.querySelectorAll('input');
+        legs.push({
+          route: inputs[0].value.trim(),
+          depF: inputs[1].value.trim(),
+          payl: inputs[2].value.trim(),
+          tripF: inputs[3].value.trim()
+        });
+      });
+      if (legs.length === 0) return alert('Adiciona pelo menos uma perna.');
+  
+      rotasPadrao.push({ nome, legs });
+      localStorage.setItem('rotasPadrao', JSON.stringify(rotasPadrao));
+  
+      document.getElementById('rotaTemp').innerHTML = '';
+      document.getElementById('nomeRota').value = '';
+      renderizarRotasGuardadas();
+    }
+  
+    function renderizarRotasGuardadas() {
+      const lista = document.getElementById('listaRotas');
+      lista.innerHTML = '';
+      rotasPadrao.forEach((rota, idx) => {
+        const li = document.createElement('li');
+        li.innerHTML = `${rota.nome} <button onclick="removerRota(${idx})">Remover</button>`;
+        lista.appendChild(li);
+      });
+    }
+  
+    function removerRota(index) {
+      if (confirm('Apagar esta rota definitivamente?')) {
+        rotasPadrao.splice(index, 1);
+        localStorage.setItem('rotasPadrao', JSON.stringify(rotasPadrao));
+        renderizarRotasGuardadas();
+      }
+    }
+  
+    document.addEventListener('DOMContentLoaded', renderizarRotasGuardadas);
+  </script>
+
+  
   <script>
     let listaAvioes = [];
 

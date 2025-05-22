@@ -90,8 +90,8 @@ if ('serviceWorker' in navigator) {
       <th>PAYL. (kg)</th>
       <th>TRIP F. (lb)</th>
       <th>LDG F. (lb)</th>
-      <th>COMENTARIO</th>
-      <th>INSERIR</th>
+      <th>NOTE</th>
+      <th></th>
     </tr>
   </thead>
   <tbody id="legsTable"></tbody> <!-- Começa vazio, é preenchido por JS -->
@@ -262,7 +262,7 @@ function criarLinhaLeg(route = '', depF = '', payl = '', tripF = '') {
     <td contenteditable="true" tabindex="0">${tripF}</td>
     <td class="ldg">0</td>
     <td class="comentario"></td>
-    <td><button class="route-insert" onclick="inserirLeg(this)">SET</button></td>
+    <td><button class="route-insert" onclick="inserirLeg(this)">Inserir</button></td>
   `;
 
   tbody.appendChild(tr);

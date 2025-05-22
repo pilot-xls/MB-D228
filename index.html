@@ -20,7 +20,6 @@
     <meta name="apple-mobile-web-app-title" content="D228">
 </head>
 
-
 <script>
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('service-worker.js')
@@ -54,7 +53,6 @@ if ('serviceWorker' in navigator) {
 </table>
 
 <hr style="margin: 30px 0; border: none; border-top: 1px solid #999;"> <!-- linha de separação de tabelas -->
-
     
 <h2 style="text-align: center;">Conversor Kg &harr; Lb</h2>
 <table>
@@ -80,8 +78,52 @@ if ('serviceWorker' in navigator) {
   <tr><td>Fuel to destination</td><td><input type="number" inputmode="decimal" step="any" id="fuelDest" value="0" oninput="calculate()" onchange="calculate()"></td><td id="momentDest">0</td><td>ARM = 7.936</td></tr>
   <tr id="landingRow" class="gray-row"><td>Landing Weight</td><td id="landingWeight" class="limit-check">0</td><td id="momentLanding">0</td><td>MAC: <span id="macLanding">0</span>%</td></tr>
 </table>
-
-
+    
+<hr style="margin: 30px 0; border: none; border-top: 1px solid #999;"> <!-- linha de separação de tabelas -->
+    
+<h2 style="text-align: center;">Resumo de Legs</h2>
+<table class="route-table">
+  <thead>
+    <tr>
+      <th>ROUTE</th>
+      <th>DEP F. (lb)</th>
+      <th>PAYL. (kg)</th>
+      <th>TRIP F. (lb)</th>
+      <th>LDG F. (lb)</th>
+      <th>COMENTARIO</th>
+      <th>INSERIR</th>
+    </tr>
+  </thead>
+  <tbody id="legsTable">
+    <tr>
+      <td contenteditable="true">LPCS-LPVZ</td>
+      <td contenteditable="true" oninput="updateLdgAuto()">3000</td>
+      <td contenteditable="true">700</td>
+      <td contenteditable="true" oninput="updateLdgAuto()">500</td>
+      <td class="ldg">2500</td>
+      <td class="comentario"></td>
+      <td><button class="route-insert" onclick="inserirLeg(this)">SET</button></td>
+    </tr>
+    <tr>
+      <td contenteditable="true">LPVZ-LPVR</td>
+      <td contenteditable="false">2500</td>
+      <td contenteditable="true">1500</td>
+      <td contenteditable="true" oninput="updateLdgAuto()">200</td>
+      <td class="ldg">2300</td>
+      <td class="comentario"></td>
+      <td><button class="route-insert" onclick="inserirLeg(this)">SET</button></td>
+    </tr>
+    <tr>
+      <td contenteditable="true">LPVR-LPBG</td>
+      <td contenteditable="false">2300</td>
+      <td contenteditable="true">70</td>
+      <td contenteditable="true" oninput="updateLdgAuto()">300</td>
+      <td class="ldg">2000</td>
+      <td class="comentario"></td>
+      <td><button class="route-insert" onclick="inserirLeg(this)">SET</button></td>
+    </tr>
+  </tbody>
+</table>
 
 
 <script>
@@ -234,7 +276,53 @@ window.onload = () => {
 };
 </script>
 
+<script>
+function inserirLeg(btn) {
+  const row = btn.closest("tr");
+  const depFuelLb = parseFloat(row.cells[1].innerText.trim()) || 0;
+  const payloadKg = parseFloat(row.cells[2].innerText.trim()) || 0;
+  const tripFuelLb = parseFloat(row.cells[3].innerText.trim()) || 0;
 
+  const depFuelKg = (depFuelLb * 0.453592).toFixed(1);
+  const tripFuelKg = (tripFuelLb * 0.453592).toFixed(1);
+
+  const payloadInput = document.getElementById("manualPayload");
+  const fuelInput = document.getElementById("fuel");
+  const tripInput = document.getElementById("fuelDest");
+
+  if (payloadInput && fuelInput && tripInput) {
+    payloadInput.value = payloadKg;
+    fuelInput.value = depFuelKg;
+    tripInput.value = tripFuelKg;
+    if (typeof calculate === "function") calculate();
+  }
+
+  const pilots = parseFloat(document.getElementById("pilots")?.value || "150") || 150;
+  const takeoff = parseFloat(depFuelKg) + parseFloat(payloadKg) + pilots;
+
+  if (takeoff > 5700) {
+    row.classList.add("overweight");
+    row.querySelector(".comentario").innerText = "OVERWEIGHT AT TAKE-OFF";
+  } else {
+    row.classList.remove("overweight");
+    row.querySelector(".comentario").innerText = "";
+  }
+}
+
+function updateLdgAuto() {
+  const rows = document.querySelectorAll("#legsTable tr");
+  for (let i = 0; i < rows.length; i++) {
+    const dep = parseFloat(rows[i].cells[1].innerText.trim()) || 0;
+    const trip = parseFloat(rows[i].cells[3].innerText.trim()) || 0;
+    const ldg = dep - trip;
+    rows[i].querySelector(".ldg").innerText = ldg.toFixed(0);
+
+    if (i + 1 < rows.length) {
+      rows[i + 1].cells[1].innerText = ldg.toFixed(0);
+    }
+  }
+}
+</script>
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {

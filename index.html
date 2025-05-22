@@ -105,6 +105,7 @@ function inserirPayload() {
     
     if (destino) {
         destino.value = payload;
+        calculate();
     } else {
         alert("Campo 'massPayload' não encontrado.");
     }

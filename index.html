@@ -42,8 +42,12 @@ if ('serviceWorker' in navigator) {
     <tr><td id="labelMulheres">Mulheres</td><td><input type="number" inputmode="numeric" pattern="[0-9]*" id="women" value="0" oninput="calculate()" onchange="calculate()"></td><td id="womenWeight">0</td></tr>
     <tr><td id="labelCriancas">Crianças</td><td><input type="number" inputmode="numeric" pattern="[0-9]*" id="children" value="0" oninput="calculate()" onchange="calculate()"></td><td id="childrenWeight">0</td></tr>
     <tr><td id="labelBagagem">Bagagem extra</td><td colspan="2"><input type="number" inputmode="numeric" pattern="[0-9]*" id="extraBag" value="0" oninput="calculate()" onchange="calculate()"></td></tr>
-    <tr><td><strong>Payload total (kg)</strong></td><td colspan="2" id="totalPayload">0</td></tr>
-    <tr><td colspan="2"><button onclick="inserirPayload()">Inserir</button></td>
+    <tr>
+      <td><strong>Payload total (kg)</strong></td>
+      <td id="totalPayload">0</td>
+      <td><button onclick="inserirPayload()">Inserir</button></td>
+    </tr>
+
 </tr>
 
 </table>

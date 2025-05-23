@@ -337,7 +337,6 @@ input, select, textarea {
 }
 th.rota-header {
   writing-mode: vertical-rl;
-  transform: rotate(180deg);
   white-space: nowrap;
   padding: 4px;
 }

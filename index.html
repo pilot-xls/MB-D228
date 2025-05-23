@@ -396,9 +396,9 @@ function carregarLegs() {
 function inserirLeg(btn) {
   const row = btn.closest("tr");
 
-  const depFuelLb = parseFloat(row.cells[1].innerText.trim()) || 0;
-  const payloadKg = parseFloat(row.cells[2].innerText.trim()) || 0;
-  const tripFuelLb = parseFloat(row.cells[3].innerText.trim()) || 0;
+  const depFuelLb = parseFloat(row.cells[1].querySelector("input")?.value || 0);
+  const payloadKg = parseFloat(row.cells[2].querySelector("input")?.value || 0);
+  const tripFuelLb = parseFloat(row.cells[3].querySelector("input")?.value || 0);
 
   const depFuelKg = depFuelLb * 0.453592;
   const tripFuelKg = tripFuelLb * 0.453592;
@@ -409,6 +409,7 @@ function inserirLeg(btn) {
 
   if (typeof calculate === "function") calculate();
 }
+
 
 function verificarPesoLinha(row) {
   const defs = JSON.parse(localStorage.getItem("definicoesMB")) || {};

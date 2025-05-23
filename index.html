@@ -406,19 +406,26 @@ function verificarPesoLinha(row) {
 
 function updateLdgAuto() {
   const rows = document.querySelectorAll("#legsTable tr");
+
   for (let i = 0; i < rows.length; i++) {
-    const dep = parseFloat(rows[i].cells[1].innerText.trim()) || 0;
-    const trip = parseFloat(rows[i].cells[3].innerText.trim()) || 0;
+    const depInput = rows[i].cells[1].querySelector("input");
+    const tripInput = rows[i].cells[3].querySelector("input");
+
+    const dep = parseFloat(depInput?.value) || 0;
+    const trip = parseFloat(tripInput?.value) || 0;
     const ldg = dep - trip;
-    rows[i].querySelector(".ldg").innerText = ldg.toFixed(0);
+
+    const ldgCell = rows[i].querySelector(".ldg");
+    if (ldgCell) ldgCell.innerText = ldg.toFixed(0);
 
     if (i + 1 < rows.length) {
-      const nextDepfCell = rows[i + 1].cells[1];
-      const valorAtual = nextDepfCell.innerText.trim();
+      const nextDepInput = rows[i + 1].cells[1].querySelector("input");
+      const valorAtual = nextDepInput?.value || "";
+      const isAuto = nextDepInput?.dataset.auto;
 
-      if (!valorAtual || valorAtual === "0" || !nextDepfCell.dataset.auto || nextDepfCell.dataset.auto === "1") {
-        nextDepfCell.innerText = ldg.toFixed(0);
-        nextDepfCell.dataset.auto = "1"; // marca como automático
+      if (!valorAtual || valorAtual === "0" || isAuto === "1") {
+        nextDepInput.value = ldg.toFixed(0);
+        nextDepInput.dataset.auto = "1";
       }
     }
 

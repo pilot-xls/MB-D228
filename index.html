@@ -305,7 +305,10 @@ function criarLinhaLeg(route = '', depF = '', payl = '', tripF = '') {
   const tr = document.createElement('tr');
 
   tr.innerHTML = `
-    <td><input type="text" value="${route}"></td>
+    <td class="rota-col" onclick="editarRota(this)">
+      <div class="rota-visual">${route}</div>
+      <input type="text" class="rota-edit" value="${route}" onblur="fecharRota(this)" style="display: none;">
+    </td>
     <td><input type="number" inputmode="decimal" step="any" value="${depF}" data-auto="1"></td>
     <td><input type="number" inputmode="decimal" step="any" value="${payl}"></td>
     <td><input type="number" inputmode="decimal" step="any" value="${tripF}"></td>
@@ -315,11 +318,11 @@ function criarLinhaLeg(route = '', depF = '', payl = '', tripF = '') {
 
   tbody.appendChild(tr);
 
-  // Seleciona todo o texto ao focar
+  // Seleciona todo o texto ao focar e trata alterações
   tr.querySelectorAll('input').forEach(input => {
     input.addEventListener('focus', () => input.select());
     input.addEventListener('input', () => {
-      input.dataset.auto = "0"; // desativa preenchimento automático se o utilizador mexer
+      input.dataset.auto = "0";
       updateLdgAuto();
       guardarLegs();
     });
@@ -327,7 +330,25 @@ function criarLinhaLeg(route = '', depF = '', payl = '', tripF = '') {
 
   updateLdgAuto();
 }
+function editarRota(td) {
+  const div = td.querySelector('.rota-visual');
+  const input = td.querySelector('.rota-edit');
+  input.value = div.textContent.trim();
+  div.style.display = "none";
+  input.style.display = "block";
+  input.focus();
+  input.select();
+}
 
+function fecharRota(input) {
+  const td = input.parentElement;
+  const div = td.querySelector('.rota-visual');
+  div.textContent = input.value.trim();
+  input.style.display = "none";
+  div.style.display = "block";
+  updateLdgAuto();
+  guardarLegs();
+}
 // Prepara eventos nas células editáveis (seleciona, guarda, atualiza)
 function prepararCelulasLeg(tr) {
   tr.querySelectorAll('td[contenteditable="true"]').forEach(cell => {

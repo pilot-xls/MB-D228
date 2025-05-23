@@ -335,3 +335,9 @@ input, select, textarea {
   border: none;
   background: var(--input-bg);
 }
+th.rota-header {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  white-space: nowrap;
+  padding: 4px;
+}

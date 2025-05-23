@@ -420,13 +420,12 @@ function verificarPesoLinha(row) {
   const pilots = parseFloat(document.getElementById("pilots")?.value || "150") || 0;
   const fuelTaxi = parseFloat(document.getElementById("fuelTaxi")?.value || "30") || 0;
 
-  const depFuelLb = parseFloat(row.cells[1].innerText.trim()) || 0;
-  const payloadKg = parseFloat(row.cells[2].innerText.trim()) || 0;
+  const depFuelLb = parseFloat(row.cells[1].querySelector("input")?.value || 0);
+  const payloadKg = parseFloat(row.cells[2].querySelector("input")?.value || 0);
 
   const depFuelKg = depFuelLb * 0.453592;
   const taxiFuelKg = fuelTaxi;
 
-  // ✅ Agora sim, take-off = tudo menos o taxi fuel
   const takeoffKg = BEW + pilots + payloadKg + depFuelKg - taxiFuelKg;
 
   if (takeoffKg > 5700) {
@@ -435,6 +434,7 @@ function verificarPesoLinha(row) {
     row.classList.remove("overweight");
   }
 }
+
 
 
 function updateLdgAuto() {

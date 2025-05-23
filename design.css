@@ -295,10 +295,13 @@ tr.overweight {
 }
 .route-table td, .route-table th {
   font-size: clamp(10px, 1.4vw, 14px);
-  word-wrap: break-word;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
 }
 .route-table input {
-  font-size: clamp(10px, 1.2vw, 14px);
+  
+  font-size: clamp(12px, 1.5vw, 16px); 
   width: 100%;
   box-sizing: border-box;
   padding: 6px;
@@ -308,5 +311,8 @@ tr.overweight {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+input, select, textarea {
+  font-size: 16px; /* impede zoom ao focar no iOS */
 }
 

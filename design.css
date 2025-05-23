@@ -298,7 +298,6 @@ tr.overweight {
   word-break: break-word;
   overflow-wrap: anywhere;
 }
-}
 .route-table input {
   
   font-size: clamp(12px, 1.5vw, 16px); 

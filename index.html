@@ -305,15 +305,26 @@ function criarLinhaLeg(route = '', depF = '', payl = '', tripF = '') {
   const tr = document.createElement('tr');
 
   tr.innerHTML = `
-    <td><input type="text" value="${route}" oninput="updateLdgAuto(); guardarLegs();"></td>
-    <td><input type="number" inputmode="decimal" step="any" value="${depF}" oninput="updateLdgAuto(); guardarLegs();"></td>
-    <td><input type="number" inputmode="decimal" step="any" value="${payl}" oninput="updateLdgAuto(); guardarLegs();"></td>
-    <td><input type="number" inputmode="decimal" step="any" value="${tripF}" oninput="updateLdgAuto(); guardarLegs();"></td>
+    <td><input type="text" value="${route}"></td>
+    <td><input type="number" inputmode="decimal" step="any" value="${depF}" data-auto="1"></td>
+    <td><input type="number" inputmode="decimal" step="any" value="${payl}"></td>
+    <td><input type="number" inputmode="decimal" step="any" value="${tripF}"></td>
     <td class="ldg">0</td>
-    <td><button onclick="inserirLeg(this)">+</button></td>
+    <td><button class="route-insert" onclick="inserirLeg(this)">+</button></td>
   `;
 
   tbody.appendChild(tr);
+
+  // Seleciona todo o texto ao focar
+  tr.querySelectorAll('input').forEach(input => {
+    input.addEventListener('focus', () => input.select());
+    input.addEventListener('input', () => {
+      input.dataset.auto = "0"; // desativa preenchimento automático se o utilizador mexer
+      updateLdgAuto();
+      guardarLegs();
+    });
+  });
+
   updateLdgAuto();
 }
 

@@ -315,4 +315,24 @@ tr.overweight {
 input, select, textarea {
   font-size: 16px; /* impede zoom ao focar no iOS */
 }
+.rota-col {
+  background-color: #fffbe6;
+  text-align: center;
+}
 
+.rota-visual {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  white-space: nowrap;
+  text-align: center;
+}
+
+.rota-edit {
+  font-size: clamp(10px, 1.2vw, 14px);
+  width: 100%;
+  box-sizing: border-box;
+  padding: 6px;
+  text-align: center;
+  border: none;
+  background: var(--input-bg);
+}

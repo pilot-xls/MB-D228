@@ -350,9 +350,7 @@ button.route-insert {
 }
 
 /* Negrito para linhas finais da tabela Mass & Balance */
-#zfw td, 
-#rampWeight td, 
-#takeoffWeight td, 
-#landingWeight td {
+
+.gray-row td {
   font-weight: bold;
 }

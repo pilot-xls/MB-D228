@@ -118,31 +118,7 @@ if ('serviceWorker' in navigator) {
         dropdown.appendChild(opt);
       });
     }
-    
-    // Preenche tabela Legs com rota escolhida
-    function preencherLegsComRota() {
-      const idx = document.getElementById("dropdownRotas").value;
-      const rotas = JSON.parse(localStorage.getItem("rotasPadrao") || "[]");
-    
-      if (idx === "") {
-        // Se o valor for vazio ("-- Selecionar rota --"), limpa e repõe linhas vazias
-        document.getElementById("legsTable").innerHTML = "";
-        for (let i = 0; i < 5; i++) criarLinhaLeg();
-        guardarLegs();
-        return;
-      }
-    
-      if (!rotas[idx]) return;
-    
-      const rota = rotas[idx];
-      document.getElementById("legsTable").innerHTML = "";
-      rota.legs.forEach(leg => {
-        criarLinhaLeg(leg.route, leg.depF, leg.payl, leg.tripF);
-      });
-      guardarLegs();
-    }
-
-    
+       
     // Adiciona esta linha ao onload ou DOMContentLoaded
     carregarDropdownRotas();
 </script>
@@ -371,27 +347,54 @@ function prepararCelulasLeg(tr) {
 }
 
 
-// Grava a tabela Legs no localStorage
+// 🆕 Substitui guardarLegs para usar sessionStorage (dados temporários)
 function guardarLegs() {
   const linhas = [...document.querySelectorAll('#legsTable tr')];
   const dados = linhas.map(row => ({
-    route: row.cells[0].innerText.trim(),
-    depF: row.cells[1].innerText.trim(),
-    payl: row.cells[2].innerText.trim(),
-    tripF: row.cells[3].innerText.trim()
+    route: row.cells[0].querySelector('.rota-edit').value.trim(),
+    depF: row.cells[1].querySelector("input")?.value || '',
+    payl: row.cells[2].querySelector("input")?.value || '',
+    tripF: row.cells[3].querySelector("input")?.value || ''
   }));
-  localStorage.setItem('legsData', JSON.stringify(dados));
+  sessionStorage.setItem('legsAtuais', JSON.stringify(dados));
 }
 
-// Carrega do localStorage ou cria 5 linhas vazias se não houver nada
+// 🆕 Substitui carregarLegs para restaurar do sessionStorage
 function carregarLegs() {
-  const dados = JSON.parse(localStorage.getItem('legsData') || '[]');
+  const dados = JSON.parse(sessionStorage.getItem('legsAtuais') || '[]');
+  document.getElementById("legsTable").innerHTML = "";
   if (dados.length === 0) {
     for (let i = 0; i < 5; i++) criarLinhaLeg();
   } else {
     dados.forEach(l => criarLinhaLeg(l.route, l.depF, l.payl, l.tripF));
   }
 }
+
+// 🆕 Substitui preencherLegsComRota para atualizar sessionStorage com nova rota
+function preencherLegsComRota() {
+  const idx = document.getElementById("dropdownRotas").value;
+  const rotas = JSON.parse(localStorage.getItem("rotasPadrao") || "[]");
+
+  if (idx === "") {
+    document.getElementById("legsTable").innerHTML = "";
+    for (let i = 0; i < 5; i++) criarLinhaLeg();
+    sessionStorage.removeItem('legsAtuais');
+    return;
+  }
+
+  if (!rotas[idx]) return;
+
+  const rota = rotas[idx];
+  document.getElementById("legsTable").innerHTML = "";
+
+  rota.legs.forEach(leg => {
+    criarLinhaLeg(leg.route, leg.depF, leg.payl, leg.tripF);
+  });
+
+  // Grava como nova sessão
+  sessionStorage.setItem('legsAtuais', JSON.stringify(rota.legs));
+}
+
     
 function inserirLeg(btn) {
   const row = btn.closest("tr");

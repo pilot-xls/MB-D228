@@ -348,7 +348,4 @@ button.route-insert {
   min-width: 20px;
   min-height: 20px;
 }
-tr.cinzento td {
-  background-color: #ddd !important;
-  font-weight: bold;
-}
+

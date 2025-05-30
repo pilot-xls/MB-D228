@@ -348,6 +348,11 @@ button.route-insert {
   min-width: 20px;
   min-height: 20px;
 }
-tr[style*="background-color: #ddd"] td {
+
+/* Negrito para linhas finais da tabela Mass & Balance */
+#zfw td, 
+#rampWeight td, 
+#takeoffWeight td, 
+#landingWeight td {
   font-weight: bold;
 }

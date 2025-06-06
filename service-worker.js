@@ -3,12 +3,12 @@ const CACHE_NAME = 'calc-cache-v4';
 
 // Lista de ficheiros a guardar para acesso offline
 const FILES_TO_CACHE = [
-  '/MB-D228/',
-  '/MB-D228/index.html',
-  '/MB-D228/settings.html',
-  '/MB-D228/icone.png',
-  '/MB-D228/manifest.json',
-  '/MB-D228/service-worker.js'
+  './',
+  './index.html',
+  './settings.html',
+  './icone.png',
+  './manifest.json',
+  './service-worker.js'
 ];
 
 

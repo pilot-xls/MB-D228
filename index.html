@@ -214,23 +214,23 @@ function calculate() {
     const macTakeoff = ((momentTakeoff / takeoffWeight - 7.26) / 2.042) * 100;
     const macLanding = ((momentLanding / landingWeight - 7.26) / 2.042) * 100;
 
-    document.getElementById("basicWeight").innerText = aviao.peso;
-    document.getElementById("basicMoment").innerText = aviao.momento;
-    document.getElementById('momentPilots').innerText = momentPilots.toFixed(1);
-    document.getElementById('momentPayload').innerText = momentPayload.toFixed(1);
-    document.getElementById('zfw').innerText = zfw.toFixed(1);
-    document.getElementById('momentZfw').innerText = momentZfw.toFixed(1);
-    document.getElementById('momentFuel').innerText = momentFuel.toFixed(1);
-    document.getElementById('rampWeight').innerText = rampWeight.toFixed(1);
-    document.getElementById('momentRamp').innerText = momentRamp.toFixed(1);
-    document.getElementById('momentTaxi').innerText = momentTaxi.toFixed(1);
-    document.getElementById('takeoffWeight').innerText = takeoffWeight.toFixed(1);
-    document.getElementById('momentTakeoff').innerText = momentTakeoff.toFixed(1);
-    document.getElementById('macTakeoff').innerText = macTakeoff.toFixed(1);
-    document.getElementById('momentDest').innerText = momentDest.toFixed(1);
-    document.getElementById('landingWeight').innerText = landingWeight.toFixed(1);
-    document.getElementById('momentLanding').innerText = momentLanding.toFixed(1);
-    document.getElementById('macLanding').innerText = macLanding.toFixed(1);
+    document.getElementById("basicWeight").innerText = aviao.peso.toFixed(0);       // PESO
+    document.getElementById("basicMoment").innerText = aviao.momento;               // MOMENTO
+    document.getElementById('momentPilots').innerText = momentPilots.toFixed(1);    // MOMENTO
+    document.getElementById('momentPayload').innerText = momentPayload.toFixed(1);  // MOMENTO
+    document.getElementById('zfw').innerText = zfw.toFixed(0);                      // PESO
+    document.getElementById('momentZfw').innerText = momentZfw.toFixed(1);          // MOMENTO
+    document.getElementById('momentFuel').innerText = momentFuel.toFixed(1);        // MOMENTO
+    document.getElementById('rampWeight').innerText = rampWeight.toFixed(0);        // PESO
+    document.getElementById('momentRamp').innerText = momentRamp.toFixed(1);        // MOMENTO
+    document.getElementById('momentTaxi').innerText = momentTaxi.toFixed(1);        // MOMENTO
+    document.getElementById('takeoffWeight').innerText = takeoffWeight.toFixed(0);  // PESO
+    document.getElementById('momentTakeoff').innerText = momentTakeoff.toFixed(1);  // MOMENTO
+    document.getElementById('macTakeoff').innerText = macTakeoff.toFixed(1);        // % MAC
+    document.getElementById('momentDest').innerText = momentDest.toFixed(1);        // MOMENTO
+    document.getElementById('landingWeight').innerText = landingWeight.toFixed(0);  // PESO
+    document.getElementById('momentLanding').innerText = momentLanding.toFixed(1);  // MOMENTO
+    document.getElementById('macLanding').innerText = macLanding.toFixed(1);        // % MAC
 
     // Avisos
     let maxPayload = 5730 - (aviao.peso + pilots + fuel);

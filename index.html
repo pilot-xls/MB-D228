@@ -376,11 +376,15 @@ function preencherLegsComRota() {
   const rotas = JSON.parse(localStorage.getItem("rotasPadrao") || "[]");
 
   if (idx === "") {
-    document.getElementById("legsTable").innerHTML = "";
-    for (let i = 0; i < 5; i++) criarLinhaLeg();
-    sessionStorage.removeItem('legsAtuais');
-    return;
-  }
+      // Só apaga se a tabela estiver vazia
+      const linhasAtuais = document.querySelectorAll("#legsTable tr");
+      if (linhasAtuais.length > 0) return;
+    
+      document.getElementById("legsTable").innerHTML = "";
+      for (let i = 0; i < 5; i++) criarLinhaLeg();
+      sessionStorage.removeItem('legsAtuais');
+      return;
+  }    
 
   if (!rotas[idx]) return;
 

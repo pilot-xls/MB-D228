@@ -410,9 +410,9 @@ function inserirLeg(btn) {
   const depFuelKg = depFuelLb * 0.453592;
   const tripFuelKg = tripFuelLb * 0.453592;
 
-  document.getElementById("manualPayload").value = payloadKg;
-  document.getElementById("fuel").value = depFuelKg.toFixed(1);
-  document.getElementById("fuelDest").value = tripFuelKg.toFixed(1);
+  document.getElementById("manualPayload").value = Math.round(payloadKg);
+  document.getElementById("fuel").value = Math.round(depFuelKg);
+  document.getElementById("fuelDest").value = Math.round(tripFuelKg);
 
   if (typeof calculate === "function") calculate();
 }

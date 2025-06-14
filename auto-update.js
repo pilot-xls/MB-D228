@@ -26,7 +26,7 @@ if ('serviceWorker' in navigator) {
     // Verificar por nova versão a cada 1h
     setInterval(() => {
       reg.update();
-    }, 60 * 60 * 1000); // 1h
+    }, 60 * 1000); // 1h
 
     reg.addEventListener('updatefound', () => {
       newWorker = reg.installing;

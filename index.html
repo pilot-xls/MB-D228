@@ -1,508 +1,156 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mass & Balance Dornier 228</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Mass & Balance Dornier 228</title>
 
-    <!-- Estilos e ícones -->
-    <link rel="stylesheet" href="design.css">
-    <script src="https://unpkg.com/feather-icons"></script>
+  <!-- Estilos -->
+  <link rel="stylesheet" href="design.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0d0d0d">
+  <link rel="apple-touch-icon" href="icone.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="D228">
 
-    <!-- App e PWA configs -->
-    <script src="app-version.js"></script>
-    <script src="auto-update.js" defer></script>
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#0d0d0d">
-    <link rel="apple-touch-icon" href="icone.png">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="D228">
+  <!-- Scripts iniciais -->
+  <script src="app-version.js"></script>
+  <script defer src="auto-update.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js')
+        .then(() => console.log('SW registado'))
+        .catch(err => console.error('Erro SW:', err));
+    }
+  </script>
 </head>
-
-<script>
-// Regista o Service Worker
-if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('service-worker.js')
-        .then(() => console.log("Service Worker registado"))
-        .catch(err => console.error("Erro ao registar SW:", err));
-}
-</script>
-
 <body>
-  <!-- Link para Definições -->
+
+  <!-- Link para Settings -->
   <div class="settings-link">
     <a href="settings.html">⚙️ Settings</a>
   </div>
 
-  <hr style="margin: 30px 0; border: none; border-top: 1px solid #999;">
-
-  <!-- Calculadora de Payload -->
-  <h2 style="text-align: center;">Cálculo do Payload</h2>
-  <table>
-    <tr><th>Tipo</th><th>Nº Passageiros</th><th>Peso total (kg)</th></tr>
-    <tr>
-      <td id="labelHomens">Homens</td>
-      <td><input type="number" id="men" value="0" oninput="calculate()" onchange="calculate()"></td>
-      <td id="menWeight">0</td>
-    </tr>
-    <tr>
-      <td id="labelMulheres">Mulheres</td>
-      <td><input type="number" id="women" value="0" oninput="calculate()" onchange="calculate()"></td>
-      <td id="womenWeight">0</td>
-    </tr>
-    <tr>
-      <td id="labelCriancas">Crianças</td>
-      <td><input type="number" id="children" value="0" oninput="calculate()" onchange="calculate()"></td>
-      <td id="childrenWeight">0</td>
-    </tr>
-    <tr>
-      <td id="labelBagagem">Bagagem extra</td>
-      <td colspan="2"><input type="number" id="extraBag" value="0" oninput="calculate()" onchange="calculate()"></td>
-    </tr>
-    <tr>
-      <td><strong>Payload total (kg)</strong></td>
-      <td id="totalPayload">0</td>
-      <td><button onclick="inserirPayload()" title="Copiar payload para Mass & Balance">+</button></td>
-    </tr>
-  </table>
-
-  <hr style="margin: 30px 0; border: none; border-top: 1px solid #999;">
-
-  <!-- Conversor -->
-  <h2 style="text-align: center;">Conversor Kg &harr; Lb</h2>
-  <table>
-    <tr>
-      <td>Kg para lb</td>
-      <td><input type="number" id="kg" value="0" oninput="convertKgToLb()" onchange="convertKgToLb()"></td>
-      <td id="toLb">0</td>
-    </tr>
-    <tr>
-      <td>Lb para kg</td>
-      <td><input type="number" id="lb" value="0" oninput="convertLbToKg()" onchange="convertLbToKg()"></td>
-      <td id="toKg">0</td>
-    </tr>
-  </table>
-
-  <hr style="margin: 30px 0; border: none; border-top: 1px solid #999;">
-
-  <!-- Mass & Balance -->
-  <h2 style="text-align: center;">
-    Mass & Balance
-    <select id="aviaoSelecionado" onchange="calculate()" style="font-size: 14px; margin-left: 10px;"></select>
-  </h2>
-  <table>
-    <tr><th>Item</th><th>Peso (kg)</th><th>Momento (kg·m)</th><th>Comentário</th></tr>
-    <tr><td>Basic weight</td><td id="basicWeight">0</td><td id="basicMoment">0</td><td></td></tr>
-    <tr>
-      <td>Pilotos</td>
-      <td><input type="number" id="pilots" value="150" oninput="calculate()" onchange="calculate()"></td>
-      <td id="momentPilots">0</td>
-      <td>ARM fixo = 4.21</td>
-    </tr>
-    <tr>
-      <td>Payload</td>
-      <td><input type="number" id="manualPayload" value="0" oninput="calculate()" onchange="calculate()"></td>
-      <td id="momentPayload">0</td>
-      <td>ARM = 8.7 <span id="maxFuelNote" class="highlight"></span></td>
-    </tr>
-    <tr class="gray-row"><td>ZFW</td><td id="zfw">0</td><td id="momentZfw">0</td><td></td></tr>
-    <tr>
-      <td>Fuel loading</td>
-      <td><input type="number" id="fuel" value="0" oninput="calculate()" onchange="calculate()"></td>
-      <td id="momentFuel">0</td>
-      <td>ARM = 7.936</td>
-    </tr>
-    <tr id="takeoffRow" class="gray-row">
-      <td>Take-off Weight</td>
-      <td id="takeoffWeight" class="limit-check">0</td>
-      <td id="momentTakeoff">0</td>
-      <td>MAC: <span id="macTakeoff">0</span>%</td>
-    </tr>
-    <tr>
-      <td>Fuel to destination</td>
-      <td><input type="number" id="fuelDest" value="0" oninput="calculate()" onchange="calculate()"></td>
-      <td id="momentDest">0</td>
-      <td>ARM = 7.936</td>
-    </tr>
-    <tr id="landingRow" class="gray-row">
-      <td>Landing Weight</td>
-      <td id="landingWeight" class="limit-check">0</td>
-      <td id="momentLanding">0</td>
-      <td>MAC: <span id="macLanding">0</span>%</td>
-    </tr>
-  </table>
-
-  <hr style="margin: 30px 0; border: none; border-top: 1px solid #999;">
-
-  <!-- Rotas -->
-  <h2 style="text-align: center;">Rotas</h2>
-  <div style="text-align: center; margin-bottom: 10px;">
+  <!-- Dropdown de Rotas -->
+  <div style="text-align:center;margin:20px 0;">
     <select id="dropdownRotas">
       <option value="">-- Selecionar rota --</option>
     </select>
   </div>
-  <table class="route-table" style="table-layout: fixed;">
+
+  <!-- Tabela de Legs -->
+  <table id="legsTable" class="route-table">
     <thead>
       <tr>
-        <th>Leg</th><th>Depf(lb)</th><th>Payl(kg)</th><th>Tripf(lb)</th><th>LDG(lb)</th><th></th>
+        <th>Leg</th>
+        <th>Depf(lb)</th>
+        <th>Payl(kg)</th>
+        <th>Tripf(lb)</th>
+        <th>LDG(lb)</th>
+        <th></th>
       </tr>
     </thead>
-    <tbody id="legsTable"></tbody>
+    <tbody>
+      <!-- Linhas criadas dinamicamente -->
+    </tbody>
   </table>
 
-  <!-- Scripts específicos de Rotas -->
+  <!-- Scripts de lógica -->
   <script>
-    // Carrega opções do dropdown
+    // Preenche o dropdown de rotas com os dados de rotasPadrao
     function carregarDropdownRotas() {
-      const rotas = JSON.parse(localStorage.getItem("rotasPadrao") || "[]");
-      const dropdown = document.getElementById("dropdownRotas");
-      dropdown.innerHTML = '<option value="">-- Selecionar rota --</option>';
-      rotas.forEach((r, i) => {
-        const opt = document.createElement("option");
-        opt.value = i;
-        opt.text = r.nome;
-        dropdown.appendChild(opt);
+      const rotas = JSON.parse(localStorage.getItem('rotasPadrao') || '[]');
+      const dd = document.getElementById('dropdownRotas');
+      dd.innerHTML = '<option value="">-- Selecionar rota --</option>';
+      rotas.forEach((r,i) => {
+        const o = document.createElement('option');
+        o.value = i; o.text = r.nome;
+        dd.appendChild(o);
       });
     }
-    carregarDropdownRotas();
 
-    // Função que guarda as linhas de “legs”
+    // Cria uma linha na tabela de legs
+    function criarLinhaLeg(route = '', depF = '', payl = '', tripF = '') {
+      const tbody = document.querySelector('#legsTable tbody');
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td contenteditable="true" class="rota-edit">${route}</td>
+        <td><input type="number" value="${depF}" /></td>
+        <td><input type="number" value="${payl}" /></td>
+        <td><input type="number" value="${tripF}" /></td>
+        <td class="ldg-cell"></td>
+        <td><button class="del-leg">×</button></td>
+      `;
+      tbody.appendChild(tr);
+      // adiciona event listeners (editar, calcular LDG, apagar)
+      // … aqui vai o teu código existente …
+    }
+
+    // Guarda no localStorage as edições em legsTable
     function guardarLegs() {
-      const linhas = [...document.querySelectorAll('#legsTable tr')];
-      const dados = linhas.map(row => ({
-        route: row.cells[0].querySelector('.rota-edit')?.value.trim() || '',
-        depF:  row.cells[1].querySelector("input")?.value || '',
-        payl:  row.cells[2].querySelector("input")?.value || '',
-        tripF: row.cells[3].querySelector("input")?.value || ''
+      const rows = [...document.querySelectorAll('#legsTable tbody tr')];
+      const dados = rows.map(r => ({
+        route: r.cells[0].innerText.trim(),
+        depF:  r.cells[1].querySelector('input').value,
+        payl:  r.cells[2].querySelector('input').value,
+        tripF: r.cells[3].querySelector('input').value
       }));
       localStorage.setItem('legsAtuais', JSON.stringify(dados));
     }
 
-    // Função que carrega as linhas ao iniciar
+    // Carrega as linhas ao arrancar a app
     function carregarLegs() {
       const dados = JSON.parse(localStorage.getItem('legsAtuais') || '[]');
-      const tbody = document.getElementById("legsTable");
-      tbody.innerHTML = "";
+      const tbody = document.querySelector('#legsTable tbody');
+      tbody.innerHTML = '';
       if (dados.length === 0) {
-        for (let i = 0; i < 5; i++) criarLinhaLeg();
+        for (let i=0;i<5;i++) criarLinhaLeg();
       } else {
-        dados.forEach(l => criarLinhaLeg(l.route, l.depF, l.payl, l.tripF));
+        dados.forEach(d => criarLinhaLeg(d.route,d.depF,d.payl,d.tripF));
       }
     }
 
-    // Função que preenche tabela a partir de rota padrão
+    // Preenche a tabela a partir da rota selecionada
     function preencherLegsComRota() {
-      const idx = document.getElementById("dropdownRotas").value;
-      const rotas = JSON.parse(localStorage.getItem("rotasPadrao") || "[]");
-
-      if (idx === "") {
-        document.getElementById("legsTable").innerHTML = "";
-        for (let i = 0; i < 5; i++) criarLinhaLeg();
+      const idx = document.getElementById('dropdownRotas').value;
+      const rotas = JSON.parse(localStorage.getItem('rotasPadrao') || '[]');
+      const tbody = document.querySelector('#legsTable tbody');
+      tbody.innerHTML = '';
+      if (idx === '') {
+        for (let i=0;i<5;i++) criarLinhaLeg();
         localStorage.removeItem('legsAtuais');
         return;
       }
       const rota = rotas[idx];
-      if (!rota) return;
-
-      const tbody = document.getElementById("legsTable");
-      tbody.innerHTML = "";
-      rota.legs.forEach(leg => {
-        criarLinhaLeg(leg.route, leg.depF, leg.payl, leg.tripF);
-      });
-
+      rota.legs.forEach(l => criarLinhaLeg(l.route,l.depF,l.payl,l.tripF));
       localStorage.setItem('legsAtuais', JSON.stringify(rota.legs));
     }
-  </script>
 
-  <!-- Funções comuns a toda a app -->
-  <script src="service-worker.js" hidden></script>
-  <script>
-    // Cria uma linha de leg (placa de exemplo)
-    function criarLinhaLeg(route = '', depF = '', payl = '', tripF = '') {
-      // implementação existente…
+    // Renderiza a tabela (caso uses uma função separada)
+    function renderTabela(dados) {
+      const tbody = document.querySelector('#legsTable tbody');
+      tbody.innerHTML = '';
+      dados.forEach(d => criarLinhaLeg(d.route,d.depF,d.payl,d.tripF));
     }
 
-    // Navegação e validação de inputs, cálculo de LDG automático,
-    // verificar peso por linha, convertKgToLb(), convertLbToKg(), inserirPayload(), calculate(), getDefs(), preencherDropdown(), etc.
-    // Mantém exatamente as funções que já tinhas no ficheiro original :contentReference[oaicite:1]{index=1}
-  </script>
-
-  <!-- Inicialização geral -->
-  <script>
+    // Inicialização
     document.addEventListener('DOMContentLoaded', () => {
-      // 1. Carregar tabela (localStorage ou vazia)
+      carregarDropdownRotas();
       carregarLegs();
 
-      // 2. Dropdown de rotas: só dispara quando efetivamente trocas
-      document.getElementById("dropdownRotas").addEventListener('change', () => {
-        localStorage.removeItem('legsAtuais');
-        preencherLegsComRota();
-        renderTabela(JSON.parse(localStorage.getItem('legsAtuais') || '[]'));
-      });
+      // Listener: só dispara quando trocas de rota
+      document.getElementById('dropdownRotas')
+        .addEventListener('change', () => {
+          localStorage.removeItem('legsAtuais');
+          preencherLegsComRota();
+          renderTabela(JSON.parse(localStorage.getItem('legsAtuais')||'[]'));
+        });
 
-      // 3. Configurar navegação entre inputs
-      // 4. Configurar células contenteditable
-      // 5. Preencher dropdowns, cálculos iniciais, ícones
-      preencherDropdown();
-      calculate();
-      updateLdgAuto();
+      // Substitui ícones
       feather.replace();
-    });
-  </script>
 
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="pt">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mass & Balance Dornier 228</title>
-
-    <!-- Estilos e ícones -->
-    <link rel="stylesheet" href="design.css">
-    <script src="https://unpkg.com/feather-icons"></script>
-
-    <!-- App e PWA configs -->
-    <script src="app-version.js"></script>
-    <script src="auto-update.js" defer></script>
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#0d0d0d">
-    <link rel="apple-touch-icon" href="icone.png">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="D228">
-</head>
-
-<script>
-// Regista o Service Worker
-if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('service-worker.js')
-        .then(() => console.log("Service Worker registado"))
-        .catch(err => console.error("Erro ao registar SW:", err));
-}
-</script>
-
-<body>
-  <!-- Link para Definições -->
-  <div class="settings-link">
-    <a href="settings.html">⚙️ Settings</a>
-  </div>
-
-  <hr style="margin: 30px 0; border: none; border-top: 1px solid #999;">
-
-  <!-- Calculadora de Payload -->
-  <h2 style="text-align: center;">Cálculo do Payload</h2>
-  <table>
-    <tr><th>Tipo</th><th>Nº Passageiros</th><th>Peso total (kg)</th></tr>
-    <tr>
-      <td id="labelHomens">Homens</td>
-      <td><input type="number" id="men" value="0" oninput="calculate()" onchange="calculate()"></td>
-      <td id="menWeight">0</td>
-    </tr>
-    <tr>
-      <td id="labelMulheres">Mulheres</td>
-      <td><input type="number" id="women" value="0" oninput="calculate()" onchange="calculate()"></td>
-      <td id="womenWeight">0</td>
-    </tr>
-    <tr>
-      <td id="labelCriancas">Crianças</td>
-      <td><input type="number" id="children" value="0" oninput="calculate()" onchange="calculate()"></td>
-      <td id="childrenWeight">0</td>
-    </tr>
-    <tr>
-      <td id="labelBagagem">Bagagem extra</td>
-      <td colspan="2"><input type="number" id="extraBag" value="0" oninput="calculate()" onchange="calculate()"></td>
-    </tr>
-    <tr>
-      <td><strong>Payload total (kg)</strong></td>
-      <td id="totalPayload">0</td>
-      <td><button onclick="inserirPayload()" title="Copiar payload para Mass & Balance">+</button></td>
-    </tr>
-  </table>
-
-  <hr style="margin: 30px 0; border: none; border-top: 1px solid #999;">
-
-  <!-- Conversor -->
-  <h2 style="text-align: center;">Conversor Kg &harr; Lb</h2>
-  <table>
-    <tr>
-      <td>Kg para lb</td>
-      <td><input type="number" id="kg" value="0" oninput="convertKgToLb()" onchange="convertKgToLb()"></td>
-      <td id="toLb">0</td>
-    </tr>
-    <tr>
-      <td>Lb para kg</td>
-      <td><input type="number" id="lb" value="0" oninput="convertLbToKg()" onchange="convertLbToKg()"></td>
-      <td id="toKg">0</td>
-    </tr>
-  </table>
-
-  <hr style="margin: 30px 0; border: none; border-top: 1px solid #999;">
-
-  <!-- Mass & Balance -->
-  <h2 style="text-align: center;">
-    Mass & Balance
-    <select id="aviaoSelecionado" onchange="calculate()" style="font-size: 14px; margin-left: 10px;"></select>
-  </h2>
-  <table>
-    <tr><th>Item</th><th>Peso (kg)</th><th>Momento (kg·m)</th><th>Comentário</th></tr>
-    <tr><td>Basic weight</td><td id="basicWeight">0</td><td id="basicMoment">0</td><td></td></tr>
-    <tr>
-      <td>Pilotos</td>
-      <td><input type="number" id="pilots" value="150" oninput="calculate()" onchange="calculate()"></td>
-      <td id="momentPilots">0</td>
-      <td>ARM fixo = 4.21</td>
-    </tr>
-    <tr>
-      <td>Payload</td>
-      <td><input type="number" id="manualPayload" value="0" oninput="calculate()" onchange="calculate()"></td>
-      <td id="momentPayload">0</td>
-      <td>ARM = 8.7 <span id="maxFuelNote" class="highlight"></span></td>
-    </tr>
-    <tr class="gray-row"><td>ZFW</td><td id="zfw">0</td><td id="momentZfw">0</td><td></td></tr>
-    <tr>
-      <td>Fuel loading</td>
-      <td><input type="number" id="fuel" value="0" oninput="calculate()" onchange="calculate()"></td>
-      <td id="momentFuel">0</td>
-      <td>ARM = 7.936</td>
-    </tr>
-    <tr id="takeoffRow" class="gray-row">
-      <td>Take-off Weight</td>
-      <td id="takeoffWeight" class="limit-check">0</td>
-      <td id="momentTakeoff">0</td>
-      <td>MAC: <span id="macTakeoff">0</span>%</td>
-    </tr>
-    <tr>
-      <td>Fuel to destination</td>
-      <td><input type="number" id="fuelDest" value="0" oninput="calculate()" onchange="calculate()"></td>
-      <td id="momentDest">0</td>
-      <td>ARM = 7.936</td>
-    </tr>
-    <tr id="landingRow" class="gray-row">
-      <td>Landing Weight</td>
-      <td id="landingWeight" class="limit-check">0</td>
-      <td id="momentLanding">0</td>
-      <td>MAC: <span id="macLanding">0</span>%</td>
-    </tr>
-  </table>
-
-  <hr style="margin: 30px 0; border: none; border-top: 1px solid #999;">
-
-  <!-- Rotas -->
-  <h2 style="text-align: center;">Rotas</h2>
-  <div style="text-align: center; margin-bottom: 10px;">
-    <select id="dropdownRotas">
-      <option value="">-- Selecionar rota --</option>
-    </select>
-  </div>
-  <table class="route-table" style="table-layout: fixed;">
-    <thead>
-      <tr>
-        <th>Leg</th><th>Depf(lb)</th><th>Payl(kg)</th><th>Tripf(lb)</th><th>LDG(lb)</th><th></th>
-      </tr>
-    </thead>
-    <tbody id="legsTable"></tbody>
-  </table>
-
-  <!-- Scripts específicos de Rotas -->
-  <script>
-    // Carrega opções do dropdown
-    function carregarDropdownRotas() {
-      const rotas = JSON.parse(localStorage.getItem("rotasPadrao") || "[]");
-      const dropdown = document.getElementById("dropdownRotas");
-      dropdown.innerHTML = '<option value="">-- Selecionar rota --</option>';
-      rotas.forEach((r, i) => {
-        const opt = document.createElement("option");
-        opt.value = i;
-        opt.text = r.nome;
-        dropdown.appendChild(opt);
-      });
-    }
-    carregarDropdownRotas();
-
-    // Função que guarda as linhas de “legs”
-    function guardarLegs() {
-      const linhas = [...document.querySelectorAll('#legsTable tr')];
-      const dados = linhas.map(row => ({
-        route: row.cells[0].querySelector('.rota-edit')?.value.trim() || '',
-        depF:  row.cells[1].querySelector("input")?.value || '',
-        payl:  row.cells[2].querySelector("input")?.value || '',
-        tripF: row.cells[3].querySelector("input")?.value || ''
-      }));
-      localStorage.setItem('legsAtuais', JSON.stringify(dados));
-    }
-
-    // Função que carrega as linhas ao iniciar
-    function carregarLegs() {
-      const dados = JSON.parse(localStorage.getItem('legsAtuais') || '[]');
-      const tbody = document.getElementById("legsTable");
-      tbody.innerHTML = "";
-      if (dados.length === 0) {
-        for (let i = 0; i < 5; i++) criarLinhaLeg();
-      } else {
-        dados.forEach(l => criarLinhaLeg(l.route, l.depF, l.payl, l.tripF));
-      }
-    }
-
-    // Função que preenche tabela a partir de rota padrão
-    function preencherLegsComRota() {
-      const idx = document.getElementById("dropdownRotas").value;
-      const rotas = JSON.parse(localStorage.getItem("rotasPadrao") || "[]");
-
-      if (idx === "") {
-        document.getElementById("legsTable").innerHTML = "";
-        for (let i = 0; i < 5; i++) criarLinhaLeg();
-        localStorage.removeItem('legsAtuais');
-        return;
-      }
-      const rota = rotas[idx];
-      if (!rota) return;
-
-      const tbody = document.getElementById("legsTable");
-      tbody.innerHTML = "";
-      rota.legs.forEach(leg => {
-        criarLinhaLeg(leg.route, leg.depF, leg.payl, leg.tripF);
-      });
-
-      localStorage.setItem('legsAtuais', JSON.stringify(rota.legs));
-    }
-  </script>
-
-  <!-- Funções comuns a toda a app -->
-  <script src="service-worker.js" hidden></script>
-  <script>
-    // Cria uma linha de leg (placa de exemplo)
-    function criarLinhaLeg(route = '', depF = '', payl = '', tripF = '') {
-      // implementação existente…
-    }
-
-    // Navegação e validação de inputs, cálculo de LDG automático,
-    // verificar peso por linha, convertKgToLb(), convertLbToKg(), inserirPayload(), calculate(), getDefs(), preencherDropdown(), etc.
-    // Mantém exatamente as funções que já tinhas no ficheiro original :contentReference[oaicite:1]{index=1}
-  </script>
-
-  <!-- Inicialização geral -->
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      // 1. Carregar tabela (localStorage ou vazia)
-      carregarLegs();
-
-      // 2. Dropdown de rotas: só dispara quando efetivamente trocas
-      document.getElementById("dropdownRotas").addEventListener('change', () => {
-        localStorage.removeItem('legsAtuais');
-        preencherLegsComRota();
-        renderTabela(JSON.parse(localStorage.getItem('legsAtuais') || '[]'));
-      });
-
-      // 3. Configurar navegação entre inputs
-      // 4. Configurar células contenteditable
-      // 5. Preencher dropdowns, cálculos iniciais, ícones
-      preencherDropdown();
-      calculate();
-      updateLdgAuto();
-      feather.replace();
+      // Aqui adiciona o resto dos listeners (inputs, cálculo, etc.)
+      // … o teu código de calculate(), convertKgToLb(), updateLdgAuto(), etc. …
     });
   </script>
 

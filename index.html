@@ -54,7 +54,7 @@ if ('serviceWorker' in navigator) {
 
 <hr style="margin: 30px 0; border: none; border-top: 1px solid #999;"> <!-- linha de separação de tabelas -->
     
-<h2 style="text-align: center;">Conversor Kg ↔ Lb</h2>
+<h2 style="text-align: center;">Conversor Kg &harr; Lb</h2>
 <table>
     <tr><td>Kg para lb</td><td><input type="number" inputmode="decimal" step="any" id="kg" value="0" oninput="convertKgToLb()" onchange="convertKgToLb()"></td><td id="toLb">0</td></tr>
     <tr><td>Lb para kg</td><td><input type="number" inputmode="decimal" step="any" id="lb" value="0" oninput="convertLbToKg()" onchange="convertLbToKg()"></td><td id="toKg">0</td></tr>
@@ -62,7 +62,7 @@ if ('serviceWorker' in navigator) {
 
 <hr style="margin: 30px 0; border: none; border-top: 1px solid #999;"> <!-- linha de separação de tabelas -->
     
-<h2 style="text-align: center;">Mass & Balance
+<h2 style="text-align: center;"> Mass & Balance
   <select id="aviaoSelecionado" onchange="calculate()" style="font-size: 14px; margin-left: 10px;"></select>
 </h2>
 <table>
@@ -78,35 +78,395 @@ if ('serviceWorker' in navigator) {
   <tr><td>Fuel to destination</td><td><input type="number" inputmode="decimal" step="any" id="fuelDest" value="0" oninput="calculate()" onchange="calculate()"></td><td id="momentDest">0</td><td>ARM = 7.936</td></tr>
   <tr id="landingRow" class="gray-row"><td>Landing Weight</td><td id="landingWeight" class="limit-check">0</td><td id="momentLanding">0</td><td>MAC: <span id="macLanding">0</span>%</td></tr>
 </table>
-
+    
 <hr style="margin: 30px 0; border: none; border-top: 1px solid #999;"> <!-- linha de separação de tabelas -->
     
 <h2 style="text-align: center;">Rotas</h2>
 <div style="text-align: center; margin-bottom: 10px;">
-  <select id="dropdownRotas" onchange="preencherLegsComRota()">
-    <option value="">-- Selecionar rota --</option>
-  </select>
+  
+<select id="dropdownRotas" onchange="preencherLegsComRota()">
+  <option value="">-- Selecionar rota --</option>
+</select>
+  
 </div>
 <table class="route-table" style="table-layout: fixed;">
   <thead>
     <tr>
-      <th>Leg</th><th>Depf(lb)</th><th>Payl(kg)</th><th>Tripf(lb)</th><th>LDG(lb)</th><th></th>
+      <th class="rota-header" style="width: 10%;">Leg</th>
+      <th style="width: 20%;">Depf(lb)</th>
+      <th style="width: 20%;">Payl(kg)</th>
+      <th style="width: 20%;">Tripf(lb)</th>
+      <th style="width: 20%;">LDG(lb)</th>
+      <th style="width: 10%;"></th> <!-- Botão + -->
     </tr>
   </thead>
   <tbody id="legsTable"></tbody>
 </table>
 
-<script src="service-worker.js" hidden></script>
+<!-- SCRIPTS PRINCIPAIS -->
+
 <script>
-  // Todas as tuas funções originais: criarLinhaLeg, updateLdgAuto, prepareCelulas, carregarLegs, preencherLegsComRota, guardarLegs, calculate, convertKgToLb, convertLbToKg, inserirPayload, getDefs, preencherDropdown, renderTabela, etc.
+// --- Funções de Cálculo Geral e Conversores ---
+
+function getDefs() {
+    return JSON.parse(localStorage.getItem('definicoesMB')) || {};
+}
+
+function preencherDropdown() {
+    const defs = getDefs();
+    const select = document.getElementById("aviaoSelecionado");
+    if (!select) return;
+
+    const avioes = defs.avioes || [];
+    const ultimaSelecao = parseInt(localStorage.getItem('aviaoSelecionadoIndex')) || 0;
+
+    select.innerHTML = "";
+    avioes.forEach((aviao, index) => {
+        const opt = document.createElement("option");
+        opt.value = index;
+        opt.text = `${aviao.nome} (${aviao.peso} kg)`;
+        if (index === ultimaSelecao) opt.selected = true;
+        select.appendChild(opt);
+    });
+}
+
+function inserirPayload() {
+    const payload = document.getElementById("totalPayload").textContent;
+    const destino = document.getElementById("manualPayload");
+    
+    if (destino) {
+        destino.value = payload;
+        calculate();
+    } else {
+        alert("Campo 'massPayload' não encontrado.");
+    }
+}
+    
+function calculate() {
+    const defs = getDefs();
+    const pesoHomem = defs.pesoHomem || 86;
+    const pesoMulher = defs.pesoMulher || 68;
+    const pesoCrianca = defs.pesoCrianca || 35;
+    const pesoBagagem = defs.pesoBagagem || 10;
+
+    document.getElementById("labelHomens").innerText = `Homens (${pesoHomem}kg)`;
+    document.getElementById("labelMulheres").innerText = `Mulheres (${pesoMulher}kg)`;
+    document.getElementById("labelCriancas").innerText = `Crianças (${pesoCrianca}kg)`;
+    document.getElementById("labelBagagem").innerText = `Bagagem extra (${pesoBagagem}kg)`;
+
+    const avioes = defs.avioes || [];
+    const select = document.getElementById("aviaoSelecionado");
+    const selectedIndex = select ? select.selectedIndex : 0;
+    const aviao = avioes[selectedIndex];
+    if (!aviao) return;
+
+    localStorage.setItem('aviaoSelecionadoIndex', selectedIndex);
+
+    const men = parseInt(document.getElementById('men').value) || 0;
+    const women = parseInt(document.getElementById('women').value) || 0;
+    const children = parseInt(document.getElementById('children').value) || 0;
+    const extraBag = parseFloat(document.getElementById('extraBag').value) || 0;
+
+    const pilots = parseFloat(document.getElementById('pilots').value) || 0;
+    const manualPayload = parseFloat(document.getElementById('manualPayload').value) || 0;
+    const fuel = parseFloat(document.getElementById('fuel').value) || 0;
+    const fuelTaxi = parseFloat(document.getElementById('fuelTaxi').value) || 0;
+    const fuelDest = parseFloat(document.getElementById('fuelDest').value) || 0;
+
+    const payload = men * pesoHomem + women * pesoMulher + children * pesoCrianca + extraBag;
+
+    document.getElementById('menWeight').innerText = men * pesoHomem;
+    document.getElementById('womenWeight').innerText = women * pesoMulher;
+    document.getElementById('childrenWeight').innerText = children * pesoCrianca;
+    document.getElementById('totalPayload').innerText = payload + men * pesoBagagem + women * pesoBagagem;
+
+    const momentPilots = pilots * 4.21;
+    const momentPayload = manualPayload * 8.7;
+    const momentFuel = fuel * 7.936;
+    const momentTaxi = fuelTaxi * 7.936;
+    const momentDest = fuelDest * 7.936;
+
+    const zfw = aviao.peso + pilots + manualPayload;
+    const momentZfw = aviao.momento + momentPilots + momentPayload;
+    const rampWeight = zfw + fuel;
+    const momentRamp = momentZfw + momentFuel;
+    const takeoffWeight = rampWeight - fuelTaxi;
+    const momentTakeoff = momentRamp - momentTaxi;
+    const landingWeight = takeoffWeight - fuelDest;
+    const momentLanding = momentTakeoff - momentDest;
+
+    const macTakeoff = ((momentTakeoff / takeoffWeight - 7.26) / 2.042) * 100;
+    const macLanding = ((momentLanding / landingWeight - 7.26) / 2.042) * 100;
+
+    document.getElementById("basicWeight").innerText = aviao.peso.toFixed(0);
+    document.getElementById("basicMoment").innerText = aviao.momento;
+    document.getElementById('momentPilots').innerText = momentPilots.toFixed(1);
+    document.getElementById('momentPayload').innerText = momentPayload.toFixed(1);
+    document.getElementById('zfw').innerText = zfw.toFixed(0);
+    document.getElementById('momentZfw').innerText = momentZfw.toFixed(1);
+    document.getElementById('momentFuel').innerText = momentFuel.toFixed(1);
+    document.getElementById('rampWeight').innerText = rampWeight.toFixed(0);
+    document.getElementById('momentRamp').innerText = momentRamp.toFixed(1);
+    document.getElementById('momentTaxi').innerText = momentTaxi.toFixed(1);
+    document.getElementById('takeoffWeight').innerText = takeoffWeight.toFixed(0);
+    document.getElementById('momentTakeoff').innerText = momentTakeoff.toFixed(1);
+    document.getElementById('macTakeoff').innerText = macTakeoff.toFixed(1);
+    document.getElementById('momentDest').innerText = momentDest.toFixed(1);
+    document.getElementById('landingWeight').innerText = landingWeight.toFixed(0);
+    document.getElementById('momentLanding').innerText = momentLanding.toFixed(1);
+    document.getElementById('macLanding').innerText = macLanding.toFixed(1);
+
+    let maxPayload = 5730 - (aviao.peso + pilots + fuel);
+    const effectivePayload = manualPayload > 0 ? manualPayload : payload;
+    let maxFuel = 5730 - (aviao.peso + pilots + effectivePayload);
+
+    document.getElementById('maxPayloadNote').innerText = maxPayload > 0
+        ? ` | Máx Payload: ${maxPayload.toFixed(0)} kg`
+        : " | Excede limite!";
+
+    document.getElementById('maxFuelNote').innerHTML = maxFuel > 0
+        ? `<small> | Máx Fuel: ${maxFuel.toFixed(0)} kg (${(maxFuel * 2.20462).toFixed(0)} lb)</small>`
+        : "<small> | Excede limite!</small>";
+
+    document.getElementById('rampWeight').classList.toggle('exceeded', rampWeight > 5730);
+    document.getElementById('takeoffWeight').classList.toggle('exceeded', takeoffWeight > 5700);
+    document.getElementById('landingWeight').classList.toggle('exceeded', landingWeight > 5700);
+
+    document.getElementById('rampRow').style.backgroundColor = rampWeight > 5730 ? '#ffcccc' : '';
+    document.getElementById('takeoffRow').style.backgroundColor = takeoffWeight > 5700 ? '#ffcccc' : '';
+    document.getElementById('landingRow').style.backgroundColor = landingWeight > 5700 ? '#ffcccc' : '';
+}
+
+function convertKgToLb() {
+    const kg = parseFloat(document.getElementById('kg').value) || 0;
+    document.getElementById('toLb').innerText = (kg * 2.20462).toFixed(1);
+}
+
+function convertLbToKg() {
+    const lb = parseFloat(document.getElementById('lb').value) || 0;
+    document.getElementById('toKg').innerText = (lb / 2.20462).toFixed(1);
+}
 </script>
 
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    // Inicialização original: carregarDropdown, carregarLegs, listeners de inputs, preenchimentos, feather.replace()
-  });
+// --- Funções da Tabela de Rotas (LEGS) ---
+
+// Carrega rotas guardadas no dropdown
+function carregarDropdownRotas() {
+    const rotas = JSON.parse(localStorage.getItem("rotasPadrao") || "[]");
+    const dropdown = document.getElementById("dropdownRotas");
+    if (!dropdown) return;
+
+    dropdown.innerHTML = '<option value="">-- Selecionar rota --</option>';
+    rotas.forEach((r, i) => {
+        const opt = document.createElement("option");
+        opt.value = i;
+        opt.text = r.nome;
+        dropdown.appendChild(opt);
+    });
+}
+
+function criarLinhaLeg(route = '', depF = '', payl = '', tripF = '') {
+    const tbody = document.getElementById('legsTable');
+    const tr = document.createElement('tr');
+
+    tr.innerHTML = `
+        <td class="rota-col" onclick="editarRota(this)">
+        <div class="rota-visual">${route}</div>
+        <input type="text" class="rota-edit" value="${route}" onblur="fecharRota(this)" style="display: none;">
+        </td>
+        <td><input type="number" inputmode="decimal" step="any" value="${depF}" data-auto="1"></td>
+        <td><input type="number" inputmode="decimal" step="any" value="${payl}"></td>
+        <td><input type="number" inputmode="decimal" step="any" value="${tripF}"></td>
+        <td class="ldg">0</td>
+        <td><button class="route-insert" onclick="inserirLeg(this)">+</button></td>
+    `;
+
+    tbody.appendChild(tr);
+
+    // Adiciona listeners para salvar e recalcular em cada input da linha
+    tr.querySelectorAll('input').forEach(input => {
+        input.addEventListener('focus', () => input.select());
+        input.addEventListener('input', () => {
+            input.dataset.auto = "0"; // Marca que o campo foi editado manualmente
+            updateLdgAuto();
+            guardarLegs(); // Salva o estado atual da tabela
+        });
+    });
+    
+    updateLdgAuto(); // Atualiza os cálculos ao criar a linha
+}
+
+function editarRota(td) {
+    const div = td.querySelector('.rota-visual');
+    const input = td.querySelector('.rota-edit');
+    input.value = div.textContent.trim();
+    div.style.display = "none";
+    input.style.display = "block";
+    input.focus();
+    input.select();
+}
+
+function fecharRota(input) {
+    const td = input.parentElement;
+    const div = td.querySelector('.rota-visual');
+    div.textContent = input.value.trim();
+    input.style.display = "none";
+    div.style.display = "block";
+    updateLdgAuto();
+    guardarLegs();
+}
+
+// [CORRIGIDO] Salva o estado atual da tabela de rotas no localStorage
+function guardarLegs() {
+    const linhas = [...document.querySelectorAll('#legsTable tr')];
+    const dados = linhas.map(row => ({
+        route: row.cells[0].querySelector('.rota-edit').value.trim(),
+        depF: row.cells[1].querySelector("input")?.value || '',
+        payl: row.cells[2].querySelector("input")?.value || '',
+        tripF: row.cells[3].querySelector("input")?.value || ''
+    }));
+    // Usa localStorage para persistência entre sessões
+    localStorage.setItem('rotaAtiva', JSON.stringify(dados));
+}
+
+// [CORRIGIDO] Carrega a tabela de rotas a partir do localStorage
+function carregarLegs() {
+    // Carrega os dados da 'rotaAtiva' guardada
+    const dados = JSON.parse(localStorage.getItem('rotaAtiva') || '[]');
+    const tbody = document.getElementById("legsTable");
+    tbody.innerHTML = "";
+    
+    if (dados.length === 0) {
+        // Se não houver dados, cria 5 linhas vazias
+        for (let i = 0; i < 5; i++) criarLinhaLeg();
+    } else {
+        dados.forEach(l => criarLinhaLeg(l.route, l.depF, l.payl, l.tripF));
+    }
+}
+
+// [CORRIGIDO] Preenche a tabela com uma rota pré-definida do dropdown
+function preencherLegsComRota() {
+    const dropdown = document.getElementById("dropdownRotas");
+    const idx = dropdown.value;
+    
+    // Salva o índice selecionado para restaurar depois
+    localStorage.setItem('rotaSelecionadaIndex', dropdown.selectedIndex);
+
+    if (idx === "") {
+        // Se "-- Selecionar rota --" for escolhido, limpa a tabela e os dados guardados
+        const tbody = document.getElementById("legsTable");
+        tbody.innerHTML = "";
+        for (let i = 0; i < 5; i++) criarLinhaLeg();
+        localStorage.removeItem('rotaAtiva'); 
+        guardarLegs(); // Salva o estado vazio
+        return;
+    }
+
+    const rotas = JSON.parse(localStorage.getItem("rotasPadrao") || "[]");
+    if (!rotas[idx]) return;
+
+    const rotaSelecionada = rotas[idx];
+    const tbody = document.getElementById("legsTable");
+    tbody.innerHTML = "";
+
+    // Preenche a tabela com os dados da rota selecionada
+    rotaSelecionada.legs.forEach(leg => {
+        criarLinhaLeg(leg.route, leg.depF, leg.payl, leg.tripF);
+    });
+
+    // Imediatamente guarda esta rota selecionada como a nova 'rotaAtiva'
+    guardarLegs();
+}
+
+function inserirLeg(btn) {
+    const row = btn.closest("tr");
+    const depFuelLb = parseFloat(row.cells[1].querySelector("input")?.value || 0);
+    const payloadKg = parseFloat(row.cells[2].querySelector("input")?.value || 0);
+    const tripFuelLb = parseFloat(row.cells[3].querySelector("input")?.value || 0);
+    const depFuelKg = depFuelLb * 0.453592;
+    const tripFuelKg = tripFuelLb * 0.453592;
+    document.getElementById("manualPayload").value = Math.round(payloadKg);
+    document.getElementById("fuel").value = Math.round(depFuelKg);
+    document.getElementById("fuelDest").value = Math.round(tripFuelKg);
+    if (typeof calculate === "function") calculate();
+}
+
+function verificarPesoLinha(row) {
+    const defs = JSON.parse(localStorage.getItem("definicoesMB")) || {};
+    const aviaoIndex = document.getElementById("aviaoSelecionado").selectedIndex || 0;
+    const aviao = defs.avioes?.[aviaoIndex];
+    const BEW = aviao?.peso || 0;
+    const pilots = parseFloat(document.getElementById("pilots")?.value || "150") || 0;
+    const fuelTaxi = parseFloat(document.getElementById("fuelTaxi")?.value || "30") || 0;
+    const depFuelLb = parseFloat(row.cells[1].querySelector("input")?.value || 0);
+    const payloadKg = parseFloat(row.cells[2].querySelector("input")?.value || 0);
+    const depFuelKg = depFuelLb * 0.453592;
+    const taxiFuelKg = fuelTaxi;
+    const takeoffKg = BEW + pilots + payloadKg + depFuelKg - taxiFuelKg;
+    if (takeoffKg > 5700) {
+        row.classList.add("overweight");
+    } else {
+        row.classList.remove("overweight");
+    }
+}
+
+function updateLdgAuto() {
+    const rows = document.querySelectorAll("#legsTable tr");
+    for (let i = 0; i < rows.length; i++) {
+        const depInput = rows[i].cells[1].querySelector("input");
+        const tripInput = rows[i].cells[3].querySelector("input");
+        const dep = parseFloat(depInput?.value) || 0;
+        const trip = parseFloat(tripInput?.value) || 0;
+        const ldg = dep - trip;
+        const ldgCell = rows[i].querySelector(".ldg");
+        if (ldgCell) ldgCell.innerText = ldg.toFixed(0);
+        if (i + 1 < rows.length) {
+            const nextDepInput = rows[i + 1].cells[1].querySelector("input");
+            const valorAtual = nextDepInput?.value || "";
+            const isAuto = nextDepInput?.dataset.auto;
+            if (!valorAtual || valorAtual === "0" || isAuto === "1") {
+                nextDepInput.value = ldg.toFixed(0);
+                nextDepInput.dataset.auto = "1";
+            }
+        }
+        verificarPesoLinha(rows[i]);
+    }
+}
+</script>
+
+<script>
+// --- Lógica de Inicialização da Página ---
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. Carrega dropdown de aviões
+    preencherDropdown();
+    
+    // 2. Carrega e preenche o dropdown das rotas
+    carregarDropdownRotas();
+
+    // 3. Restaura a última rota selecionada no dropdown
+    const selectedIndex = localStorage.getItem('rotaSelecionadaIndex') || 0;
+    const dropdownRotas = document.getElementById('dropdownRotas');
+    if (dropdownRotas.options.length > selectedIndex) {
+        dropdownRotas.selectedIndex = selectedIndex;
+    }
+
+    // 4. Carrega os dados da tabela de legs (a rota ativa que foi editada)
+    carregarLegs();
+
+    // 5. Adiciona listeners para recalcular tudo quando um valor muda (exceto na tabela de legs, que já tem)
+    document.querySelectorAll('input[type="number"], input[type="text"]').forEach(input => {
+        if (!input.closest('#legsTable')) {
+            input.addEventListener('input', calculate);
+        }
+    });
+    
+    // 6. Executa os cálculos iniciais e atualiza a interface
+    calculate();
+    updateLdgAuto();
+    feather.replace();
+});
 </script>
 
 </body>
 </html>
-

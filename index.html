@@ -460,6 +460,18 @@ document.addEventListener('DOMContentLoaded', () => {
             input.addEventListener('input', calculate);
         }
     });
+
+    // 5. Adiciona listeners de foco e input a todos os inputs relevantes
+    document.querySelectorAll('input[type="number"], input[type="text"]').forEach(input => {
+        // Adiciona o listener de foco para selecionar todo o texto
+        input.addEventListener('focus', () => input.select());
+
+        // Adiciona o listener de cálculo apenas aos inputs fora da tabela de rotas
+        // (a tabela de legs tem o seu próprio handler dentro de criarLinhaLeg)
+        if (!input.closest('#legsTable')) {
+            input.addEventListener('input', calculate);
+        }
+    });
     
     // 6. Executa os cálculos iniciais e atualiza a interface
     calculate();

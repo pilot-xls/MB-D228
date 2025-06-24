@@ -440,7 +440,7 @@ async function carregarValoresPadraoSeNecessario() {
   }
 
   try {
-    const response = await fetch('default_settings.html');
+    const response = await fetch('default_settings.json');
     if (!response.ok) throw new Error('A resposta da rede não foi bem-sucedida.');
     const htmlText = await response.text();
     

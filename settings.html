@@ -233,7 +233,6 @@
         avioes: listaAvioes
       };
     
-      // Captura o nome e as linhas da rota temporária
       const nome = document.getElementById('nomeRota').value.trim();
       const linhas = document.querySelectorAll('#rotaTemp tr');
       const legs = [];
@@ -248,18 +247,16 @@
         });
       });
     
-      // Se existir nome e pelo menos uma perna
       if (nome && legs.length > 0) {
-        // Verifica se rota com esse nome já existe
         const indexExistente = rotasPadrao.findIndex(r => r.nome === nome);
     
         if (indexExistente !== -1) {
           if (!confirm(`Já existe uma rota chamada "${nome}". Queres substituir?`)) {
-            return; // não faz nada
+            return;
           }
-          rotasPadrao[indexExistente] = { nome, legs }; // substitui
+          rotasPadrao[indexExistente] = { nome, legs };
         } else {
-          rotasPadrao.push({ nome, legs }); // adiciona nova
+          rotasPadrao.push({ nome, legs });
         }
     
         document.getElementById('rotaTemp').innerHTML = '';
@@ -267,15 +264,12 @@
         renderizarRotasGuardadas();
       }
     
-      // Guarda tudo no localStorage
       localStorage.setItem("definicoesMB", JSON.stringify(definicoes));
       localStorage.setItem("rotasPadrao", JSON.stringify(rotasPadrao));
     
       alert("Definições guardadas com sucesso!");
       window.location.href = "index.html";
     }
-
-
 
     function abrirModalQR() {
       document.getElementById("modalQR").style.display = "block";
@@ -285,26 +279,68 @@
       document.getElementById("modalQR").style.display = "none";
     }
 
-    // Fechar modal ao clicar fora
     window.onclick = function(event) {
       const modal = document.getElementById("modalQR");
       if (event.target === modal) {
         modal.style.display = "none";
       }
     }
+    
+    /**
+     * Carrega as definições padrão do ficheiro `default_settings.html` se não existirem no localStorage.
+     * Esta função garante que a aplicação tem dados base para funcionar na primeira utilização.
+     */
+    async function carregarValoresPadraoSeNecessario() {
+      const definicoesExistem = localStorage.getItem("definicoesMB");
+      const rotasExistem = localStorage.getItem("rotasPadrao");
+
+      // Se ambos já existem, não faz nada
+      if (definicoesExistem && rotasExistem) {
+        return;
+      }
+
+      try {
+        const response = await fetch('default_settings.html');
+        if (!response.ok) throw new Error('A resposta da rede não foi bem-sucedida.');
+        const htmlText = await response.text();
+        
+        // Usa o DOMParser para analisar o HTML recebido
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(htmlText, 'text/html');
+        const dataElement = doc.getElementById('default-data');
+        
+        if (!dataElement) throw new Error('O contentor de dados não foi encontrado em default_settings.html');
+
+        const defaults = JSON.parse(dataElement.textContent);
+
+        // Define os valores no localStorage apenas se não existirem
+        if (!definicoesExistem) {
+          localStorage.setItem("definicoesMB", JSON.stringify(defaults.definicoesMB));
+        }
+        if (!rotasExistem) {
+          localStorage.setItem("rotasPadrao", JSON.stringify(defaults.rotasPadrao));
+        }
+        console.log("Definições padrão carregadas com sucesso a partir do ficheiro.");
+
+      } catch (error) {
+        console.error("Falha ao carregar definições padrão:", error);
+        // Fallback para valores codificados para garantir que a app funciona mesmo offline ou com erros de rede
+        if (!definicoesExistem) {
+          const definicoesIniciais = {
+            pesoHomem: 86, pesoMulher: 68, pesoCrianca: 35, pesoBagagem: 10,
+            avioes: [{ nome: "Dornier 228", peso: 3643, momento: 26419 }]
+          };
+          localStorage.setItem("definicoesMB", JSON.stringify(definicoesIniciais));
+        }
+        if (!rotasExistem) {
+          localStorage.setItem("rotasPadrao", JSON.stringify([]));
+        }
+      }
+    }
 
     // Carrega valores padrão se for a primeira vez
-    window.onload = () => {
-      if (!localStorage.getItem("definicoesMB")) {
-        const definicoesIniciais = {
-          pesoHomem: 86,
-          pesoMulher: 68,
-          pesoCrianca: 35,
-          pesoBagagem: 10,
-          avioes: [{ nome: "Dornier 228", peso: 3643, momento: 26419 }]
-        };
-        localStorage.setItem("definicoesMB", JSON.stringify(definicoesIniciais));
-      }
+    window.onload = async () => {
+      await carregarValoresPadraoSeNecessario();
       carregarDefinicoes();
     };
   </script>
@@ -319,7 +355,5 @@
        feather.replace();
     });
   </script>
-
-   
 </body>
 </html>

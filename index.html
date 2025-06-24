@@ -442,17 +442,9 @@ async function carregarValoresPadraoSeNecessario() {
   try {
     const response = await fetch('default_settings.json');
     if (!response.ok) throw new Error('A resposta da rede não foi bem-sucedida.');
-    const htmlText = await response.text();
-    
-    // Usa o DOMParser para analisar o HTML recebido
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(htmlText, 'text/html');
-    const dataElement = doc.getElementById('default-data');
-    
-    if (!dataElement) throw new Error('O contentor de dados não foi encontrado em default_settings.html');
 
-    const defaults = JSON.parse(dataElement.textContent);
-
+    const defaults = await response.json();
+    
     // Define os valores no localStorage apenas se não existirem
     if (!definicoesExistem) {
       localStorage.setItem("definicoesMB", JSON.stringify(defaults.definicoesMB));

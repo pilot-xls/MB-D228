@@ -353,7 +353,7 @@
     }
 
     /**
-     * Carrega as definições padrão do ficheiro `default_settings.html` se não existirem no localStorage.
+     * Carrega as definições padrão do ficheiro `default_settings.json` se não existirem no localStorage.
      * Esta função agora trata o ficheiro como a única fonte de verdade para os padrões.
      */
     async function carregarValoresPadraoSeNecessario() {
@@ -368,7 +368,7 @@
       try {
         // Tenta sempre ir buscar as definições ao ficheiro, que é a única fonte de verdade.
         // O service worker garante que este ficheiro está disponível offline após a primeira visita.
-        const response = await fetch('default_settings.html');
+        const response = await fetch('default_settings.json');
         if (!response.ok) throw new Error('A resposta da rede não foi bem-sucedida ao carregar as definições padrão.');
         
         const htmlText = await response.text();
@@ -376,7 +376,7 @@
         const doc = parser.parseFromString(htmlText, 'text/html');
         const dataElement = doc.getElementById('default-data');
         
-        if (!dataElement) throw new Error('O contentor de dados não foi encontrado em default_settings.html');
+        if (!dataElement) throw new Error('O contentor de dados não foi encontrado em default_settings.json');
 
         const defaults = JSON.parse(dataElement.textContent);
 

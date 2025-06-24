@@ -334,7 +334,6 @@
 
     /**
      * Repõe as definições para os valores de fábrica.
-     * Remove os dados do localStorage e força o recarregamento a partir do ficheiro default_settings.html.
      */
     async function resetarDefinicoes() {
       console.log("A repor as definições...");
@@ -343,33 +342,36 @@
       localStorage.removeItem("definicoesMB");
       localStorage.removeItem("rotasPadrao");
 
-      // 2. Força o carregamento das definições padrão. A função abaixo fará isso
-      //    porque os itens do localStorage foram removidos.
+      // 2. Força o carregamento das definições padrão a partir do ficheiro.
       await carregarValoresPadraoSeNecessario();
 
-      // 3. Informa o utilizador e recarrega a página para refletir as alterações
-      alert("Definições repostas com sucesso!");
-      location.reload();
+      // 3. Fecha a janela de confirmação
+      fecharModalReset();
+
+      // 4. Recarrega os novos dados do localStorage e atualiza a interface imediatamente
+      carregarDefinicoes();
     }
 
     /**
      * Carrega as definições padrão do ficheiro `default_settings.html` se não existirem no localStorage.
-     * Esta função garante que a aplicação tem dados base para funcionar na primeira utilização.
+     * Esta função agora trata o ficheiro como a única fonte de verdade para os padrões.
      */
     async function carregarValoresPadraoSeNecessario() {
       const definicoesExistem = localStorage.getItem("definicoesMB");
       const rotasExistem = localStorage.getItem("rotasPadrao");
 
-      // Se ambos já existem, não faz nada
+      // Se os dados já existem no localStorage, não é preciso fazer mais nada.
       if (definicoesExistem && rotasExistem) {
         return;
       }
 
       try {
+        // Tenta sempre ir buscar as definições ao ficheiro, que é a única fonte de verdade.
+        // O service worker garante que este ficheiro está disponível offline após a primeira visita.
         const response = await fetch('default_settings.html');
-        if (!response.ok) throw new Error('A resposta da rede não foi bem-sucedida.');
-        const htmlText = await response.text();
+        if (!response.ok) throw new Error('A resposta da rede não foi bem-sucedida ao carregar as definições padrão.');
         
+        const htmlText = await response.text();
         const parser = new DOMParser();
         const doc = parser.parseFromString(htmlText, 'text/html');
         const dataElement = doc.getElementById('default-data');
@@ -378,6 +380,7 @@
 
         const defaults = JSON.parse(dataElement.textContent);
 
+        // Guarda no localStorage apenas os dados que faltarem.
         if (!definicoesExistem) {
           localStorage.setItem("definicoesMB", JSON.stringify(defaults.definicoesMB));
         }
@@ -387,17 +390,9 @@
         console.log("Definições padrão carregadas com sucesso a partir do ficheiro.");
 
       } catch (error) {
-        console.error("Falha ao carregar definições padrão:", error);
-        if (!definicoesExistem) {
-          const definicoesIniciais = {
-            pesoHomem: 86, pesoMulher: 68, pesoCrianca: 35, pesoBagagem: 10,
-            avioes: [{ nome: "Dornier 228", peso: 3643, momento: 26419 }]
-          };
-          localStorage.setItem("definicoesMB", JSON.stringify(definicoesIniciais));
-        }
-        if (!rotasExistem) {
-          localStorage.setItem("rotasPadrao", JSON.stringify([]));
-        }
+        // Se a busca falhar (caso raro de primeira visita offline), informa na consola.
+        // A aplicação irá arrancar com valores vazios, que é o comportamento esperado sem definições.
+        console.error("Falha crítica ao carregar definições padrão. A aplicação pode não ter aviões ou rotas pré-definidas até à próxima ligação à rede.", error);
       }
     }
 

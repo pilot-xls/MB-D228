@@ -23,10 +23,10 @@ function showUpdateBanner() {
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('service-worker.js').then(reg => {
     
-    // Verificar por nova versão a cada 1h
+    // Verificar por nova versão a cada 1'
     setInterval(() => {
       reg.update();
-    }, 60 * 1000); // 1h
+    }, 60 * 1000); // 1'
 
     reg.addEventListener('updatefound', () => {
       newWorker = reg.installing;

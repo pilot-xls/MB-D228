@@ -1,11 +1,15 @@
 // Nome da cache (altera para forçar atualização quando modificares ficheiros)
-const CACHE_NAME = 'calc-cache-v6';
+const CACHE_NAME = 'calc-cache-v7';
 
 // Lista de ficheiros a guardar para acesso offline
 const FILES_TO_CACHE = [
   './',
   './index.html',
   './settings.html',
+  './default_settings.html', // <-- ADICIONADO
+  './design.css',
+  './app-version.js',
+  './auto-update.js',
   './icone.png',
   './manifest.json',
   './service-worker.js'
@@ -17,6 +21,7 @@ self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       // Guardar os ficheiros definidos na cache
+      console.log('Ficheiros guardados na cache durante a instalação.');
       return cache.addAll(FILES_TO_CACHE);
     })
   );
@@ -40,6 +45,7 @@ self.addEventListener('activate', (event) => {
       return Promise.all(
         keys.map(key => {
           if (!allowedCaches.includes(key)) {
+            console.log('A apagar cache antiga:', key);
             return caches.delete(key);
           }
         })
@@ -53,4 +59,3 @@ self.addEventListener('message', (event) => {
     self.skipWaiting();
   }
 });
-

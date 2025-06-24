@@ -251,7 +251,6 @@ function convertLbToKg() {
 <script>
 // --- Funções da Tabela de Rotas (LEGS) ---
 
-// Carrega rotas guardadas no dropdown
 function carregarDropdownRotas() {
     const rotas = JSON.parse(localStorage.getItem("rotasPadrao") || "[]");
     const dropdown = document.getElementById("dropdownRotas");
@@ -284,17 +283,16 @@ function criarLinhaLeg(route = '', depF = '', payl = '', tripF = '') {
 
     tbody.appendChild(tr);
 
-    // Adiciona listeners para salvar e recalcular em cada input da linha
     tr.querySelectorAll('input').forEach(input => {
         input.addEventListener('focus', () => input.select());
         input.addEventListener('input', () => {
-            input.dataset.auto = "0"; // Marca que o campo foi editado manualmente
+            input.dataset.auto = "0";
             updateLdgAuto();
-            guardarLegs(); // Salva o estado atual da tabela
+            guardarLegs();
         });
     });
     
-    updateLdgAuto(); // Atualiza os cálculos ao criar a linha
+    updateLdgAuto();
 }
 
 function editarRota(td) {
@@ -317,7 +315,6 @@ function fecharRota(input) {
     guardarLegs();
 }
 
-// [CORRIGIDO] Salva o estado atual da tabela de rotas no localStorage
 function guardarLegs() {
     const linhas = [...document.querySelectorAll('#legsTable tr')];
     const dados = linhas.map(row => ({
@@ -326,40 +323,33 @@ function guardarLegs() {
         payl: row.cells[2].querySelector("input")?.value || '',
         tripF: row.cells[3].querySelector("input")?.value || ''
     }));
-    // Usa localStorage para persistência entre sessões
     localStorage.setItem('rotaAtiva', JSON.stringify(dados));
 }
 
-// [CORRIGIDO] Carrega a tabela de rotas a partir do localStorage
 function carregarLegs() {
-    // Carrega os dados da 'rotaAtiva' guardada
     const dados = JSON.parse(localStorage.getItem('rotaAtiva') || '[]');
     const tbody = document.getElementById("legsTable");
     tbody.innerHTML = "";
     
     if (dados.length === 0) {
-        // Se não houver dados, cria 5 linhas vazias
         for (let i = 0; i < 5; i++) criarLinhaLeg();
     } else {
         dados.forEach(l => criarLinhaLeg(l.route, l.depF, l.payl, l.tripF));
     }
 }
 
-// [CORRIGIDO] Preenche a tabela com uma rota pré-definida do dropdown
 function preencherLegsComRota() {
     const dropdown = document.getElementById("dropdownRotas");
     const idx = dropdown.value;
     
-    // Salva o índice selecionado para restaurar depois
     localStorage.setItem('rotaSelecionadaIndex', dropdown.selectedIndex);
 
     if (idx === "") {
-        // Se "-- Selecionar rota --" for escolhido, limpa a tabela e os dados guardados
         const tbody = document.getElementById("legsTable");
         tbody.innerHTML = "";
         for (let i = 0; i < 5; i++) criarLinhaLeg();
         localStorage.removeItem('rotaAtiva'); 
-        guardarLegs(); // Salva o estado vazio
+        guardarLegs();
         return;
     }
 
@@ -370,12 +360,10 @@ function preencherLegsComRota() {
     const tbody = document.getElementById("legsTable");
     tbody.innerHTML = "";
 
-    // Preenche a tabela com os dados da rota selecionada
     rotaSelecionada.legs.forEach(leg => {
         criarLinhaLeg(leg.route, leg.depF, leg.payl, leg.tripF);
     });
 
-    // Imediatamente guarda esta rota selecionada como a nova 'rotaAtiva'
     guardarLegs();
 }
 
@@ -437,43 +425,88 @@ function updateLdgAuto() {
 
 <script>
 // --- Lógica de Inicialização da Página ---
-document.addEventListener('DOMContentLoaded', () => {
-    // 1. Carrega dropdown de aviões
-    preencherDropdown();
+
+/**
+ * Carrega as definições padrão do ficheiro `default_settings.html` se não existirem no localStorage.
+ * Esta função garante que a aplicação tem dados base para funcionar na primeira utilização.
+ */
+async function carregarValoresPadraoSeNecessario() {
+  const definicoesExistem = localStorage.getItem("definicoesMB");
+  const rotasExistem = localStorage.getItem("rotasPadrao");
+
+  // Se ambos já existem, não faz nada
+  if (definicoesExistem && rotasExistem) {
+    return;
+  }
+
+  try {
+    const response = await fetch('default_settings.html');
+    if (!response.ok) throw new Error('A resposta da rede não foi bem-sucedida.');
+    const htmlText = await response.text();
     
-    // 2. Carrega e preenche o dropdown das rotas
+    // Usa o DOMParser para analisar o HTML recebido
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(htmlText, 'text/html');
+    const dataElement = doc.getElementById('default-data');
+    
+    if (!dataElement) throw new Error('O contentor de dados não foi encontrado em default_settings.html');
+
+    const defaults = JSON.parse(dataElement.textContent);
+
+    // Define os valores no localStorage apenas se não existirem
+    if (!definicoesExistem) {
+      localStorage.setItem("definicoesMB", JSON.stringify(defaults.definicoesMB));
+    }
+    if (!rotasExistem) {
+      localStorage.setItem("rotasPadrao", JSON.stringify(defaults.rotasPadrao));
+    }
+    console.log("Definições padrão carregadas com sucesso a partir do ficheiro.");
+
+  } catch (error) {
+    console.error("Falha ao carregar definições padrão:", error);
+    // Fallback para valores codificados para garantir que a app funciona mesmo offline ou com erros de rede
+    if (!definicoesExistem) {
+      const definicoesIniciais = {
+        pesoHomem: 86, pesoMulher: 68, pesoCrianca: 35, pesoBagagem: 10,
+        avioes: [{ nome: "Dornier 228", peso: 3643, momento: 26419 }]
+      };
+      localStorage.setItem("definicoesMB", JSON.stringify(definicoesIniciais));
+    }
+    if (!rotasExistem) {
+      localStorage.setItem("rotasPadrao", JSON.stringify([]));
+    }
+  }
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+    // 1. Carrega as definições padrão ANTES de qualquer outra coisa
+    await carregarValoresPadraoSeNecessario();
+    
+    // 2. Continua com a inicialização normal
+    preencherDropdown();
     carregarDropdownRotas();
 
-    // 3. Restaura a última rota selecionada no dropdown
     const selectedIndex = localStorage.getItem('rotaSelecionadaIndex') || 0;
     const dropdownRotas = document.getElementById('dropdownRotas');
     if (dropdownRotas.options.length > selectedIndex) {
         dropdownRotas.selectedIndex = selectedIndex;
     }
 
-    // 4. Carrega os dados da tabela de legs (a rota ativa que foi editada)
     carregarLegs();
 
-    // 5. Adiciona listeners para recalcular tudo quando um valor muda (exceto na tabela de legs, que já tem)
     document.querySelectorAll('input[type="number"], input[type="text"]').forEach(input => {
         if (!input.closest('#legsTable')) {
             input.addEventListener('input', calculate);
         }
     });
 
-    // 5. Adiciona listeners de foco e input a todos os inputs relevantes
     document.querySelectorAll('input[type="number"], input[type="text"]').forEach(input => {
-        // Adiciona o listener de foco para selecionar todo o texto
         input.addEventListener('focus', () => input.select());
-
-        // Adiciona o listener de cálculo apenas aos inputs fora da tabela de rotas
-        // (a tabela de legs tem o seu próprio handler dentro de criarLinhaLeg)
         if (!input.closest('#legsTable')) {
             input.addEventListener('input', calculate);
         }
     });
     
-    // 6. Executa os cálculos iniciais e atualiza a interface
     calculate();
     updateLdgAuto();
     feather.replace();

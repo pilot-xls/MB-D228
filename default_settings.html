@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<!--
+  Este ficheiro contém os dados padrão da aplicação.
+  Não é uma página visível, serve apenas para ser lido pelo JavaScript.
+-->
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <title>Default Settings</title>
+</head>
+<body>
+  <!-- Os dados estão guardados como JSON dentro de um elemento escondido para facilitar a leitura -->
+  <div id="default-data" style="display:none;">
+    {
+      "definicoesMB": {
+        "pesoHomem": 86,
+        "pesoMulher": 68,
+        "pesoCrianca": 35,
+        "pesoBagagem": 10,
+        "avioes": [
+          { "nome": "Dornier 228", "peso": 3643, "momento": 26419 }
+        ]
+      },
+      "rotasPadrao": [
+        {
+          "nome": "FNC-PXO",
+          "legs": [
+            { "route": "FNC-PXO", "depF": "2000", "payl": "1200", "tripF": "400" },
+            { "route": "PXO-FNC", "depF": "1600", "payl": "1100", "tripF": "400" }
+          ]
+        },
+        {
+          "nome": "PXO-FNC",
+          "legs": [
+             { "route": "PXO-FNC", "depF": "1800", "payl": "1000", "tripF": "400" },
+             { "route": "FNC-PXO", "depF": "1400", "payl": "1300", "tripF": "400" }
+          ]
+        }
+      ]
+    }
+  </div>
+</body>
+</html>

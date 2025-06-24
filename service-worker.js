@@ -6,7 +6,7 @@ const FILES_TO_CACHE = [
   './',
   './index.html',
   './settings.html',
-  './default_settings.html', // <-- ADICIONADO
+  './default_settings.json',
   './design.css',
   './app-version.js',
   './auto-update.js',

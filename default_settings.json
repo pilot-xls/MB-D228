@@ -1,16 +1,3 @@
-<!DOCTYPE html>
-<!--
-  Este ficheiro contém os dados padrão da aplicação.
-  Não é uma página visível, serve apenas para ser lido pelo JavaScript.
--->
-<html lang="pt">
-<head>
-  <meta charset="UTF-8">
-  <title>Default Settings</title>
-</head>
-<body>
-  <!-- Os dados estão guardados como JSON dentro de um elemento escondido para facilitar a leitura -->
-  <div id="default-data" style="display:none;">
     {
       "definicoesMB": {
         "pesoHomem": 86,
@@ -56,6 +43,4 @@
         }
       ]
     }
-  </div>
-</body>
-</html>
+ 

@@ -403,17 +403,15 @@ function updateLdgAuto() {
 	    
 	const dep = parseFloat(depInput?.value) || 0;
 	const pay = parseFloat(payInput?.value) || 0;	            
-        const trip = parseFloat(tripInput?.value) || 0;
-        const ldg = dep - trip;        
+        const trip = parseFloat(tripInput?.value) || 0;        
 	const bew = parseFloat(document.getElementById("basicWeight")?.innerText) || 0;
 	const pilots = parseFloat(document.getElementById("pilots")?.value) || 0;	
 	const maxPayload = 5730 - (bew + pilots + (dep / 2.20462));
-	const maxFuel = 5730 - (bew + pilots + pay);		
+	const maxFuel = (5730 - (bew + pilots + pay))*2.20462;		
         const ldgCell = rows[i].querySelector(".ldg"); 		
 	if (ldgCell) ldgCell.innerHTML = `
 		<div>Max PayL: ${maxPayload.toFixed(0)}</div>
 		<div>Max Fuel: ${maxFuel.toFixed(0)}</div>
-		<div>Ldg Weight: ${ldg.toFixed(0)}</div>
 	  `;        
 	if (i + 1 < rows.length) {
 	    const nextDepInput = rows[i + 1].cells[1].querySelector("input");

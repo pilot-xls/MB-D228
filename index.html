@@ -394,10 +394,13 @@ function verificarPesoLinha(row) {
 function updateLdgAuto() {
     const rows = document.querySelectorAll("#legsTable tr");
     for (let i = 0; i < rows.length; i++) {
+
+	const row = rows[i];
     	const inputs = Array.from(row.querySelectorAll("td input"));
 	const depInput  = inputs[1];
 	const payInput  = inputs[2];
 	const tripInput = inputs[3];
+	    
 	const dep = parseFloat(depInput?.value) || 0;
 	const pay = parseFloat(payInput?.value) || 0;	            
         const trip = parseFloat(tripInput?.value) || 0;
@@ -508,7 +511,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 </script>
 	
-<script>
+<script defer>
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('service-worker.js')
         .then(() => console.log("Service Worker registado"))

@@ -400,20 +400,19 @@ function verificarPesoLinha(row) {
 }
 
 function updateLdgAuto() {
-    const rows = document.querySelectorAll("#legsTable tr");
-    for (let i = 0; i < rows.length; i++) {
-        const depInput = rows[i].cells[1].querySelector("input");
-        const tripInput = rows[i].cells[3].querySelector("input");
-        const dep = parseFloat(depInput?.value) || 0;
-        const trip = parseFloat(tripInput?.value) || 0;
-        const ldg = dep - trip;
-        const ldgCell = rows[i].querySelector(".ldg");
-        const depFuel = parseFloat(rows[i].cells[1].querySelector("input")?.value) || 0;
-        const payl    = parseFloat(rows[i].cells[2].querySelector("input")?.value) || 0;
-        const trip    = parseFloat(rows[i].cells[3].querySelector("input")?.value) || 0;
+      const rows = document.querySelectorAll("#legsTable tr");
+      for (let i = 0; i < rows.length; i++) {
+        const row          = rows[i];
+        const depFuelInput = row.cells[1].querySelector("input");
+        const paylInput    = row.cells[2].querySelector("input");
+        const tripInput    = row.cells[3].querySelector("input");
+        const ldgCell      = row.querySelector(".ldg");
+    
+        const depFuel = parseFloat(depFuelInput?.value) || 0;
+        const payl    = parseFloat(paylInput?.value)    || 0;
+        const trip    = parseFloat(tripInput?.value)    || 0;
         const ldg     = depFuel - trip;
-        const ldgCell = rows[i].querySelector(".ldg");
-        
+    
         if (ldgCell) {
           ldgCell.innerHTML = `
             <div>max Pload: ${payl.toFixed(0)}</div>
@@ -421,18 +420,22 @@ function updateLdgAuto() {
             <div>landing W: ${ldg.toFixed(0)}</div>
           `;
         }
+    
+        // autopreenche próximo Dep
         if (i + 1 < rows.length) {
-            const nextDepInput = rows[i + 1].cells[1].querySelector("input");
-            const valorAtual = nextDepInput?.value || "";
-            const isAuto = nextDepInput?.dataset.auto;
-            if (!valorAtual || valorAtual === "0" || isAuto === "1") {
-                nextDepInput.value = ldg.toFixed(0);
-                nextDepInput.dataset.auto = "1";
-            }
+          const nextDepInput = rows[i + 1].cells[1].querySelector("input");
+          const valorAtual   = nextDepInput?.value || "";
+          const isAuto       = nextDepInput?.dataset.auto;
+          if (!valorAtual || valorAtual === "0" || isAuto === "1") {
+            nextDepInput.value = ldg.toFixed(0);
+            nextDepInput.dataset.auto = "1";
+          }
         }
-        verificarPesoLinha(rows[i]);
-    }
+    
+        verificarPesoLinha(row);
+      }
 }
+
 </script>
 
 <script>

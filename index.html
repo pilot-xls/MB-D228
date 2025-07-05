@@ -96,7 +96,7 @@ if ('serviceWorker' in navigator) {
       <th style="width: 20%;">Depf(lb)</th>
       <th style="width: 20%;">Payl(kg)</th>
       <th style="width: 20%;">Tripf(lb)</th>
-      <th style="width: 20%;">LDG(lb)</th>
+      <th style="width: 20%;">Note</th>
       <th style="width: 10%;"></th> <!-- Botão + -->
     </tr>
   </thead>
@@ -277,7 +277,7 @@ function criarLinhaLeg(route = '', depF = '', payl = '', tripF = '') {
         <td><input type="number" inputmode="decimal" step="any" value="${depF}" data-auto="1"></td>
         <td><input type="number" inputmode="decimal" step="any" value="${payl}"></td>
         <td><input type="number" inputmode="decimal" step="any" value="${tripF}"></td>
-        <td class="ldg">0</td>
+        <td class="ldg"></td>
         <td><button class="route-insert" onclick="inserirLeg(this)">+</button></td>
     `;
 
@@ -408,7 +408,19 @@ function updateLdgAuto() {
         const trip = parseFloat(tripInput?.value) || 0;
         const ldg = dep - trip;
         const ldgCell = rows[i].querySelector(".ldg");
-        if (ldgCell) ldgCell.innerText = ldg.toFixed(0);
+        const depFuel = parseFloat(rows[i].cells[1].querySelector("input")?.value) || 0;
+        const payl    = parseFloat(rows[i].cells[2].querySelector("input")?.value) || 0;
+        const trip    = parseFloat(rows[i].cells[3].querySelector("input")?.value) || 0;
+        const ldg     = depFuel - trip;
+        const ldgCell = rows[i].querySelector(".ldg");
+        
+        if (ldgCell) {
+          ldgCell.innerHTML = `
+            <div>max Pload: ${payl.toFixed(0)}</div>
+            <div>max Fuel: ${depFuel.toFixed(0)}</div>
+            <div>landing W: ${ldg.toFixed(0)}</div>
+          `;
+        }
         if (i + 1 < rows.length) {
             const nextDepInput = rows[i + 1].cells[1].querySelector("input");
             const valorAtual = nextDepInput?.value || "";

@@ -403,7 +403,8 @@ function updateLdgAuto() {
 	    
 	const dep = parseFloat(depInput?.value) || 0;
 	const pay = parseFloat(payInput?.value) || 0;	            
-        const trip = parseFloat(tripInput?.value) || 0;        
+        const trip = parseFloat(tripInput?.value) || 0;    
+    	const ldg = dep - trip;
 	const bew = parseFloat(document.getElementById("basicWeight")?.innerText) || 0;
 	const pilots = parseFloat(document.getElementById("pilots")?.value) || 0;	
 	const maxPayload = 5730 - (bew + pilots + (dep / 2.20462));

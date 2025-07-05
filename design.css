@@ -2,27 +2,14 @@
 
 /* Tema base (modo claro) */
 :root {
-  --bg: #ffffff; /* fundo da página #ffffff=branco*/
+  --bg: #ffffff;
   --fg: #121212;
   --accent: #1e88e5;
   --danger: #ff4d4d;
   --safe: #2e7d32;
-  --input-bg: #f0f0f0; /* fundo dos inputs e células (#f0f0f0)=cinzento */
-  --row-hover: rgba(0, 0, 0, 0.1); /* Opacidade aumentada para um cinzento mais notório */
+  --input-bg: #f0f0f0;
+  --row-hover: rgba(0, 0, 0, 0.1);
 }
-
-/* 
-Tema escuro automático 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #121212;
-    --fg: #e0e0e0;
-    --accent: #66b3ff;
-    --input-bg: #1e1e1e;
-    --row-hover: rgba(255, 255, 255, 0.05);
-  }
-}
-*/
 
 body {
   font-family: 'Manrope', sans-serif;
@@ -42,14 +29,14 @@ h2, h3 {
 table {
   width: 100%;
   border-collapse: collapse;
-  border: 2px solid #000000; /* linha preta */
+  border: 2px solid #000;
   margin-bottom: 30px;
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-  background-color: #f7fbff; /* comenteario*/
+  background-color: #f7fbff;
 }
-/* Linha entre tabelas */
+
 table + table {
   border-top: 2px solid var(--input-bg);
   margin-top: 40px;
@@ -119,7 +106,7 @@ button:hover {
 }
 
 .limit-check.exceeded {
-  background-color: var(--danger) !important;
+  background-color: var(--danger);
   color: white;
   font-weight: bold;
 }
@@ -140,7 +127,7 @@ button:hover {
 }
 
 .settings-link {
-  display: inline-block; /* <-- Limita a largura ao conteúdo */
+  display: inline-block;
   position: relative;
   top: 10px;
   right: 10px;
@@ -161,7 +148,6 @@ button:hover {
   text-decoration: underline;
 }
 
-/* Ícones Feather */
 .feather {
   width: 16px;
   height: 16px;
@@ -169,7 +155,7 @@ button:hover {
   margin-right: 6px;
 }
 
-/* Ajuste para colunas iguais na tabela de conversão */
+/* Conversor Kg ↔ Lb */
 table#conversor td:nth-child(2),
 table#conversor td:nth-child(3) {
   width: 50%;
@@ -188,6 +174,7 @@ table#conversor td:nth-child(3) {
   }
 }
 
+/* Botões no topo */
 .top-buttons {
   position: relative;
   top: 10px;
@@ -213,14 +200,13 @@ table#conversor td:nth-child(3) {
   background: #e2e2e2;
 }
 
+/* Modal */
 .modal {
-  display: none; /* ESSENCIAL! Oculto por padrão */
+  display: none;
   position: fixed;
   z-index: 9999;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
+  left: 0; top: 0;
+  width: 100%; height: 100%;
   background-color: rgba(0, 0, 0, 0.6);
 }
 
@@ -259,50 +245,28 @@ table#conversor td:nth-child(3) {
   padding: 10px;
 }
 
-/* Estilo específico para a tabela Resumo de Legs */
-table.route-table td[contenteditable="true"] {
-  background-color: #fffbe6;
-  cursor: text;
-  border-bottom: 1px solid #ccc;
-}
-
-table.route-table .ldg {
-  background-color: #f4f4f4;
-  font-weight: bold;
-}
-
-table.route-table .comentario {
-  font-style: italic;
-  color: var(--danger);
-}
-
-/* Realce para excesso de peso à descolagem */
-tr.overweight {
-  background-color: var(--danger) !important;
-  color: white;
-  font-weight: bold;
-}
-.route-table tr.overweight td {
-  background-color: var(--danger) !important;
-  color: white !important;
-  font-weight: bold;
-}
-
-/* ⬇️ AJUSTES FINAIS PARA A TABELA LEGS (route-table) */
+/* ⬇️ ESTILOS ESPECÍFICOS PARA A TABELA DE ROTAS (route-table) */
 .route-table {
   table-layout: fixed;
   width: 100%;
 }
-.route-table td, .route-table th {
+
+.route-table th,
+.route-table td {
+  vertical-align: middle;
   font-size: clamp(10px, 1.4vw, 14px);
   word-break: break-word;
   overflow-wrap: anywhere;
+  padding: 4px;
+  box-sizing: border-box;
 }
-.route-table input {
-  
-  font-size: clamp(12px, 1.5vw, 16px); 
+
+.route-table td input,
+.route-table td .rota-visual {
+  display: block;
   width: 100%;
   box-sizing: border-box;
+  margin: 0;
   padding: 6px;
   text-align: center;
   border: none;
@@ -310,13 +274,19 @@ tr.overweight {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  font-size: clamp(12px, 1.5vw, 16px);
 }
-input, select, textarea {
-  font-size: 16px; /* impede zoom ao focar no iOS */
-}
-.rota-col {
+
+.route-table td.rota-col {
+  padding: 0;
   background-color: #fffbe6;
   text-align: center;
+}
+
+.th.rota-header {
+  writing-mode: vertical-rl;
+  white-space: nowrap;
+  padding: 4px;
 }
 
 .rota-visual {
@@ -335,12 +305,7 @@ input, select, textarea {
   border: none;
   background: var(--input-bg);
 }
-th.rota-header {
-  writing-mode: vertical-rl;
-  /* transform: rotate(-90deg);*/
-  white-space: nowrap;
-  padding: 4px;
-}
+
 button.route-insert {
   padding: 2px 6px;
   font-size: 12px;
@@ -348,27 +313,9 @@ button.route-insert {
   min-width: 20px;
   min-height: 20px;
 }
-/* Garante que cada célula usa 100% da largura que o table-layout fixed dá a cada coluna */
-.route-table td {
-  padding: 4px;               /* ajusta o padding a gosto */
-  box-sizing: border-box;     /* inclui padding na largura total */
-}
 
-/* Inputs e o texto editável ficam a 100% da célula */
-.route-table td input,
-.route-table td .rota-visual {
-  width: 100%;
-  box-sizing: border-box;
-  margin: 0;                  /* remove margens extra */
-}
-
-/* Se quiseres também alinhar o texto na célula de rota: */
-.route-table td.rota-col {
-  padding: 0;                 /* sem padding extra */
-}
-
-/* Negrito para linhas finais da tabela Mass & Balance */
-
-.gray-row td {
+.route-table tr.overweight td {
+  background-color: var(--danger);
+  color: white;
   font-weight: bold;
 }

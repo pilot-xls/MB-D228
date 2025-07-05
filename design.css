@@ -348,6 +348,24 @@ button.route-insert {
   min-width: 20px;
   min-height: 20px;
 }
+/* Garante que cada célula usa 100% da largura que o table-layout fixed dá a cada coluna */
+.route-table td {
+  padding: 4px;               /* ajusta o padding a gosto */
+  box-sizing: border-box;     /* inclui padding na largura total */
+}
+
+/* Inputs e o texto editável ficam a 100% da célula */
+.route-table td input,
+.route-table td .rota-visual {
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0;                  /* remove margens extra */
+}
+
+/* Se quiseres também alinhar o texto na célula de rota: */
+.route-table td.rota-col {
+  padding: 0;                 /* sem padding extra */
+}
 
 /* Negrito para linhas finais da tabela Mass & Balance */
 

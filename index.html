@@ -410,8 +410,8 @@ function updateLdgAuto() {
 	const maxFuel = (5730 - (bew + pilots + pay))*2.20462;		
         const ldgCell = rows[i].querySelector(".ldg"); 		
 	if (ldgCell) ldgCell.innerHTML = `
-		<div>Max PayL: ${maxPayload.toFixed(0)}</div>
-		<div>Max Fuel: ${maxFuel.toFixed(0)}</div>
+		<div>Max PayL: ${maxPayload.toFixed(1)}</div>
+		<div>Max Fuel: ${maxFuel.toFixed(1)}</div>
 	  `;        
 	if (i + 1 < rows.length) {
 	    const nextDepInput = rows[i + 1].cells[1].querySelector("input");

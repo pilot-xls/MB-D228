@@ -20,14 +20,6 @@
     <meta name="apple-mobile-web-app-title" content="D228">
 </head>
 
-<script>
-if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('service-worker.js')
-        .then(() => console.log("Service Worker registado"))
-        .catch(err => console.error("Erro ao registar SW:", err));
-}
-</script>
-
 <body>
     
 <div class="settings-link">
@@ -515,6 +507,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     feather.replace();
 });
 </script>
-
+	
+<script>
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('service-worker.js')
+        .then(() => console.log("Service Worker registado"))
+        .catch(err => console.error("Erro ao registar SW:", err));
+}
+</script>
+	
 </body>
 </html>

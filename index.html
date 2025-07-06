@@ -108,28 +108,12 @@ function preencherDropdown() {
     });
 }
 
-function inserirPayload() {
-    const payload = document.getElementById("totalPayload").textContent;
-    const destino = document.getElementById("manualPayload");
-    if (destino) {
-        destino.value = payload;
-        calculate();
-    } else {
-        alert("Campo 'manualPayload' não encontrado.");
-    }
-}
-    
 function calculate() {
     const defs = getDefs();
     const pesoHomem = defs.pesoHomem || 86;
     const pesoMulher = defs.pesoMulher || 68;
     const pesoCrianca = defs.pesoCrianca || 35;
     const pesoBagagem = defs.pesoBagagem || 10;
-
-    //document.getElementById("labelHomens").innerText = `Homens (${pesoHomem}kg)`;
-    //document.getElementById("labelMulheres").innerText = `Mulheres (${pesoMulher}kg)`;
-    //document.getElementById("labelCriancas").innerText = `Crianças (${pesoCrianca}kg)`;
-    //document.getElementById("labelBagagem").innerText = `Bagagem extra (${pesoBagagem}kg)`;
 
     const avioes = defs.avioes || [];
     const select = document.getElementById("aviaoSelecionado");
@@ -139,23 +123,11 @@ function calculate() {
 
     localStorage.setItem('aviaoSelecionadoIndex', selectedIndex);
 
-    //const men = parseInt(document.getElementById('men').value) || 0;
-    //const women = parseInt(document.getElementById('women').value) || 0;
-    //const children = parseInt(document.getElementById('children').value) || 0;
-    //const extraBag = parseFloat(document.getElementById('extraBag').value) || 0;
-
     const pilots = parseFloat(document.getElementById('pilots').value) || 0;
     const manualPayload = parseFloat(document.getElementById('manualPayload').value) || 0;
     const fuel = parseFloat(document.getElementById('fuel').value) || 0;
     const fuelTaxi = parseFloat(document.getElementById('fuelTaxi').value) || 0;
     const fuelDest = parseFloat(document.getElementById('fuelDest').value) || 0;
-
-    //const payload = men * pesoHomem + women * pesoMulher + children * pesoCrianca + extraBag;
-
-    //document.getElementById('menWeight').innerText = men * pesoHomem;
-    //document.getElementById('womenWeight').innerText = women * pesoMulher;
-    //document.getElementById('childrenWeight').innerText = children * pesoCrianca;
-    //document.getElementById('totalPayload').innerText = payload + men * pesoBagagem + women * pesoBagagem;
 
     const momentPilots = pilots * 4.21;
     const momentPayload = manualPayload * 8.7;

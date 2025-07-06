@@ -8,8 +8,6 @@
     <!-- Estilo moderno -->
     <link rel="stylesheet" href="design.css">
     <script src="https://unpkg.com/feather-icons"></script>
-
-    <!-- App e PWA configs -->
     <script src="app-version.js"></script>
     <script src="auto-update.js" defer></script>
     <link rel="manifest" href="manifest.json">
@@ -21,13 +19,12 @@
 </head>
 
 <body>
-    
 <div class="settings-link">
     <a href="settings.html">⚙️ Settings</a>
 </div>
 
-<hr style="margin: 30px 0; border: none; border-top: 1px solid #999;"> <!-- linha de separação de tabelas -->
-    
+<hr style="margin: 30px 0; border: none; border-top: 1px solid #999;">
+
 <h2 style="text-align: center;">Cálculo do Payload</h2>
 <table>
     <tr><th>Tipo</th><th>Nº Passageiros</th><th>Peso total (kg)</th></tr>
@@ -44,16 +41,16 @@
     </tr>
 </table>
 
-<hr style="margin: 30px 0; border: none; border-top: 1px solid #999;"> <!-- linha de separação de tabelas -->
-    
+<hr style="margin: 30px 0; border: none; border-top: 1px solid #999;">
+
 <h2 style="text-align: center;">Conversor Kg &harr; Lb</h2>
 <table>
     <tr><td>Kg para lb</td><td><input type="number" inputmode="decimal" step="any" id="kg" value="0" oninput="convertKgToLb()" onchange="convertKgToLb()"></td><td id="toLb">0</td></tr>
     <tr><td>Lb para kg</td><td><input type="number" inputmode="decimal" step="any" id="lb" value="0" oninput="convertLbToKg()" onchange="convertLbToKg()"></td><td id="toKg">0</td></tr>
 </table>
 
-<hr style="margin: 30px 0; border: none; border-top: 1px solid #999;"> <!-- linha de separação de tabelas -->
-    
+<hr style="margin: 30px 0; border: none; border-top: 1px solid #999;">
+
 <h2 style="text-align: center;"> Mass & Balance
   <select id="aviaoSelecionado" onchange="calculate()" style="font-size: 14px; margin-left: 10px;"></select>
 </h2>
@@ -70,14 +67,12 @@
   <tr><td>Fuel to destination</td><td><input type="number" inputmode="decimal" step="any" id="fuelDest" value="0" oninput="calculate()" onchange="calculate()"></td><td id="momentDest">0</td><td>ARM = 7.936</td></tr>
   <tr id="landingRow" class="gray-row"><td>Landing Weight</td><td id="landingWeight" class="limit-check">0</td><td id="momentLanding">0</td><td>MAC: <span id="macLanding">0</span>%</td></tr>
 </table>
-    
-<hr style="margin: 30px 0; border: none; border-top: 1px solid #999;"> <!-- linha de separação de tabelas -->
-    
+
+<hr style="margin: 30px 0; border: none; border-top: 1px solid #999;">
+
 <div style="width: 100%; margin-bottom: 8px;">
   <div style="display: flex; align-items: center; position: relative;">
-    <!-- TÍTULO CENTRADO -->
     <h2 style="margin: 0 auto; position: absolute; left: 0; right: 0; text-align: center; pointer-events: none;">Rotas</h2>
-    <!-- BOTÕES À DIREITA -->
     <div style="margin-left: auto; z-index: 1;">
       <button id="btnAddLeg" title="Adicionar linha" style="font-size: 1.1em; padding: 2px 8px;">Adicionar linha</button>
       <button id="btnRemoveLeg" title="Remover linha" style="font-size: 1.1em; padding: 2px 8px;">Remover Linha</button>
@@ -90,8 +85,6 @@
   </div>
 </div>
 
-  
-</div>
 <table class="route-table" style="table-layout: fixed;">
   <thead>
     <tr>
@@ -100,14 +93,13 @@
       <th style="width: 17%;">Payl(kg)</th>
       <th style="width: 17%;">Tripf(lb)</th>
       <th style="width: 29%;">Info</th>
-      <th style="width: 10%;"></th> <!-- Botão + -->
+      <th style="width: 10%;"></th>
     </tr>
   </thead>
   <tbody id="legsTable"></tbody>
 </table>
 
 <!-- SCRIPTS PRINCIPAIS -->
-
 <script>
 // --- Funções de Cálculo Geral e Conversores ---
 
@@ -136,12 +128,11 @@ function preencherDropdown() {
 function inserirPayload() {
     const payload = document.getElementById("totalPayload").textContent;
     const destino = document.getElementById("manualPayload");
-    
     if (destino) {
         destino.value = payload;
         calculate();
     } else {
-        alert("Campo 'massPayload' não encontrado.");
+        alert("Campo 'manualPayload' não encontrado.");
     }
 }
     
@@ -252,274 +243,11 @@ function convertLbToKg() {
 </script>
 
 <script>
-// --- Funções da Tabela de Rotas (LEGS) ---
-
-let legsData = [];
-let legEmEdicao = null; // Índice da linha que está a ser editada no popup
-
-function carregarLegsDoLocalStorage() {
-  let dados = localStorage.getItem('legsDataV2');
-  if (dados) {
-    legsData = JSON.parse(dados);
-  } else {
-    // Começa com 5 linhas vazias se não houver dados
-    legsData = Array(5).fill(0).map(()=>({homens:0, mulheres:0, criancas:0, bagagem:0, payload:0}));
-  }
-}
-
-function guardarLegsNoLocalStorage() {
-  localStorage.setItem('legsDataV2', JSON.stringify(legsData));
-}
-	
-let linhaSelecionadaIndex = null;
-
-function selecionarLinhaLeg(tr) {
-  document.querySelectorAll('#legsTable tr').forEach(row => row.classList.remove('selected'));
-  tr.classList.add('selected');
-  linhaSelecionadaIndex = Array.from(tr.parentNode.children).indexOf(tr);
-}
-	
-function carregarDropdownRotas() {
-    const rotas = JSON.parse(localStorage.getItem("rotasPadrao") || "[]");
-    const dropdown = document.getElementById("dropdownRotas");
-    if (!dropdown) return;
-
-    dropdown.innerHTML = '<option value="">-- Selecionar rota --</option>';
-    rotas.forEach((r, i) => {
-        const opt = document.createElement("option");
-        opt.value = i;
-        opt.text = r.nome;
-        dropdown.appendChild(opt);
-    });
-}
-
-function criarLinhaLeg(route = '', depF = '', payl = '', tripF = '') {
-    const tbody = document.getElementById('legsTable');
-    const tr = document.createElement('tr');
-
-    tr.innerHTML = `
-        <td class="rota-col" onclick="editarRota(this)">
-          <div class="rota-visual">${route}</div>
-          <input type="text" class="rota-edit" value="${route}" onblur="fecharRota(this)" style="display: none;">
-        </td>
-        <td><input type="number" inputmode="decimal" step="any" value="${depF}" data-auto="1"></td>
-        <td>
-		<input type="number" inputmode="decimal" step="any" value="${payl}" 
-		style="width:60px"
-		onclick="abrirPopupPayload(this)" 
-		readonly>
-	</td>
-        <td><input type="number" inputmode="decimal" step="any" value="${tripF}"></td>
-        <td class="ldg">0</td>
-        <td><button class="route-insert" onclick="inserirLeg(this)">+</button></td>
-    `;
-
-    // Seleção visual da linha ao clicar (menos no botão)
-    tr.addEventListener('click', function(e) {
-      if (e.target.tagName === "BUTTON") return;
-      selecionarLinhaLeg(tr);
-    });
-
-    tbody.appendChild(tr);
-
-    tr.querySelectorAll('input').forEach(input => {
-        input.addEventListener('focus', () => input.select());
-        input.addEventListener('input', () => {
-            input.dataset.auto = "0";
-            updateLdgAuto();
-            guardarLegs();
-        });
-    });
-    
-    updateLdgAuto();
-}
-
-function editarRota(td) {
-    const div = td.querySelector('.rota-visual');
-    const input = td.querySelector('.rota-edit');
-    input.value = div.textContent.trim();
-    div.style.display = "none";
-    input.style.display = "block";
-    input.focus();
-    input.select();
-}
-
-function fecharRota(input) {
-    const td = input.parentElement;
-    const div = td.querySelector('.rota-visual');
-    div.textContent = input.value.trim();
-    input.style.display = "none";
-    div.style.display = "block";
-    updateLdgAuto();
-    guardarLegs();
-}
-
-function guardarLegs() {
-    const linhas = [...document.querySelectorAll('#legsTable tr')];
-    const dados = linhas.map(row => ({
-        route: row.cells[0].querySelector('.rota-edit').value.trim(),
-        depF: row.cells[1].querySelector("input")?.value || '',
-        payl: row.cells[2].querySelector("input")?.value || '',
-        tripF: row.cells[3].querySelector("input")?.value || ''
-    }));
-    localStorage.setItem('rotaAtiva', JSON.stringify(dados));
-}
-
-function carregarLegs() {
-    const dados = JSON.parse(localStorage.getItem('rotaAtiva') || '[]');
-    const tbody = document.getElementById("legsTable");
-    tbody.innerHTML = "";
-    
-    if (dados.length === 0) {
-        for (let i = 0; i < 5; i++) criarLinhaLeg();
-    } else {
-        dados.forEach(l => criarLinhaLeg(l.route, l.depF, l.payl, l.tripF));
-    }
-}
-
-function preencherLegsComRota() {
-    const dropdown = document.getElementById("dropdownRotas");
-    const idx = dropdown.value;
-    
-    localStorage.setItem('rotaSelecionadaIndex', dropdown.selectedIndex);
-
-    if (idx === "") {
-        const tbody = document.getElementById("legsTable");
-        tbody.innerHTML = "";
-        for (let i = 0; i < 5; i++) criarLinhaLeg();
-        localStorage.removeItem('rotaAtiva'); 
-        guardarLegs();
-        return;
-    }
-
-    const rotas = JSON.parse(localStorage.getItem("rotasPadrao") || "[]");
-    if (!rotas[idx]) return;
-
-    const rotaSelecionada = rotas[idx];
-    const tbody = document.getElementById("legsTable");
-    tbody.innerHTML = "";
-
-    rotaSelecionada.legs.forEach(leg => {
-        criarLinhaLeg(leg.route, leg.depF, leg.payl, leg.tripF);
-    });
-
-    guardarLegs();
-}
-
-function inserirLeg(btn) {
-    const row = btn.closest("tr");
-    const depFuelLb = parseFloat(row.cells[1].querySelector("input")?.value || 0);
-    const payloadKg = parseFloat(row.cells[2].querySelector("input")?.value || 0);
-    const tripFuelLb = parseFloat(row.cells[3].querySelector("input")?.value || 0);
-    const depFuelKg = depFuelLb / 2.20462;
-    const tripFuelKg = tripFuelLb / 2.20462;
-    document.getElementById("manualPayload").value = Math.round(payloadKg);
-    document.getElementById("fuel").value = Math.round(depFuelKg);
-    document.getElementById("fuelDest").value = Math.round(tripFuelKg);
-    if (typeof calculate === "function") calculate();
-}
-
-function updateLdgAuto() {
-    
-    const rows = document.querySelectorAll("#legsTable tr");
-    rows.forEach((row, i) => {
-	    const inputs     = row.querySelectorAll("td input");
-	    const depFuelLb  = parseFloat(inputs[1].value) || 0;     // lb
-	    const payloadKg  = Math.round(parseFloat(inputs[2].value) || 0); // kg
-	    const tripLb    = parseFloat(inputs[3].value)    || 0; // lb
-	    
-	    const BEW        = parseFloat(document.getElementById("basicWeight").innerText) || 0;
-	    const pilots     = parseFloat(document.getElementById("pilots").value)       || 0;
-	    const taxiKg     = parseFloat(document.getElementById("fuelTaxi").value)     || 0;
-	
-	    const depFuelKg  = Math.round(depFuelLb / 2.20462);	    
-	    const maxFuelKg   = 5730 - (BEW + pilots + payloadKg);
-	    const maxFuelLb = Math.round(maxFuelKg * 2.20462);
-	    const maxPayloadKg = 5730 - (BEW + pilots + depFuelKg);
-			
-	    const ldgCell = row.querySelector(".ldg");
-	    if (ldgCell) {
-	      ldgCell.innerHTML = `
-		<div>Max PayL: ${maxPayloadKg.toFixed(0)} kg</div>
-		<div>Max Fuel: ${maxFuelLb.toFixed(0)} lb</div>
-	      `;
-	    }	
-
-	    const ldgKg = depFuelLb - tripLb;	
-	    
-		//calcula o proximo departure fuel
-	     // autopreenche próximo Dep
-	    if (i + 1 < rows.length) {
-	      const nextDepInput = rows[i + 1].cells[1].querySelector("input");
-	      const atual        = nextDepInput.value || "";
-	      const isAuto       = nextDepInput.dataset.auto;
-	      if (!atual || atual === "0" || isAuto === "1") {
-		nextDepInput.value = ldgKg;
-		nextDepInput.dataset.auto = "1";
-	      }
-	    }	
-	    // pinta de vermelho a linha que ultrapassa o peso permitido a descolagem
-	    row.classList.toggle("overweight", depFuelLb > maxFuelLb);
-  });
-}
-
-function adicionarLinhaLeg() {
-  const tbody = document.getElementById('legsTable');
-  let idx = linhaSelecionadaIndex;
-  if (idx == null || idx < 0) idx = tbody.children.length - 1;
-
-  const novaLinha = tbody.children[idx]?.cloneNode(true) || null;
-  if (novaLinha) {
-    // Limpa os valores dos inputs
-    novaLinha.querySelectorAll('input').forEach(input => input.value = '');
-    novaLinha.querySelector('.rota-visual').textContent = '';
-    novaLinha.querySelector('.rota-edit').value = '';
-    tbody.insertBefore(novaLinha, tbody.children[idx + 1]);
-    // Atualiza handlers e index selecionado
-    criarLinhaLegHandlers(novaLinha);
-    selecionarLinhaLeg(novaLinha);
-    guardarLegs();
-    updateLdgAuto();
-  } else {
-    // Se não houver linha, cria de raiz
-    criarLinhaLeg();
-  }
-}
-
-function removerLinhaLeg() {
-  const tbody = document.getElementById('legsTable');
-  let idx = linhaSelecionadaIndex;
-  if (idx == null || idx < 0) return;
-  if (tbody.children.length <= 1) return; // Garante pelo menos uma linha
-
-  tbody.removeChild(tbody.children[idx]);
-  linhaSelecionadaIndex = null;
-  guardarLegs();
-  updateLdgAuto();
-}
-
-// Função para garantir handlers de seleção em linhas inseridas manualmente
-function criarLinhaLegHandlers(tr) {
-  tr.addEventListener('click', function(e) {
-    if (e.target.tagName === "BUTTON") return;
-    selecionarLinhaLeg(tr);
-  });
-}
-	
-</script>
-
-<script>
-// --- Lógica de Inicialização da Página ---
-
-/**
- * Carrega as definições padrão do ficheiro `default_settings.html` se não existirem no localStorage.
- * Esta função garante que a aplicação tem dados base para funcionar na primeira utilização.
- */
+// --- Lógica de Inicialização da Página e carregamento dos dados padrão ---
 async function carregarValoresPadraoSeNecessario() {
   const definicoesExistem = localStorage.getItem("definicoesMB");
   const rotasExistem = localStorage.getItem("rotasPadrao");
 
-  // Se ambos já existem, não faz nada
   if (definicoesExistem && rotasExistem) {
     return;
   }
@@ -527,10 +255,8 @@ async function carregarValoresPadraoSeNecessario() {
   try {
     const response = await fetch('default_settings.json');
     if (!response.ok) throw new Error('A resposta da rede não foi bem-sucedida.');
-
     const defaults = await response.json();
-    
-    // Define os valores no localStorage apenas se não existirem
+
     if (!definicoesExistem) {
       localStorage.setItem("definicoesMB", JSON.stringify(defaults.definicoesMB));
     }
@@ -538,10 +264,8 @@ async function carregarValoresPadraoSeNecessario() {
       localStorage.setItem("rotasPadrao", JSON.stringify(defaults.rotasPadrao));
     }
     console.log("Definições padrão carregadas com sucesso a partir do ficheiro.");
-
   } catch (error) {
     console.error("Falha ao carregar definições padrão:", error);
-    // Fallback para valores codificados para garantir que a app funciona mesmo offline ou com erros de rede
     if (!definicoesExistem) {
       const definicoesIniciais = {
         pesoHomem: 86, pesoMulher: 68, pesoCrianca: 35, pesoBagagem: 10,
@@ -556,11 +280,9 @@ async function carregarValoresPadraoSeNecessario() {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
-    // 1. Carrega as definições padrão ANTES de qualquer outra coisa
     await carregarValoresPadraoSeNecessario();
-    
-    // 2. Continua com a inicialização normal
-	carregarLegsDoLocalStorage();
+
+    carregarLegsDoLocalStorage();
     preencherDropdown();
     carregarDropdownRotas();
 
@@ -584,19 +306,18 @@ document.addEventListener('DOMContentLoaded', async () => {
             input.addEventListener('input', calculate);
         }
     });
-    // botões de adicionar/remover tabela rota
+
     document.getElementById('btnAddLeg').onclick = adicionarLinhaLeg;
     document.getElementById('btnRemoveLeg').onclick = removerLinhaLeg;
 
-    // Inicialização extra para garantir que não ficam linhas sem handlers de seleção
     document.querySelectorAll('#legsTable tr').forEach(tr => criarLinhaLegHandlers(tr));
-	
+
     calculate();
     updateLdgAuto();
     feather.replace();
 });
 </script>
-	
+
 <script defer>
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('service-worker.js')
@@ -604,7 +325,6 @@ if ('serviceWorker' in navigator) {
         .catch(err => console.error("Erro ao registar SW:", err));
 }
 </script>
-
 
 <!-- Popup para editar payload de cada leg -->
 <div id="popupPayload" style="display:none; position:fixed; left:0; top:0; width:100vw; height:100vh; z-index:999; background:rgba(0,0,0,0.35); align-items:center; justify-content:center;">
@@ -623,37 +343,207 @@ if ('serviceWorker' in navigator) {
 </div>
 
 <script>
-// === Popup Payload Legs ===
+// === Gestão única de legs, popup e dados associados ===
 
-// Dados dos payloads por linha (são sincronizados com localStorage)
 let legsData = [];
-let legEmEdicao = null; // Índice da linha a editar
+let legEmEdicao = null;
+let linhaSelecionadaIndex = null;
 
-// Carregar dados do localStorage no início
 function carregarLegsDoLocalStorage() {
   let dados = localStorage.getItem('legsDataV2');
   if (dados) {
     legsData = JSON.parse(dados);
   } else {
-    // Começa com 5 linhas vazias se não houver dados
     legsData = Array(5).fill(0).map(()=>({homens:0, mulheres:0, criancas:0, bagagem:0, payload:0}));
   }
 }
 function guardarLegsNoLocalStorage() {
   localStorage.setItem('legsDataV2', JSON.stringify(legsData));
 }
+function selecionarLinhaLeg(tr) {
+  document.querySelectorAll('#legsTable tr').forEach(row => row.classList.remove('selected'));
+  tr.classList.add('selected');
+  linhaSelecionadaIndex = Array.from(tr.parentNode.children).indexOf(tr);
+}
+function carregarDropdownRotas() {
+    const rotas = JSON.parse(localStorage.getItem("rotasPadrao") || "[]");
+    const dropdown = document.getElementById("dropdownRotas");
+    if (!dropdown) return;
 
-// Função para abrir o popup quando se clica no input da célula Payload
+    dropdown.innerHTML = '<option value="">-- Selecionar rota --</option>';
+    rotas.forEach((r, i) => {
+        const opt = document.createElement("option");
+        opt.value = i;
+        opt.text = r.nome;
+        dropdown.appendChild(opt);
+    });
+}
+function criarLinhaLeg(route = '', depF = '', payl = '', tripF = '') {
+    const tbody = document.getElementById('legsTable');
+    const tr = document.createElement('tr');
+
+    tr.innerHTML = `
+        <td class="rota-col" onclick="editarRota(this)">
+          <div class="rota-visual">${route}</div>
+          <input type="text" class="rota-edit" value="${route}" onblur="fecharRota(this)" style="display: none;">
+        </td>
+        <td><input type="number" inputmode="decimal" step="any" value="${depF}" data-auto="1"></td>
+        <td>
+		<input type="number" inputmode="decimal" step="any" value="${payl}" 
+		style="width:60px"
+		onclick="abrirPopupPayload(this)" 
+		readonly>
+	</td>
+        <td><input type="number" inputmode="decimal" step="any" value="${tripF}"></td>
+        <td class="ldg">0</td>
+        <td><button class="route-insert" onclick="inserirLeg(this)">+</button></td>
+    `;
+
+    tr.addEventListener('click', function(e) {
+      if (e.target.tagName === "BUTTON") return;
+      selecionarLinhaLeg(tr);
+    });
+
+    tbody.appendChild(tr);
+
+    tr.querySelectorAll('input').forEach(input => {
+        input.addEventListener('focus', () => input.select());
+        input.addEventListener('input', () => {
+            input.dataset.auto = "0";
+            updateLdgAuto();
+            guardarLegs();
+        });
+    });
+
+    updateLdgAuto();
+}
+function editarRota(td) {
+    const div = td.querySelector('.rota-visual');
+    const input = td.querySelector('.rota-edit');
+    input.value = div.textContent.trim();
+    div.style.display = "none";
+    input.style.display = "block";
+    input.focus();
+    input.select();
+}
+function fecharRota(input) {
+    const td = input.parentElement;
+    const div = td.querySelector('.rota-visual');
+    div.textContent = input.value.trim();
+    input.style.display = "none";
+    div.style.display = "block";
+    updateLdgAuto();
+    guardarLegs();
+}
+function guardarLegs() {
+    const linhas = [...document.querySelectorAll('#legsTable tr')];
+    const dados = linhas.map(row => ({
+        route: row.cells[0].querySelector('.rota-edit').value.trim(),
+        depF: row.cells[1].querySelector("input")?.value || '',
+        payl: row.cells[2].querySelector("input")?.value || '',
+        tripF: row.cells[3].querySelector("input")?.value || ''
+    }));
+    localStorage.setItem('rotaAtiva', JSON.stringify(dados));
+}
+function carregarLegs() {
+    const dados = JSON.parse(localStorage.getItem('rotaAtiva') || '[]');
+    const tbody = document.getElementById("legsTable");
+    tbody.innerHTML = "";
+
+    if (dados.length === 0) {
+        for (let i = 0; i < 5; i++) criarLinhaLeg();
+    } else {
+        dados.forEach(l => criarLinhaLeg(l.route, l.depF, l.payl, l.tripF));
+    }
+}
+function preencherLegsComRota() {
+    const dropdown = document.getElementById("dropdownRotas");
+    const idx = dropdown.value;
+    localStorage.setItem('rotaSelecionadaIndex', dropdown.selectedIndex);
+
+    if (idx === "") {
+        const tbody = document.getElementById("legsTable");
+        tbody.innerHTML = "";
+        for (let i = 0; i < 5; i++) criarLinhaLeg();
+        localStorage.removeItem('rotaAtiva');
+        guardarLegs();
+        return;
+    }
+    const rotas = JSON.parse(localStorage.getItem("rotasPadrao") || "[]");
+    if (!rotas[idx]) return;
+
+    const rotaSelecionada = rotas[idx];
+    const tbody = document.getElementById("legsTable");
+    tbody.innerHTML = "";
+
+    rotaSelecionada.legs.forEach(leg => {
+        criarLinhaLeg(leg.route, leg.depF, leg.payl, leg.tripF);
+    });
+
+    guardarLegs();
+}
+function inserirLeg(btn) {
+    const row = btn.closest("tr");
+    const depFuelLb = parseFloat(row.cells[1].querySelector("input")?.value || 0);
+    const payloadKg = parseFloat(row.cells[2].querySelector("input")?.value || 0);
+    const tripFuelLb = parseFloat(row.cells[3].querySelector("input")?.value || 0);
+    const depFuelKg = depFuelLb / 2.20462;
+    const tripFuelKg = tripFuelLb / 2.20462;
+    document.getElementById("manualPayload").value = Math.round(payloadKg);
+    document.getElementById("fuel").value = Math.round(depFuelKg);
+    document.getElementById("fuelDest").value = Math.round(tripFuelKg);
+    if (typeof calculate === "function") calculate();
+}
+function updateLdgAuto() {
+    const rows = document.querySelectorAll("#legsTable tr");
+    rows.forEach((row, i) => {
+        const inputs     = row.querySelectorAll("td input");
+        const depFuelLb  = parseFloat(inputs[1].value) || 0;
+        const payloadKg  = Math.round(parseFloat(inputs[2].value) || 0);
+        const tripLb     = parseFloat(inputs[3].value) || 0;
+        const BEW        = parseFloat(document.getElementById("basicWeight").innerText) || 0;
+        const pilots     = parseFloat(document.getElementById("pilots").value) || 0;
+        const taxiKg     = parseFloat(document.getElementById("fuelTaxi").value) || 0;
+        const depFuelKg  = Math.round(depFuelLb / 2.20462);
+        const maxFuelKg  = 5730 - (BEW + pilots + payloadKg);
+        const maxFuelLb  = Math.round(maxFuelKg * 2.20462);
+        const maxPayloadKg = 5730 - (BEW + pilots + depFuelKg);
+        const ldgCell = row.querySelector(".ldg");
+        if (ldgCell) {
+            ldgCell.innerHTML = `
+                <div>Max PayL: ${maxPayloadKg.toFixed(0)} kg</div>
+                <div>Max Fuel: ${maxFuelLb.toFixed(0)} lb</div>
+            `;
+        }
+        const ldgKg = depFuelLb - tripLb;
+        if (i + 1 < rows.length) {
+            const nextDepInput = rows[i + 1].cells[1].querySelector("input");
+            const atual        = nextDepInput.value || "";
+            const isAuto       = nextDepInput.dataset.auto;
+            if (!atual || atual === "0" || isAuto === "1") {
+                nextDepInput.value = ldgKg;
+                nextDepInput.dataset.auto = "1";
+            }
+        }
+        row.classList.toggle("overweight", depFuelLb > maxFuelLb);
+    });
+}
+function criarLinhaLegHandlers(tr) {
+    tr.addEventListener('click', function(e) {
+        if (e.target.tagName === "BUTTON") return;
+        selecionarLinhaLeg(tr);
+    });
+}
+
+// --- Popup Payload ---
 function abrirPopupPayload(input) {
     const tr = input.closest('tr');
     const idx = Array.from(tr.parentNode.children).indexOf(tr);
     legEmEdicao = idx;
 
-    // Garantir array inicializada
     if (!window.legsData) window.legsData = [];
     if (!legsData[idx]) legsData[idx] = {homens:0, mulheres:0, criancas:0, bagagem:0, payload:0};
 
-    // Preencher campos do popup
     document.getElementById('ppHomens').value   = legsData[idx].homens   ?? 0;
     document.getElementById('ppMulheres').value = legsData[idx].mulheres ?? 0;
     document.getElementById('ppCriancas').value = legsData[idx].criancas ?? 0;
@@ -661,8 +551,6 @@ function abrirPopupPayload(input) {
     atualizarPopupTotal();
     document.getElementById('popupPayload').style.display = 'flex';
 }
-
-// Atualiza total no popup ao editar campos
 function atualizarPopupTotal() {
     const defs = JSON.parse(localStorage.getItem('definicoesMB')) || {};
     const pH = defs.pesoHomem   || 86;
@@ -676,8 +564,6 @@ function atualizarPopupTotal() {
     document.getElementById('ppTotal').innerText = total;
     return total;
 }
-
-// Quando se clica para guardar o Payload do popup
 function guardarPayloadDoPopup() {
     if (legEmEdicao === null) return;
     legsData[legEmEdicao] = {
@@ -687,7 +573,6 @@ function guardarPayloadDoPopup() {
         bagagem:  parseInt(document.getElementById('ppBagagem').value)  || 0,
         payload:  atualizarPopupTotal()
     };
-    // Atualiza o input da célula com o novo payload
     const tr = document.querySelectorAll('#legsTable tr')[legEmEdicao];
     if (tr) {
         const paylInput = tr.cells[2].querySelector('input');
@@ -696,30 +581,22 @@ function guardarPayloadDoPopup() {
     guardarLegsNoLocalStorage();
     fecharPopupPayload();
 }
-
 function fecharPopupPayload() {
     document.getElementById('popupPayload').style.display = 'none';
     legEmEdicao = null;
 }
-
-// Atualiza total sempre que há input no popup
 ['ppHomens', 'ppMulheres', 'ppCriancas', 'ppBagagem'].forEach(id => {
     document.getElementById(id).addEventListener('input', atualizarPopupTotal);
 });
 
-// Interceptar cliques nos inputs de Payload das linhas de legs
 document.addEventListener('DOMContentLoaded', () => {
     carregarLegsDoLocalStorage();
-
-    // Adiciona listener a todas as linhas criadas após o DOM estar pronto
     function ativarPopupNasCelulasPayload() {
         document.querySelectorAll('#legsTable tr').forEach((tr, idx) => {
             const paylInput = tr.cells[2]?.querySelector('input');
             if (paylInput) {
-                // Remove listeners antigos
                 paylInput.onfocus = null;
                 paylInput.onclick = null;
-                // Ao clicar, abrir popup
                 paylInput.addEventListener('focus', function(e){
                     e.preventDefault();
                     abrirPopupPayload(paylInput);
@@ -731,16 +608,12 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-
-    // Chama ao carregar as legs
-    setTimeout(ativarPopupNasCelulasPayload, 350); // Pequeno delay para garantir que linhas já existem
-
-    // Sempre que adicionar/remover linha, volta a ativar o popup nos inputs
+    setTimeout(ativarPopupNasCelulasPayload, 350);
     const observer = new MutationObserver(ativarPopupNasCelulasPayload);
     observer.observe(document.getElementById('legsTable'), {childList: true});
 });
 
-// GARANTE QUE AO ADICIONAR/REMOVER LINHA a array legsData é mantida correta!
+// Funções adicionar/remover linha sincronizam com legsData!
 function adicionarLinhaLeg() {
   const tbody = document.getElementById('legsTable');
   let idx = linhaSelecionadaIndex;
@@ -753,7 +626,6 @@ function adicionarLinhaLeg() {
     tbody.insertBefore(novaLinha, tbody.children[idx + 1]);
     criarLinhaLegHandlers(novaLinha);
     selecionarLinhaLeg(novaLinha);
-    // ADICIONAR novo objeto na mesma posição
     legsData.splice(idx+1, 0, {homens:0, mulheres:0, criancas:0, bagagem:0, payload:0});
     guardarLegsNoLocalStorage();
     updateLdgAuto();
@@ -773,7 +645,5 @@ function removerLinhaLeg() {
   updateLdgAuto();
 }
 </script>
-
-	
 </body>
 </html>

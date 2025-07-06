@@ -166,8 +166,8 @@ function calculate() {
     document.getElementById('macLanding').innerText = macLanding.toFixed(1);
 
     let maxPayload = 5730 - (aviao.peso + pilots + fuel);
-    const effectivePayload = manualPayload > 0 ? manualPayload : payload;
-    let maxFuel = 5730 - (aviao.peso + pilots + effectivePayload);
+    //const effectivePayload = manualPayload > 0 ? manualPayload : payload;
+    //let maxFuel = 5730 - (aviao.peso + pilots + effectivePayload);
 
     document.getElementById('maxPayloadNote').innerText = maxPayload > 0
         ? ` | Máx Payload: ${maxPayload.toFixed(0)} kg`

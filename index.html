@@ -408,7 +408,13 @@ function updateLdgAuto() {
 	const bew = parseFloat(document.getElementById("basicWeight")?.innerText) || 0;
 	const pilots = parseFloat(document.getElementById("pilots")?.value) || 0;	
 	const maxPayload = 5730 - (bew + pilots + Math.round((dep / 2.20462)));
-	const maxFuel = Math.round(2.20462 * (5730 - (bew + pilots + pay)));		
+	const maxFuel = Math.round(2.20462 * (5730 - (bew + pilots + pay)));	
+	    
+  // Adiciona isto para ver os valores
+  console.log(`Leg ${i}: maxPayload=${maxPayload.toFixed(1)} kg, maxFuel=${maxFuel.toFixed(1)} kg`);
+	    console.log({ dep, depKg, pay, payKg, maxPayload, maxFuel });
+
+
         const ldgCell = rows[i].querySelector(".ldg"); 		
 	if (ldgCell) ldgCell.innerHTML = `
 		<div>Max PayL: ${maxPayload.toFixed(0)}</div>
@@ -426,6 +432,7 @@ function updateLdgAuto() {
         verificarPesoLinha(rows[i]);
     }
 }
+
 </script>
 
 <script>

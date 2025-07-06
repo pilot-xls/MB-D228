@@ -373,22 +373,33 @@ function inserirLeg(btn) {
 }
 
 function verificarPesoLinha(row) {
-    const defs = JSON.parse(localStorage.getItem("definicoesMB")) || {};
-    const aviaoIndex = document.getElementById("aviaoSelecionado").selectedIndex || 0;
-    const aviao = defs.avioes?.[aviaoIndex];
-    const BEW = aviao?.peso || 0;
-    const pilots = parseFloat(document.getElementById("pilots")?.value || 0);
-    const fuelTaxi = parseFloat(document.getElementById("fuelTaxi")?.value || 0);
-    const depFuelLb = parseFloat(row.cells[1].querySelector("input")?.value || 0);
-    const payloadKg = parseFloat(row.cells[2].querySelector("input")?.value || 0);
-    const depFuelKg = Math.round(depFuelLb / 2.20462);
-    const taxiFuelKg = fuelTaxi;
-    const takeoffKg = BEW + pilots + payloadKg + depFuelKg - taxiFuelKg;
-    if (takeoffKg > 5700) {
-        row.classList.add("overweight");
-    } else {
-        row.classList.remove("overweight");
-    }
+	const defs       = JSON.parse(localStorage.getItem("definicoesMB")) || {};
+	const aviaoIndex = document.getElementById("aviaoSelecionado").selectedIndex || 0;
+	const aviao      = defs.avioes?.[aviaoIndex];
+	const BEW        = aviao?.peso || 0;// kg
+	const pilots     = Math.round(parseFloat(document.getElementById("pilots")?.value) || 0); // kg, já inteiro
+	const fuelTaxi   = Math.round(parseFloat(document.getElementById("fuelTaxi")?.value) || 0); // kg, já inteiro
+	
+	// 1) Leitura em libras
+	const depFuelLb  = parseFloat(row.cells[1].querySelector("input")?.value) || 0; // lb
+	// 2) Converte e arredonda para kg
+	const depFuelKg  = Math.round(depFuelLb / 2.20462); // kg, inteiro
+	// 3) Lê payload e arredonda
+	const payloadKg  = Math.round(parseFloat(row.cells[2].querySelector("input")?.value) || 0);// kg, inteiro
+	
+	// 4) Calcula o máximo de fuel em kg
+	const maxFuelKg  = 5730 - (BEW + pilots + payloadKg);
+	
+	// 5) Se quiseres mostrar em lb, converte e arredonda
+	const maxFuelLb  = Math.round(maxFuelKg * 2.20462);
+	
+	// 6) Pinta de vermelho se passar do limite
+	const takeoffKg  = BEW + pilots + payloadKg + depFuelKg - fuelTaxi; // todo inteiro
+	if (takeoffKg > 5700) {
+		row.classList.add("overweight");
+	} else {
+		row.classList.remove("overweight");
+	}
 }
 
 function updateLdgAuto() {

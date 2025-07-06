@@ -381,7 +381,7 @@ function verificarPesoLinha(row) {
     const fuelTaxi = parseFloat(document.getElementById("fuelTaxi")?.value || 0);
     const depFuelLb = parseFloat(row.cells[1].querySelector("input")?.value || 0);
     const payloadKg = parseFloat(row.cells[2].querySelector("input")?.value || 0);
-    const depFuelKg = depFuelLb / 2.20462;
+    const depFuelKg = Math.round(depFuelLb / 2.20462);
     const taxiFuelKg = fuelTaxi;
     const takeoffKg = BEW + pilots + payloadKg + depFuelKg - taxiFuelKg;
     if (takeoffKg > 5700) {

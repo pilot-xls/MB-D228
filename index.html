@@ -465,7 +465,7 @@ function updateLdgAuto() {
         const maxFuelKg  = 5730 - (BEW + pilots + payloadKg);
         const maxFuelLb  = Math.round(maxFuelKg * 2.20462);
         const maxPayloadKg = 5730 - (BEW + pilots + depFuelKg);
-	const TakeoffUnderLoad = 5700 - (BEW + pilots + payloadKg + depFuelKg + taxiKg);    
+	const TakeoffUnderLoad = 5700 - (BEW + pilots + payloadKg + depFuelKg - taxiKg);    
         const ldgCell = row.querySelector(".ldg");
         if (ldgCell) {
             ldgCell.innerHTML = `

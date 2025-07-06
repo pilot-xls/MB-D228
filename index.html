@@ -73,12 +73,14 @@
     
 <hr style="margin: 30px 0; border: none; border-top: 1px solid #999;"> <!-- linha de separação de tabelas -->
     
-<h2 style="text-align: center;">Rotas</h2>
-<div style="text-align: center; margin-bottom: 10px;">
-  
-<select id="dropdownRotas" onchange="preencherLegsComRota()">
-  <option value="">-- Selecionar rota --</option>
-</select>
+<div style="text-align: center; display: flex; justify-content: center; align-items: center; gap: 12px; margin-bottom: 10px;">
+  <h2 style="margin: 0;">Rotas</h2>
+  <button id="btnAddLeg" title="ADD" style="font-size: 1.1em; padding: 2px 8px; margin-left: 8px;">+</button>
+  <button id="btnRemoveLeg" title="DEL" style="font-size: 1.1em; padding: 2px 8px;">–</button>
+  <select id="dropdownRotas" onchange="preencherLegsComRota()" style="margin-left: 20px;">
+    <option value="">-- Selecionar rota --</option>
+  </select>
+</div>
   
 </div>
 <table class="route-table" style="table-layout: fixed;">
@@ -243,6 +245,54 @@ function convertLbToKg() {
 <script>
 // --- Funções da Tabela de Rotas (LEGS) ---
 
+let linhaSelecionadaIndex = null;
+
+function selecionarLinhaLeg(tr) {
+  document.querySelectorAll('#legsTable tr').forEach(row => row.classList.remove('selected'));
+  tr.classList.add('selected');
+  linhaSelecionadaIndex = Array.from(tr.parentNode.children).indexOf(tr);
+}
+
+// Ao criar a linha:
+function criarLinhaLeg(route = '', depF = '', payl = '', tripF = '') {
+    const tbody = document.getElementById('legsTable');
+    const tr = document.createElement('tr');
+
+    tr.innerHTML = `
+        <td class="rota-col" onclick="editarRota(this)">
+          <div class="rota-visual">${route}</div>
+          <input type="text" class="rota-edit" value="${route}" onblur="fecharRota(this)" style="display: none;">
+        </td>
+        <td><input type="number" inputmode="decimal" step="any" value="${depF}" data-auto="1"></td>
+        <td><input type="number" inputmode="decimal" step="any" value="${payl}"></td>
+        <td><input type="number" inputmode="decimal" step="any" value="${tripF}"></td>
+        <td class="ldg">0</td>
+        <td><button class="route-insert" onclick="inserirLeg(this)">+</button></td>
+    `;
+
+    // ADICIONA ISTO para seleção visual da linha
+    tr.addEventListener('click', function(e) {
+      // Ignora se clicares no botão "+"
+      if (e.target.tagName === "BUTTON") return;
+      selecionarLinhaLeg(tr);
+    });
+
+    tbody.appendChild(tr);
+
+    tr.querySelectorAll('input').forEach(input => {
+        input.addEventListener('focus', () => input.select());
+        input.addEventListener('input', () => {
+            input.dataset.auto = "0";
+            updateLdgAuto();
+            guardarLegs();
+        });
+    });
+    
+    updateLdgAuto();
+}
+
+
+	
 function carregarDropdownRotas() {
     const rotas = JSON.parse(localStorage.getItem("rotasPadrao") || "[]");
     const dropdown = document.getElementById("dropdownRotas");
@@ -416,6 +466,49 @@ function updateLdgAuto() {
   });
 }
 
+function adicionarLinhaLeg() {
+  const tbody = document.getElementById('legsTable');
+  let idx = linhaSelecionadaIndex;
+  if (idx == null || idx < 0) idx = tbody.children.length - 1;
+
+  const novaLinha = tbody.children[idx]?.cloneNode(true) || null;
+  if (novaLinha) {
+    // Limpa os valores dos inputs
+    novaLinha.querySelectorAll('input').forEach(input => input.value = '');
+    novaLinha.querySelector('.rota-visual').textContent = '';
+    novaLinha.querySelector('.rota-edit').value = '';
+    tbody.insertBefore(novaLinha, tbody.children[idx + 1]);
+    // Atualiza handlers e index selecionado
+    criarLinhaLegHandlers(novaLinha);
+    selecionarLinhaLeg(novaLinha);
+    guardarLegs();
+    updateLdgAuto();
+  } else {
+    // Se não houver linha, cria de raiz
+    criarLinhaLeg();
+  }
+}
+
+function removerLinhaLeg() {
+  const tbody = document.getElementById('legsTable');
+  let idx = linhaSelecionadaIndex;
+  if (idx == null || idx < 0) return;
+  if (tbody.children.length <= 1) return; // Garante pelo menos uma linha
+
+  tbody.removeChild(tbody.children[idx]);
+  linhaSelecionadaIndex = null;
+  guardarLegs();
+  updateLdgAuto();
+}
+
+// Função para garantir handlers de seleção em linhas inseridas manualmente
+function criarLinhaLegHandlers(tr) {
+  tr.addEventListener('click', function(e) {
+    if (e.target.tagName === "BUTTON") return;
+    selecionarLinhaLeg(tr);
+  });
+}
+	
 </script>
 
 <script>
@@ -493,7 +586,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             input.addEventListener('input', calculate);
         }
     });
-    
+    // botões de adicionar/remover tabela rota
+    document.getElementById('btnAddLeg').onclick = adicionarLinhaLeg;
+    document.getElementById('btnRemoveLeg').onclick = removerLinhaLeg;
+
+    // Inicialização extra para garantir que não ficam linhas sem handlers de seleção
+    document.querySelectorAll('#legsTable tr').forEach(tr => criarLinhaLegHandlers(tr));
+	
     calculate();
     updateLdgAuto();
     feather.replace();

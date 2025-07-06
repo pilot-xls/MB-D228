@@ -431,7 +431,7 @@ function updateLdgAuto() {
 	      `;
 	    }	
 	    // marca excesso com base no cálculo exato em kg
-	    row.classList.toggle("overweight", actualTakeoffKg.toFixed(0) > TAKEOFF_LIMIT_KG);
+	    row.classList.toggle("overweight", depFuelLb > maxFuelLb);
   });
 }
 

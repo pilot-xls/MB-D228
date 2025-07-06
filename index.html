@@ -364,8 +364,8 @@ function inserirLeg(btn) {
     const depFuelLb = parseFloat(row.cells[1].querySelector("input")?.value || 0);
     const payloadKg = parseFloat(row.cells[2].querySelector("input")?.value || 0);
     const tripFuelLb = parseFloat(row.cells[3].querySelector("input")?.value || 0);
-    const depFuelKg = depFuelLb * 0.453592;
-    const tripFuelKg = tripFuelLb * 0.453592;
+    const depFuelKg = depFuelLb / 2.20462;
+    const tripFuelKg = tripFuelLb / 2.20462;
     document.getElementById("manualPayload").value = Math.round(payloadKg);
     document.getElementById("fuel").value = Math.round(depFuelKg);
     document.getElementById("fuelDest").value = Math.round(tripFuelKg);

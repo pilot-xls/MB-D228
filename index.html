@@ -407,8 +407,8 @@ function updateLdgAuto() {
     	const ldg = dep - trip;
 	const bew = parseFloat(document.getElementById("basicWeight")?.innerText) || 0;
 	const pilots = parseFloat(document.getElementById("pilots")?.value) || 0;	
-	const maxPayload = 5730 - (bew + pilots + (dep / 2.20462));
-	const maxFuel = 2.20462 * (5730 - (bew + pilots + pay));		
+	const maxPayload = 5730 - (bew + pilots + Math.round((dep / 2.20462)));
+	const maxFuel = Math.round(2.20462 * (5730 - (bew + pilots + pay)));		
         const ldgCell = rows[i].querySelector(".ldg"); 		
 	if (ldgCell) ldgCell.innerHTML = `
 		<div>Max PayL: ${maxPayload.toFixed(0)}</div>

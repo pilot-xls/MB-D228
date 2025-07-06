@@ -381,7 +381,7 @@ function verificarPesoLinha(row) {
     const fuelTaxi = parseFloat(document.getElementById("fuelTaxi")?.value || "30") || 0;
     const depFuelLb = parseFloat(row.cells[1].querySelector("input")?.value || 0);
     const payloadKg = parseFloat(row.cells[2].querySelector("input")?.value || 0);
-    const depFuelKg = depFuelLb * 0.453592;
+    const depFuelKg = depFuelLb / 2.20462;
     const taxiFuelKg = fuelTaxi;
     const takeoffKg = BEW + pilots + payloadKg + depFuelKg - taxiFuelKg;
     if (takeoffKg > 5700) {
@@ -411,8 +411,8 @@ function updateLdgAuto() {
 	const maxFuel = 2.20462 * (5730 - (bew + pilots + pay));		
         const ldgCell = rows[i].querySelector(".ldg"); 		
 	if (ldgCell) ldgCell.innerHTML = `
-		<div>Max PayL: ${maxPayload.toFixed(1)}</div>
-		<div>Max Fuel: ${maxFuel.toFixed(1)}</div>
+		<div>Max PayL: ${maxPayload.toFixed(0)}</div>
+		<div>Max Fuel: ${maxFuel.toFixed(0)}</div>
 	  `;        
 	if (i + 1 < rows.length) {
 	    const nextDepInput = rows[i + 1].cells[1].querySelector("input");

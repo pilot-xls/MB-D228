@@ -73,11 +73,13 @@
     
 <hr style="margin: 30px 0; border: none; border-top: 1px solid #999;"> <!-- linha de separação de tabelas -->
     
-<div style="text-align: center; display: flex; justify-content: center; align-items: center; gap: 12px; margin-bottom: 10px;">
+<div style="text-align: center; display: flex; justify-content: center; align-items: center; gap: 12px; margin-bottom: 6px;">
   <h2 style="margin: 0;">Rotas</h2>
   <button id="btnAddLeg" title="ADD" style="font-size: 1.1em; padding: 2px 8px; margin-left: 8px;">+</button>
   <button id="btnRemoveLeg" title="DEL" style="font-size: 1.1em; padding: 2px 8px;">–</button>
-  <select id="dropdownRotas" onchange="preencherLegsComRota()" style="margin-left: 20px;">
+</div>
+<div style="text-align: center; margin-bottom: 10px;">
+  <select id="dropdownRotas" onchange="preencherLegsComRota()" style="margin-top: 4px;">
     <option value="">-- Selecionar rota --</option>
   </select>
 </div>

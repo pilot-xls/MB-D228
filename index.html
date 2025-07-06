@@ -25,32 +25,6 @@
 
 <hr style="margin: 30px 0; border: none; border-top: 1px solid #999;">
 
-<h2 style="text-align: center;">Cálculo do Payload</h2>
-<table>
-    <tr><th>Tipo</th><th>Nº Passageiros</th><th>Peso total (kg)</th></tr>
-    <tr><td id="labelHomens">Homens</td><td><input type="number" inputmode="numeric" pattern="[0-9]*" id="men" value="0" oninput="calculate()" onchange="calculate()"></td><td id="menWeight">0</td></tr>
-    <tr><td id="labelMulheres">Mulheres</td><td><input type="number" inputmode="numeric" pattern="[0-9]*" id="women" value="0" oninput="calculate()" onchange="calculate()"></td><td id="womenWeight">0</td></tr>
-    <tr><td id="labelCriancas">Crianças</td><td><input type="number" inputmode="numeric" pattern="[0-9]*" id="children" value="0" oninput="calculate()" onchange="calculate()"></td><td id="childrenWeight">0</td></tr>
-    <tr><td id="labelBagagem">Bagagem extra</td><td colspan="2"><input type="number" inputmode="numeric" pattern="[0-9]*" id="extraBag" value="0" oninput="calculate()" onchange="calculate()"></td></tr>
-    <tr>
-      <td><strong>Payload total (kg)</strong></td>
-      <td id="totalPayload">0</td>
-      <td>
-        <button onclick="inserirPayload()" title="Copiar payload para Mass & Balance">+</button>
-      </td>
-    </tr>
-</table>
-
-<hr style="margin: 30px 0; border: none; border-top: 1px solid #999;">
-
-<h2 style="text-align: center;">Conversor Kg &harr; Lb</h2>
-<table>
-    <tr><td>Kg para lb</td><td><input type="number" inputmode="decimal" step="any" id="kg" value="0" oninput="convertKgToLb()" onchange="convertKgToLb()"></td><td id="toLb">0</td></tr>
-    <tr><td>Lb para kg</td><td><input type="number" inputmode="decimal" step="any" id="lb" value="0" oninput="convertLbToKg()" onchange="convertLbToKg()"></td><td id="toKg">0</td></tr>
-</table>
-
-<hr style="margin: 30px 0; border: none; border-top: 1px solid #999;">
-
 <h2 style="text-align: center;"> Mass & Balance
   <select id="aviaoSelecionado" onchange="calculate()" style="font-size: 14px; margin-left: 10px;"></select>
 </h2>
@@ -99,6 +73,15 @@
   <tbody id="legsTable"></tbody>
 </table>
 
+<hr style="margin: 30px 0; border: none; border-top: 1px solid #999;">
+
+<h2 style="text-align: center;">Conversor Kg &harr; Lb</h2>
+<table>
+    <tr><td>Kg para lb</td><td><input type="number" inputmode="decimal" step="any" id="kg" value="0" oninput="convertKgToLb()" onchange="convertKgToLb()"></td><td id="toLb">0</td></tr>
+    <tr><td>Lb para kg</td><td><input type="number" inputmode="decimal" step="any" id="lb" value="0" oninput="convertLbToKg()" onchange="convertLbToKg()"></td><td id="toKg">0</td></tr>
+</table>	
+
+	
 <!-- SCRIPTS PRINCIPAIS -->
 <script>
 // --- Funções de Cálculo Geral e Conversores ---

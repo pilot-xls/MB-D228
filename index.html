@@ -414,11 +414,7 @@ function updateLdgAuto() {
 	    const pilots     = parseFloat(document.getElementById("pilots").value)       || 0;
 	    const taxiKg     = parseFloat(document.getElementById("fuelTaxi").value)     || 0;
 	
-	    const depFuelKg  = Math.round(depFuelLb / 2.20462);
-	
-	    // cálculo exato em kg
-	    const actualTakeoffKg   = BEW + pilots + payloadKg + depFuelKg - taxiKg;
-	    
+	    const depFuelKg  = Math.round(depFuelLb / 2.20462);	    
 	    const maxFuelKg   = 5730 - (BEW + pilots + payloadKg);
 	    const maxFuelLb = Math.round(maxFuelKg * 2.20462);
 	    const maxPayloadKg = 5730 - (BEW + pilots + depFuelKg);

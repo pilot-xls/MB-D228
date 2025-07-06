@@ -254,6 +254,23 @@ function convertLbToKg() {
 <script>
 // --- Funções da Tabela de Rotas (LEGS) ---
 
+let legsData = [];
+let legEmEdicao = null; // Índice da linha que está a ser editada no popup
+
+function carregarLegsDoLocalStorage() {
+  let dados = localStorage.getItem('legsDataV2');
+  if (dados) {
+    legsData = JSON.parse(dados);
+  } else {
+    // Começa com 5 linhas vazias se não houver dados
+    legsData = Array(5).fill(0).map(()=>({homens:0, mulheres:0, criancas:0, bagagem:0, payload:0}));
+  }
+}
+
+function guardarLegsNoLocalStorage() {
+  localStorage.setItem('legsDataV2', JSON.stringify(legsData));
+}
+	
 let linhaSelecionadaIndex = null;
 
 function selecionarLinhaLeg(tr) {
@@ -286,7 +303,12 @@ function criarLinhaLeg(route = '', depF = '', payl = '', tripF = '') {
           <input type="text" class="rota-edit" value="${route}" onblur="fecharRota(this)" style="display: none;">
         </td>
         <td><input type="number" inputmode="decimal" step="any" value="${depF}" data-auto="1"></td>
-        <td><input type="number" inputmode="decimal" step="any" value="${payl}"></td>
+        <td>
+		<input type="number" inputmode="decimal" step="any" value="${payl}" 
+		style="width:60px"
+		onclick="abrirPopupPayload(this)" 
+		readonly>
+	</td>
         <td><input type="number" inputmode="decimal" step="any" value="${tripF}"></td>
         <td class="ldg">0</td>
         <td><button class="route-insert" onclick="inserirLeg(this)">+</button></td>
@@ -538,6 +560,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     await carregarValoresPadraoSeNecessario();
     
     // 2. Continua com a inicialização normal
+	carregarLegsDoLocalStorage();
     preencherDropdown();
     carregarDropdownRotas();
 
@@ -581,6 +604,176 @@ if ('serviceWorker' in navigator) {
         .catch(err => console.error("Erro ao registar SW:", err));
 }
 </script>
+
+
+<!-- Popup para editar payload de cada leg -->
+<div id="popupPayload" style="display:none; position:fixed; left:0; top:0; width:100vw; height:100vh; z-index:999; background:rgba(0,0,0,0.35); align-items:center; justify-content:center;">
+  <div style="background:#fff; border-radius:10px; max-width:340px; width:95vw; margin:auto; box-shadow:0 8px 24px #0002; padding:20px; position:relative;">
+    <button onclick="fecharPopupPayload()" style="position:absolute; top:6px; right:12px; font-size:1.5em; border:none; background:none; cursor:pointer;">&times;</button>
+    <h3 style="margin-top:0; font-size:1.1em;">Editar Payload</h3>
+    <table style="width:100%;">
+      <tr><td>Homens</td><td><input type="number" id="ppHomens" min="0" value="0"></td></tr>
+      <tr><td>Mulheres</td><td><input type="number" id="ppMulheres" min="0" value="0"></td></tr>
+      <tr><td>Crianças</td><td><input type="number" id="ppCriancas" min="0" value="0"></td></tr>
+      <tr><td>Bagagem</td><td><input type="number" id="ppBagagem" min="0" value="0"></td></tr>
+      <tr style="font-weight:bold;"><td>Total</td><td id="ppTotal">0</td></tr>
+    </table>
+    <button onclick="guardarPayloadDoPopup()" style="margin-top:10px; width:100%;">Usar este Payload</button>
+  </div>
+</div>
+
+<script>
+// === Popup Payload Legs ===
+
+// Dados dos payloads por linha (são sincronizados com localStorage)
+let legsData = [];
+let legEmEdicao = null; // Índice da linha a editar
+
+// Carregar dados do localStorage no início
+function carregarLegsDoLocalStorage() {
+  let dados = localStorage.getItem('legsDataV2');
+  if (dados) {
+    legsData = JSON.parse(dados);
+  } else {
+    // Começa com 5 linhas vazias se não houver dados
+    legsData = Array(5).fill(0).map(()=>({homens:0, mulheres:0, criancas:0, bagagem:0, payload:0}));
+  }
+}
+function guardarLegsNoLocalStorage() {
+  localStorage.setItem('legsDataV2', JSON.stringify(legsData));
+}
+
+// Função para abrir o popup quando se clica no input da célula Payload
+function abrirPopupPayload(input) {
+    const tr = input.closest('tr');
+    const idx = Array.from(tr.parentNode.children).indexOf(tr);
+    legEmEdicao = idx;
+
+    // Garantir array inicializada
+    if (!window.legsData) window.legsData = [];
+    if (!legsData[idx]) legsData[idx] = {homens:0, mulheres:0, criancas:0, bagagem:0, payload:0};
+
+    // Preencher campos do popup
+    document.getElementById('ppHomens').value   = legsData[idx].homens   ?? 0;
+    document.getElementById('ppMulheres').value = legsData[idx].mulheres ?? 0;
+    document.getElementById('ppCriancas').value = legsData[idx].criancas ?? 0;
+    document.getElementById('ppBagagem').value  = legsData[idx].bagagem  ?? 0;
+    atualizarPopupTotal();
+    document.getElementById('popupPayload').style.display = 'flex';
+}
+
+// Atualiza total no popup ao editar campos
+function atualizarPopupTotal() {
+    const defs = JSON.parse(localStorage.getItem('definicoesMB')) || {};
+    const pH = defs.pesoHomem   || 86;
+    const pM = defs.pesoMulher  || 68;
+    const pC = defs.pesoCrianca || 35;
+    const homens   = parseInt(document.getElementById('ppHomens').value)   || 0;
+    const mulheres = parseInt(document.getElementById('ppMulheres').value) || 0;
+    const criancas = parseInt(document.getElementById('ppCriancas').value) || 0;
+    const bagagem  = parseInt(document.getElementById('ppBagagem').value)  || 0;
+    const total = homens * pH + mulheres * pM + criancas * pC + bagagem;
+    document.getElementById('ppTotal').innerText = total;
+    return total;
+}
+
+// Quando se clica para guardar o Payload do popup
+function guardarPayloadDoPopup() {
+    if (legEmEdicao === null) return;
+    legsData[legEmEdicao] = {
+        homens:   parseInt(document.getElementById('ppHomens').value)   || 0,
+        mulheres: parseInt(document.getElementById('ppMulheres').value) || 0,
+        criancas: parseInt(document.getElementById('ppCriancas').value) || 0,
+        bagagem:  parseInt(document.getElementById('ppBagagem').value)  || 0,
+        payload:  atualizarPopupTotal()
+    };
+    // Atualiza o input da célula com o novo payload
+    const tr = document.querySelectorAll('#legsTable tr')[legEmEdicao];
+    if (tr) {
+        const paylInput = tr.cells[2].querySelector('input');
+        if (paylInput) paylInput.value = legsData[legEmEdicao].payload;
+    }
+    guardarLegsNoLocalStorage();
+    fecharPopupPayload();
+}
+
+function fecharPopupPayload() {
+    document.getElementById('popupPayload').style.display = 'none';
+    legEmEdicao = null;
+}
+
+// Atualiza total sempre que há input no popup
+['ppHomens', 'ppMulheres', 'ppCriancas', 'ppBagagem'].forEach(id => {
+    document.getElementById(id).addEventListener('input', atualizarPopupTotal);
+});
+
+// Interceptar cliques nos inputs de Payload das linhas de legs
+document.addEventListener('DOMContentLoaded', () => {
+    carregarLegsDoLocalStorage();
+
+    // Adiciona listener a todas as linhas criadas após o DOM estar pronto
+    function ativarPopupNasCelulasPayload() {
+        document.querySelectorAll('#legsTable tr').forEach((tr, idx) => {
+            const paylInput = tr.cells[2]?.querySelector('input');
+            if (paylInput) {
+                // Remove listeners antigos
+                paylInput.onfocus = null;
+                paylInput.onclick = null;
+                // Ao clicar, abrir popup
+                paylInput.addEventListener('focus', function(e){
+                    e.preventDefault();
+                    abrirPopupPayload(paylInput);
+                });
+                paylInput.addEventListener('click', function(e){
+                    e.preventDefault();
+                    abrirPopupPayload(paylInput);
+                });
+            }
+        });
+    }
+
+    // Chama ao carregar as legs
+    setTimeout(ativarPopupNasCelulasPayload, 350); // Pequeno delay para garantir que linhas já existem
+
+    // Sempre que adicionar/remover linha, volta a ativar o popup nos inputs
+    const observer = new MutationObserver(ativarPopupNasCelulasPayload);
+    observer.observe(document.getElementById('legsTable'), {childList: true});
+});
+
+// GARANTE QUE AO ADICIONAR/REMOVER LINHA a array legsData é mantida correta!
+function adicionarLinhaLeg() {
+  const tbody = document.getElementById('legsTable');
+  let idx = linhaSelecionadaIndex;
+  if (idx == null || idx < 0) idx = tbody.children.length - 1;
+  const novaLinha = tbody.children[idx]?.cloneNode(true) || null;
+  if (novaLinha) {
+    novaLinha.querySelectorAll('input').forEach(input => input.value = '');
+    novaLinha.querySelector('.rota-visual').textContent = '';
+    novaLinha.querySelector('.rota-edit').value = '';
+    tbody.insertBefore(novaLinha, tbody.children[idx + 1]);
+    criarLinhaLegHandlers(novaLinha);
+    selecionarLinhaLeg(novaLinha);
+    // ADICIONAR novo objeto na mesma posição
+    legsData.splice(idx+1, 0, {homens:0, mulheres:0, criancas:0, bagagem:0, payload:0});
+    guardarLegsNoLocalStorage();
+    updateLdgAuto();
+  } else {
+    criarLinhaLeg();
+  }
+}
+function removerLinhaLeg() {
+  const tbody = document.getElementById('legsTable');
+  let idx = linhaSelecionadaIndex;
+  if (idx == null || idx < 0) return;
+  if (tbody.children.length <= 1) return;
+  tbody.removeChild(tbody.children[idx]);
+  legsData.splice(idx, 1);
+  linhaSelecionadaIndex = null;
+  guardarLegsNoLocalStorage();
+  updateLdgAuto();
+}
+</script>
+
 	
 </body>
 </html>

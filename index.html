@@ -339,7 +339,8 @@ if ('serviceWorker' in navigator) {
       <tr><td>Bagagem</td><td><input type="number" inputmode="numeric" pattern="[0-9]*" id="ppBagagem" min="0" value="0"></td></tr>
       <tr style="font-weight:bold;"><td>Total</td><td id="ppTotal">0</td></tr>
     </table>
-    <button onclick="guardarPayloadDoPopup()" style="margin-top:10px; width:100%;">Usar este Payload</button>
+	<button onclick="guardarPayloadDoPopup()" style="margin-top:10px; width:100%;">Limpar</button>	  
+    <button onclick="guardarPayloadDoPopup()" style="margin-top:10px; width:100%;">Usar</button>
   </div>
 </div>
 
@@ -564,6 +565,13 @@ function atualizarPopupTotal() {
     const total = homens * pH + mulheres * pM + criancas * pC + bagagem;
     document.getElementById('ppTotal').innerText = total;
     return total;
+}
+function limparPayloadDoPopup() {
+    document.getElementById('ppHomens').value = 0;
+    document.getElementById('ppMulheres').value = 0;
+    document.getElementById('ppCriancas').value = 0;
+    document.getElementById('ppBagagem').value = 0;
+    atualizarPopupTotal();
 }
 function guardarPayloadDoPopup() {
     if (legEmEdicao === null) return;

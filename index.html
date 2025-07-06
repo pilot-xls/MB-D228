@@ -594,6 +594,7 @@ function adicionarLinhaLeg() {
     selecionarLinhaLeg(novaLinha);
     legsData.splice(idx+1, 0, {homens:0, mulheres:0, criancas:0, bagagem:0, payload:0});
     guardarLegsNoLocalStorage();
+    guardarLegs();
     updateLdgAuto();
   } else {
     criarLinhaLeg();
@@ -608,6 +609,7 @@ function removerLinhaLeg() {
   legsData.splice(idx, 1);
   linhaSelecionadaIndex = null;
   guardarLegsNoLocalStorage();
+  guardarLegs();
   updateLdgAuto();
 }
 </script>

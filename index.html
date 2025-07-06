@@ -414,21 +414,22 @@ function updateLdgAuto() {
 	    const pilots     = parseFloat(document.getElementById("pilots").value)       || 0;
 	    const taxiKg     = parseFloat(document.getElementById("fuelTaxi").value)     || 0;
 	
-	    const depFuelKg  = depFuelLb / 2.20462;
+	    const depFuelKg  = Math.round(depFuelLb / 2.20462);
 	
 	    // cálculo exato em kg
 	    const actualTakeoffKg   = BEW + pilots + payloadKg + depFuelKg - taxiKg;
+	    
 	    const maxFuelLb   = 5730 - (BEW + pilots + payloadKg);
-	    const maxPayloadKg = Math.round(5730 - (BEW + pilots + depFuelKg));
-		
+	    const maxFuelKg = Math.round(maxFuelLb * 2.20462);
+	    const maxPayloadKg = 5730 - (BEW + pilots + depFuelKg);
+	    		
 	    const ldgCell = row.querySelector(".ldg");
 	    if (ldgCell) {
 	      ldgCell.innerHTML = `
 	        <div>Max Payload: ${maxPayloadKg} kg</div>
-	        <div>Max Fuel: ${maxFuelLb} lb</div>
+	        <div>Max Fuel: ${maxFuelKg} lb</div>
 	      `;
-	    }
-	
+	    }	
 	    // marca excesso com base no cálculo exato em kg
 	    row.classList.toggle("overweight", actualTakeoffKg > TAKEOFF_LIMIT_KG);
   });

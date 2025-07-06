@@ -418,8 +418,8 @@ function updateLdgAuto() {
 	
 	    // cálculo exato em kg
 	    const actualTakeoffKg   = BEW + pilots + payloadKg + depFuelKg - taxiKg;
-	    const maxFuelLb   = TAKEOFF_LIMIT_KG - (BEW + pilots + payloadKg);
-	    const maxPayloadKg = Math.round(TAKEOFF_LIMIT_KG - (BEW + pilots + depFuelKg + taxiKg));
+	    const maxFuelLb   = 5730 - (BEW + pilots + payloadKg);
+	    const maxPayloadKg = Math.round(5730 - (BEW + pilots + depFuelKg));
 		
 	    const ldgCell = row.querySelector(".ldg");
 	    if (ldgCell) {

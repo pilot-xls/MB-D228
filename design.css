@@ -319,3 +319,8 @@ button.route-insert {
   color: white;
   font-weight: bold;
 }
+
+#legsTable tr.selected {
+  outline: 2px solid #1a73e8;
+  background: #e3f0fd;
+}

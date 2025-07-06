@@ -420,14 +420,14 @@ function updateLdgAuto() {
 	    const actualTakeoffKg   = BEW + pilots + payloadKg + depFuelKg - taxiKg;
 	    
 	    const maxFuelLb   = 5730 - (BEW + pilots + payloadKg);
-	    const maxFuelKg = Math.round(maxFuelLb * 2.20462);
+	    //const maxFuelKg = Math.round(maxFuelLb * 2.20462);
 	    const maxPayloadKg = 5730 - (BEW + pilots + depFuelKg);
 	    		
 	    const ldgCell = row.querySelector(".ldg");
 	    if (ldgCell) {
 	      ldgCell.innerHTML = `
 	        <div>Max Payload: ${maxPayloadKg} kg</div>
-	        <div>Max Fuel: ${maxFuelKg} lb</div>
+	        <div>Max Fuel: ${maxFuelLb} lb</div>
 	      `;
 	    }	
 	    // marca excesso com base no cálculo exato em kg

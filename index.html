@@ -373,13 +373,14 @@ function inserirLeg(btn) {
 }
 
 function updateLdgAuto() {
-    const TAKEOFF_LIMIT_KG = 5700;
+    
     const rows = document.querySelectorAll("#legsTable tr");
     rows.forEach((row, i) => {
 	    const inputs     = row.querySelectorAll("td input");
 	    const depFuelLb  = parseFloat(inputs[1].value) || 0;     // lb
 	    const payloadKg  = Math.round(parseFloat(inputs[2].value) || 0); // kg
-	
+	    const tripLb    = parseFloat(inputs[3].value)    || 0; // lb
+	    
 	    const BEW        = parseFloat(document.getElementById("basicWeight").innerText) || 0;
 	    const pilots     = parseFloat(document.getElementById("pilots").value)       || 0;
 	    const taxiKg     = parseFloat(document.getElementById("fuelTaxi").value)     || 0;
@@ -388,15 +389,29 @@ function updateLdgAuto() {
 	    const maxFuelKg   = 5730 - (BEW + pilots + payloadKg);
 	    const maxFuelLb = Math.round(maxFuelKg * 2.20462);
 	    const maxPayloadKg = 5730 - (BEW + pilots + depFuelKg);
-	    		
+			
 	    const ldgCell = row.querySelector(".ldg");
 	    if (ldgCell) {
 	      ldgCell.innerHTML = `
-	        <div>Max Payload: ${maxPayloadKg.toFixed(0)} kg</div>
-	        <div>Max Fuel: ${maxFuelLb.toFixed(0)} lb</div>
+		<div>Max Payload: ${maxPayloadKg.toFixed(0)} kg</div>
+		<div>Max Fuel: ${maxFuelLb.toFixed(0)} lb</div>
 	      `;
 	    }	
-	    // marca excesso com base no cálculo exato em kg
+
+	    const ldgKg = depFuelLb - tripLb;	
+	    
+		//calcula o proximo departure fuel
+	     // autopreenche próximo Dep
+	    if (i + 1 < rows.length) {
+	      const nextDepInput = rows[i + 1].cells[1].querySelector("input");
+	      const atual        = nextDepInput.value || "";
+	      const isAuto       = nextDepInput.dataset.auto;
+	      if (!atual || atual === "0" || isAuto === "1") {
+		nextDepInput.value = ldgKg;
+		nextDepInput.dataset.auto = "1";
+	      }
+	    }	
+	    // pinta de vermelho a linha que ultrapassa o peso permitido a descolagem
 	    row.classList.toggle("overweight", depFuelLb > maxFuelLb);
   });
 }

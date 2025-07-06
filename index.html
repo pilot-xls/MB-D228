@@ -409,25 +409,18 @@ function updateLdgAuto() {
 	    const inputs     = row.querySelectorAll("td input");
 	    const depFuelLb  = parseFloat(inputs[1].value) || 0;     // lb
 	    const payloadKg  = Math.round(parseFloat(inputs[2].value) || 0); // kg
-	    const tripFuelLb = parseFloat(inputs[3].value) || 0;     // lb
 	
 	    const BEW        = parseFloat(document.getElementById("basicWeight").innerText) || 0;
 	    const pilots     = parseFloat(document.getElementById("pilots").value)       || 0;
 	    const taxiKg     = parseFloat(document.getElementById("fuelTaxi").value)     || 0;
 	
 	    const depFuelKg  = depFuelLb / 2.20462;
-	    const tripFuelKg = tripFuelLb / 2.20462;
-	    const ldgKg      = depFuelKg - tripFuelKg;
 	
 	    // cálculo exato em kg
-	    const takeoffKg   = BEW + pilots + payloadKg + depFuelKg - taxiKg;
-	    const maxFuelKg   = TAKEOFF_LIMIT_KG - (BEW + pilots + payloadKg);
+	    const actualTakeoffKg   = BEW + pilots + payloadKg + depFuelKg - taxiKg;
+	    const maxFuelLb   = TAKEOFF_LIMIT_KG - (BEW + pilots + payloadKg);
 	    const maxPayloadKg = TAKEOFF_LIMIT_KG - (BEW + pilots + depFuelKg);
-	
-	    // converte para lb somente para exibição, usando floor
-	    const maxFuelLb    = Math.floor(maxFuelKg * 2.20462);
-	    const maxPayloadLb = Math.floor(maxPayloadKg * 2.20462);
-	
+		
 	    const ldgCell = row.querySelector(".ldg");
 	    if (ldgCell) {
 	      ldgCell.innerHTML = `
@@ -437,7 +430,7 @@ function updateLdgAuto() {
 	    }
 	
 	    // marca excesso com base no cálculo exato em kg
-	    row.classList.toggle("overweight", takeoffKg > TAKEOFF_LIMIT_KG);
+	    row.classList.toggle("overweight", actualTakeoffKg > TAKEOFF_LIMIT_KG);
   });
 }
 

@@ -252,46 +252,6 @@ function selecionarLinhaLeg(tr) {
   tr.classList.add('selected');
   linhaSelecionadaIndex = Array.from(tr.parentNode.children).indexOf(tr);
 }
-
-// Ao criar a linha:
-function criarLinhaLeg(route = '', depF = '', payl = '', tripF = '') {
-    const tbody = document.getElementById('legsTable');
-    const tr = document.createElement('tr');
-
-    tr.innerHTML = `
-        <td class="rota-col" onclick="editarRota(this)">
-          <div class="rota-visual">${route}</div>
-          <input type="text" class="rota-edit" value="${route}" onblur="fecharRota(this)" style="display: none;">
-        </td>
-        <td><input type="number" inputmode="decimal" step="any" value="${depF}" data-auto="1"></td>
-        <td><input type="number" inputmode="decimal" step="any" value="${payl}"></td>
-        <td><input type="number" inputmode="decimal" step="any" value="${tripF}"></td>
-        <td class="ldg">0</td>
-        <td><button class="route-insert" onclick="inserirLeg(this)">+</button></td>
-    `;
-
-    // ADICIONA ISTO para seleção visual da linha
-    tr.addEventListener('click', function(e) {
-      // Ignora se clicares no botão "+"
-      if (e.target.tagName === "BUTTON") return;
-      selecionarLinhaLeg(tr);
-    });
-
-    tbody.appendChild(tr);
-
-    tr.querySelectorAll('input').forEach(input => {
-        input.addEventListener('focus', () => input.select());
-        input.addEventListener('input', () => {
-            input.dataset.auto = "0";
-            updateLdgAuto();
-            guardarLegs();
-        });
-    });
-    
-    updateLdgAuto();
-}
-
-
 	
 function carregarDropdownRotas() {
     const rotas = JSON.parse(localStorage.getItem("rotasPadrao") || "[]");
@@ -313,8 +273,8 @@ function criarLinhaLeg(route = '', depF = '', payl = '', tripF = '') {
 
     tr.innerHTML = `
         <td class="rota-col" onclick="editarRota(this)">
-        <div class="rota-visual">${route}</div>
-        <input type="text" class="rota-edit" value="${route}" onblur="fecharRota(this)" style="display: none;">
+          <div class="rota-visual">${route}</div>
+          <input type="text" class="rota-edit" value="${route}" onblur="fecharRota(this)" style="display: none;">
         </td>
         <td><input type="number" inputmode="decimal" step="any" value="${depF}" data-auto="1"></td>
         <td><input type="number" inputmode="decimal" step="any" value="${payl}"></td>
@@ -322,6 +282,12 @@ function criarLinhaLeg(route = '', depF = '', payl = '', tripF = '') {
         <td class="ldg">0</td>
         <td><button class="route-insert" onclick="inserirLeg(this)">+</button></td>
     `;
+
+    // Seleção visual da linha ao clicar (menos no botão)
+    tr.addEventListener('click', function(e) {
+      if (e.target.tagName === "BUTTON") return;
+      selecionarLinhaLeg(tr);
+    });
 
     tbody.appendChild(tr);
 

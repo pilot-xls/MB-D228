@@ -83,7 +83,7 @@
   <h2>Aviões Disponíveis</h2>
   <table>
     <thead>
-      <tr><th>Nome</th><th>Peso Básico (kg)</th><th>Momento</th><th>MTOW</th><th>MLOW</th><th></th></tr>
+      <tr><th>Nome</th><th>Peso Básico (kg)</th><th>Momento</th><th>MTOW</th><th>MLW</th><th></th></tr>
 	  <tr></tr>
     </thead>
     <tbody id="tabelaAvioes"></tbody>
@@ -146,31 +146,7 @@
       document.getElementById('rotaTemp').appendChild(tr);
     }
   
-    function guardarRotaPadrao() {
-      const nome = document.getElementById('nomeRota').value.trim();
-      if (!nome) return alert('Dá um nome à rota!');
-  
-      const linhas = document.querySelectorAll('#rotaTemp tr');
-      const legs = [];
-      linhas.forEach(row => {
-        const inputs = row.querySelectorAll('input');
-        legs.push({
-          route: inputs[0].value.trim(),
-          depF: inputs[1].value.trim(),
-          payl: inputs[2].value.trim(),
-          tripF: inputs[3].value.trim()
-        });
-      });
-      if (legs.length === 0) return alert('Adiciona pelo menos uma perna.');
-  
-      rotasPadrao.push({ nome, legs });
-      localStorage.setItem('rotasPadrao', JSON.stringify(rotasPadrao));
-  
-      document.getElementById('rotaTemp').innerHTML = '';
-      document.getElementById('nomeRota').value = '';
-      renderizarRotasGuardadas();
-    }
-  
+      
     function renderizarRotasGuardadas() {
     const lista = document.getElementById('listaRotas');
     lista.innerHTML = '';
@@ -241,7 +217,7 @@
     }
 
     function atualizarAviao(index, campo, valor) {
-      listaAvioes[index][campo] = campo === 'peso' || campo === 'momento' || campo === 'MTOW'|| campo === 'MLOW' ? parseFloat(valor) : valor;
+      listaAvioes[index][campo] = campo === 'peso' || campo === 'momento' || campo === 'MTOW'|| campo === 'MLW' ? parseFloat(valor) : valor;
     }
 
     function removerAviao(index) {
@@ -259,7 +235,7 @@
         alert("Preenche todos os campos do novo avião.");
         return;
       }
-      listaAvioes.push({ nome, peso, momento });
+      listaAvioes.push({ nome, peso, momento, MTOW, MLW });
       document.getElementById("novoNome").value = "";
       document.getElementById("novoPeso").value = "";
       document.getElementById("novoMomento").value = "";

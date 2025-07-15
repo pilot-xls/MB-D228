@@ -83,7 +83,7 @@
   <h2>Aviões Disponíveis</h2>
   <table>
     <thead>
-      <tr><th>Nome</th><th>Peso Básico (kg)</th><th>Momento</th><th>Ações</th></tr>
+      <tr><th>Nome</th><th>Peso Básico (kg)</th><th>Momento</th><th></th></tr>
     </thead>
     <tbody id="tabelaAvioes"></tbody>
   </table>
@@ -93,6 +93,8 @@
   <input type="text" id="novoNome" placeholder="Nome do avião">
   <input type="number" inputmode="decimal" step="any" id="novoPeso" placeholder="Peso (kg)" onfocus="this.select()">
   <input type="number" inputmode="decimal" step="any" id="novoMomento" placeholder="Momento" onfocus="this.select()">
+  <input type="number" inputmode="decimal" step="any" id="MTOW" placeholder="MTOW" onfocus="this.select()">
+  <input type="number" inputmode="decimal" step="any" id="MLOW" placeholder="MLOW" onfocus="this.select()">
   <button onclick="adicionarAviao()">Adicionar Avião</button>
 
   <hr style="margin: 30px 0; border: none; border-top: 1px solid #999;"> <!-- linha de separação de tabelas -->
@@ -229,6 +231,8 @@
           <td><input type="text" value="${aviao.nome}" onchange="atualizarAviao(${i}, 'nome', this.value)" onfocus="this.select()"></td>
           <td><input type="number" inputmode="decimal" step="any" value="${aviao.peso}" onchange="atualizarAviao(${i}, 'peso', this.value)" onfocus="this.select()"></td>
           <td><input type="number" inputmode="decimal" step="any" value="${aviao.momento}" onchange="atualizarAviao(${i}, 'momento', this.value)" onfocus="this.select()"></td>
+		  <td><input type="number" inputmode="decimal" step="any" value="${aviao.MTOW}" onchange="atualizarAviao(${i}, 'MTOW', this.value)" onfocus="this.select()"></td>
+		  <td><input type="number" inputmode="decimal" step="any" value="${aviao.MLW}" onchange="atualizarAviao(${i}, 'MLW', this.value)" onfocus="this.select()"></td>
           <td class="actions"><button onclick="removerAviao(${i})">Remover</button></td>
         `;
         tabela.appendChild(row);
@@ -236,7 +240,7 @@
     }
 
     function atualizarAviao(index, campo, valor) {
-      listaAvioes[index][campo] = campo === 'peso' || campo === 'momento' ? parseFloat(valor) : valor;
+      listaAvioes[index][campo] = campo === 'peso' || campo === 'momento' || campo === 'MTOW'|| campo === 'MLOW'? parseFloat(valor) : valor;
     }
 
     function removerAviao(index) {
@@ -248,6 +252,8 @@
       const nome = document.getElementById("novoNome").value;
       const peso = parseFloat(document.getElementById("novoPeso").value);
       const momento = parseFloat(document.getElementById("novoMomento").value);
+	  const MTOW = parseFloat(document.getElementById("novoMTOW").value);
+	  const MLW = parseFloat(document.getElementById("novoMLW").value);
       if (!nome || isNaN(peso) || isNaN(momento)) {
         alert("Preenche todos os campos do novo avião.");
         return;
@@ -256,6 +262,8 @@
       document.getElementById("novoNome").value = "";
       document.getElementById("novoPeso").value = "";
       document.getElementById("novoMomento").value = "";
+	  document.getElementById("novoMTOW").value = "";
+	  document.getElementById("novoMLW").value = "";
       renderAvioes();
     }
 

@@ -171,8 +171,10 @@ button:hover {
 .mb-header {
   position: relative;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;   /* empilha em vez de pôr em linha */
+  align-items: center;      
+  justify-content: center;  
+  gap: 8px;                  /* espaço entre título e dropdown */
 }
 .mb-header .settings {
   position: absolute;

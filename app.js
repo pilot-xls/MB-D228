@@ -218,11 +218,19 @@ function updateLdgAuto(){
 }
 
 async function carregarValoresPadraoSeNecessario(){
-  const defsExist=localStorage.getItem('definicoesMB');
-  const rotasExist=localStorage.getItem('rotasPadrao');
-  if(defsExist&&rotasExist)return;
-  try{const res=await fetch('default_settings.json');if(!res.ok)throw'';const d=await res.json();if(!defsExist)localStorage.setItem('definicoesMB',JSON.stringify(d.definicoesMB));if(!rotasExist)localStorage.setItem('rotasPadrao',JSON.stringify(d.rotasPadrao));}catch{if(!defsExist)localStorage.setItem('definicoesMB',JSON.stringify({pesoHomem:86,pesoMulher:68,pesoCrianca:35,pesoBagagem:10,avioes:[{nome:'Dornier 228',peso:3643,momento:26419}]}));if(!rotasExist)localStorage.setItem('rotasPadrao',JSON.stringify([]));}
+  try {
+    const res = await fetch('default_settings.json');
+    if (!res.ok) throw new Error('Não foi possível carregar defaults');
+    const d = await res.json();
+    // Guarda sempre as definições vindas do JSON
+    localStorage.setItem('definicoesMB', JSON.stringify(d.definicoesMB));
+    localStorage.setItem('rotasPadrao', JSON.stringify(d.rotasPadrao));
+  } catch (err) {
+    console.error('Erro ao carregar default_settings.json:', err);
+    // Aqui podes avisar o utilizador ou manter o que já está no localStorage
+  }
 }
+
 
 document.addEventListener('DOMContentLoaded',async()=>{
   await carregarValoresPadraoSeNecessario();

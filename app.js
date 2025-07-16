@@ -189,13 +189,13 @@ function criarLinhaLeg(route = '', depF = '', payl = '', tripF = '') {
   const tr = document.createElement('tr');
 
   tr.innerHTML = `
-    <td class="rota-col" contenteditable="true">${route}</td>
-    <td><input type="number" … value="${depF}"></td>
-    <td><input type="number" … value="${payl}"></td>
-    <td><input type="number" … value="${tripF}"></td>
-    <td class="ldg">0</td>
-    <td><button class="route-insert">+</button></td>
-  `;
+  <td class="rota-col" contenteditable="true">${route}</td>
+  <td><input type="number" inputmode="decimal" step="any" value="${depF}"></td>
+  <td><input type="number" inputmode="decimal" step="any" value="${payl}"></td>
+  <td><input type="number" inputmode="decimal" step="any" value="${tripF}"></td>
+  <td class="ldg">0</td>
+  <td><button class="route-insert">+</button></td>
+`;
 
   // 2) Logo depois de criar o <tr>, regista o click handler:
   tr.addEventListener('click', () => {

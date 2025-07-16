@@ -162,7 +162,7 @@ button:hover {
 .mb-section .select-plane {
   font-size: 14px;
   margin-left: 10px;
-  gap: 20px;
+  margin-bottom: 10px;
 }
 .mb-table caption {
   caption-side: top;

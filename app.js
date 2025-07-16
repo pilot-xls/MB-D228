@@ -96,15 +96,27 @@ function calculate() {
   document.getElementById('momentLanding').innerText = momentLanding.toFixed(1);
   document.getElementById('macLanding').innerText    = macLanding.toFixed(1);
 
-  // Notas de limite
+  //
+  // --- Notas de limite ---
+  // 1) Máx Fuel (vai aparecer na row do Payload)
+  const maxFuel = MRW - (BEW + pilots + manualPayload);
+  const fuelNote = document.getElementById('maxFuelNote');
+  if (maxFuel >= 0) {
+    fuelNote.innerHTML = `<small> | Máx Fuel: ${maxFuel.toFixed(0)} kg (${(maxFuel * 2.20462).toFixed(0)} lb)</small>`;
+  } else {
+    fuelNote.innerHTML = '<small> | Excede limite!</small>';
+  }
+  
+  // 2) Máx Payload (vai aparecer na row do Fuel loading)
   const maxPayload = MRW - (BEW + pilots + fuel);
-  const maxFuel    = MRW - (BEW + pilots + manualPayload);
-  document.getElementById('maxPayloadNote').innerText = maxPayload > 0
-    ? ` | Máx Payload: ${maxPayload.toFixed(0)} kg` : ' | Excede limite!';
-  document.getElementById('maxFuelNote').innerHTML    = maxFuel > 0
-    ? `<small> | Máx Fuel: ${maxFuel.toFixed(0)} kg (${(maxFuel*2.20462).toFixed(0)} lb)</small>`
-    : '<small> | Excede limite!</small>';
-
+  const payloadNote = document.getElementById('maxPayloadNote');
+  if (maxPayload >= 0) {
+    payloadNote.innerText = ` | Máx Payload: ${maxPayload.toFixed(0)} kg`;
+  } else {
+    payloadNote.innerText = ' | Excede limite!';
+  } 
+  
+  
   // Destacar linhas excedidas
   ['rampRow','takeoffRow','landingRow'].forEach(id => {
     const el = document.getElementById(id);

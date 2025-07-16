@@ -245,9 +245,7 @@ button.route-insert {
   min-height: 20px;
 }
 .route-table tr.overweight td {
-  background-color: var(--danger);
-  color: white;
-  font-weight: bold;
+    background-color: #ffcccc;  /* rosa suave*/
 }
 #legsTable tr.selected {
   outline: 2px solid #1a73e8;

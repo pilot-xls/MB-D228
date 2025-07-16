@@ -168,7 +168,18 @@ button:hover {
   font-weight: 600;
   margin-bottom: 8px;
 }
-
+.mb-header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.mb-header .settings {
+  position: absolute;
+  right: 0; /* fica alinhado ao conteúdo */
+  background: none;
+  border: none;
+}
 /* Rotas section */
 .routes-section {
   margin-bottom: 40px;

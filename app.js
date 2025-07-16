@@ -150,73 +150,42 @@ function guardarLegsNoLocalStorage(){localStorage.setItem('legsDataV2',JSON.stri
 
 
 function adicionarLinhaLeg() {
-  const tbody = document.getElementById('legsTable');
+  const table = document.getElementById('legsTable');
+  const modelo = document.querySelector('#legsTable tr').cloneNode(true);
+  const nova = modelo.cloneNode(true);
 
-  // 1) Determina onde inserir: após a linha selecionada ou no fim
-  let idx = (linhaSelecionadaIndex != null && linhaSelecionadaIndex >= 0)
-            ? linhaSelecionadaIndex
-            : tbody.children.length - 1;
-
-  // 2) Clona a linha de referência e limpa todos os inputs
-  const refRow = tbody.children[idx];
-  const nova   = refRow.cloneNode(true);
-  nova.querySelectorAll('input').forEach(input => {
-    input.value = '';
-    delete input.dataset.auto;
+  // Reseta valores
+  nova.querySelectorAll('input[type="number"]').forEach((inp, idx) => {
+    inp.value = '';
+    
+    if (idx === 0) {
+      // Este é o DepF: marca para auto‑população
+      inp.dataset.auto = '1';
+      inp.addEventListener('focus', e => {
+        e.target.select();
+        // Limpa a flag no primeiro foco: daqui para frente é edição manual
+        e.target.removeAttribute('data-auto');
+      });
+      inp.addEventListener('input', e => {
+        // Garante que, ao usares o DepF, já não é auto
+        e.target.removeAttribute('data-auto');
+        guardarLegs();
+        updateLdgAuto();
+      });
+    } else {
+      // Payl ou Trip: sem flag data-auto
+      inp.addEventListener('focus', e => e.target.select());
+      inp.addEventListener('input', () => {
+        guardarLegs();
+        updateLdgAuto();
+      });
+    }
   });
 
-  // 3) Insere a nova linha no DOM
-  tbody.insertBefore(nova, tbody.children[idx + 1]);
-
-  // 4) Rebind: clique para selecionar a linha
-  nova.addEventListener('click', () => {
-    document.querySelectorAll('#legsTable tr')
-            .forEach(r => r.classList.remove('selected'));
-    nova.classList.add('selected');
-    linhaSelecionadaIndex = Array.from(tbody.children).indexOf(nova);
-  });
-
-  // 5) Rebind: input de texto na Leg (se existir rota-input)
-  nova.querySelectorAll('input.rota-input').forEach(inp => {
-    inp.addEventListener('focus',  e => e.target.select());
-    inp.addEventListener('input', guardarLegs);
-  });
-
-  // 6) Rebind: inputs numéricos (DepF, Payl, TripF)
-  nova.querySelectorAll('input[type="number"]').forEach(inp => {
-  inp.addEventListener('focus', e => {
-    e.target.select();
-    // limpa o flag para não voltar a auto‑preencher
-    e.target.removeAttribute('data-auto');
-  });
-  inp.addEventListener('input', e => {
-    // garante que, ao começares a escrever, o código já não te vai sobrepor
-    e.target.removeAttribute('data-auto');
-    guardarLegs();
-    updateLdgAuto();
-  });
-});
-
-  // 7) Rebind: botão “+” para transferir dados para MB
-  const btnInsert = nova.querySelector('.route-insert');
-  if (btnInsert) {
-    btnInsert.addEventListener('click', e => {
-      e.stopPropagation();
-      inserirLeg(e.target);
-    });
-  }
-
-  // 8) Marca imediatamente a nova linha como selecionada
-  document.querySelectorAll('#legsTable tr')
-          .forEach(r => r.classList.remove('selected'));
-  nova.classList.add('selected');
-  linhaSelecionadaIndex = idx + 1;
-
-  // 9) Sincroniza e recalcúla
+  table.appendChild(nova);
   guardarLegs();
   updateLdgAuto();
 }
-
 
 
 function criarLinhaLeg(route = '', depF = '', payl = '', tripF = '') {
@@ -299,35 +268,39 @@ function updateLdgAuto() {
   const rows = document.querySelectorAll('#legsTable tr');
 
   rows.forEach((row, i) => {
-    const inputs = row.querySelectorAll('input');
-    const dep   = parseFloat(inputs[0].value) || 0;
+    const inputs = row.querySelectorAll('input[type="number"]');
+    const dep   = parseFloat(inputs[0].value) || 0;          // DepF
     const payl  = Math.round(parseFloat(inputs[1].value) || 0);
+    const trip  = parseFloat(inputs[2].value) || 0;          // Gasto
     const BEW   = parseFloat(document.getElementById('basicWeight').innerText) || 0;
     const pilots= parseFloat(document.getElementById('pilots').value) || 0;
     const taxi  = parseFloat(document.getElementById('fuelTaxi').value) || 0;
 
-    // Cálculo dos limites e under
+    // Cálculos de limites
     const maxFuelLb = Math.round((MRW - (BEW + pilots + payl)) * 2.20462);
     const under     = MRW - (BEW + pilots + payl + Math.round(dep / 2.20462) - taxi);
 
-    // Atualiza o bloco “Info”
-    row.querySelector('.ldg').innerHTML =
-      `<div>Max PayL: ${MRW - (BEW + pilots + Math.round(dep / 2.20462))} kg</div>` +
-      `<div>Max Fuel: ${maxFuelLb} lb</div>` +
-      `<div>Under: ${under} kg</div>`;
+    // Atualiza blocos de info (se existirem)
+    const info = row.querySelector('.ldg');
+    if (info) {
+      info.innerHTML =
+        `<div>Max PayL: ${MRW - (BEW + pilots + Math.round(dep/2.20462))} kg</div>` +
+        `<div>Max Fuel: ${maxFuelLb} lb</div>` +
+        `<div>Under: ${under} kg</div>`;
+    }
 
-    // Auto‑populate só se data-auto === '1'
+    // Auto‑preenche DepF na próxima linha apenas se tiver data-auto="1"
     if (i + 1 < rows.length) {
-      const next = rows[i + 1].querySelector('input');
-      if (next.dataset.auto === '1') {
-        const trip = parseFloat(inputs[2].value) || 0;
-        next.value = (dep - trip).toFixed(0);
-        // mantém o flag para futuras repopulações, se houver
-        next.dataset.auto = '1';
+      const nextDep = rows[i + 1].querySelector('input[type="number"]');
+      if (nextDep.dataset.auto === '1') {
+        nextDep.value = (dep - trip).toFixed(0);
+        // mantém data-auto para futuras recalculações, 
+        // até o utilizador realmente editar manualmente
+        nextDep.dataset.auto = '1';
       }
     }
 
-    // Destaca se overweight
+    // Marca overweight se passar o limite
     row.classList.toggle('overweight', dep > maxFuelLb);
   });
 }

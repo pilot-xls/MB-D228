@@ -29,7 +29,7 @@ h2, h3 {
 
 /* Separator */
 hr.separator {
-  margin: 60px 0 30px; /* 60px em cima, 30px em baixo */
+  margin: 60px 0 10px; /* 60px em cima, x_px em baixo */
   border: none;
   border-top: 1px solid var(--input-bg);
 }
@@ -162,6 +162,7 @@ button:hover {
 .mb-section .select-plane {
   font-size: 14px;
   margin-left: 10px;
+  gap: 7px;
 }
 .mb-table caption {
   caption-side: top;
@@ -174,7 +175,7 @@ button:hover {
   flex-direction: column;   /* empilha em vez de pôr em linha */
   align-items: center;      
   justify-content: center;  
-  gap: 8px;                  /* espaço entre título e dropdown */
+  gap: 7px;                  /* espaço entre título e dropdown */
 }
 .mb-header .settings {
   position: absolute;

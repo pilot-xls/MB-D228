@@ -218,12 +218,6 @@ document.addEventListener('DOMContentLoaded',async()=>{
   preencherDropdownRotas();
   carregarLegsDoLocalStorage();
   carregarLegs();
-
-  // Dispara o calculate() sempre que o valor de qualquer input muda:
-  ['pilots','manualPayload','fuel','fuelTaxi','fuelDest'].forEach(id => {
-    const el = document.getElementById(id);
-    el.addEventListener('input', calculate);
-  });
   
   // Selecionar texto todo ao focar
   document.querySelectorAll('input[type="number"],input[type="text"]').forEach(inp=>inp.addEventListener('focus',e=>e.target.select()));

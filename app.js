@@ -5,6 +5,8 @@ const ARM_FUEL = 7.936;
 const MAC_ZERO = 7.26;
 const MAC_DIV = 2.042;
 
+let linhaSelecionadaIndex = null;
+
 // --- Funções de Definições ---
 function getDefs() {
   try {
@@ -146,21 +148,79 @@ function carregarLegsDoLocalStorage(){
 }
 function guardarLegsNoLocalStorage(){localStorage.setItem('legsDataV2',JSON.stringify(legsData));}
 
-function criarLinhaLeg(route='',depF='',payl='',tripF=''){
-  const tbody=document.getElementById('legsTable');
-  const tr=document.createElement('tr');
-  tr.innerHTML=`<td>${route}</td>
-    <td><input type="number" step="any" value="${depF}"></td>
-    <td><input type="number" step="any" value="${payl}"></td>
-    <td><input type="number" step="any" value="${tripF}"></td>
-    <td class="ldg">0</td>
-    <td><button class="route-insert">+</button></td>`;
-  tbody.appendChild(tr);
-  tr.querySelectorAll('input').forEach(inp=>{
-    inp.addEventListener('focus',e=>e.target.select());
-    inp.addEventListener('input',()=>{guardarLegs();updateLdgAuto();});
+
+function adicionarLinhaLeg() {
+  // Função para adicionar uma nova perna com o btn
+  const tbody = document.getElementById('legsTable');
+  // Se não houver linha seleccionada, coloca no fim
+  let idx = (linhaSelecionadaIndex != null && linhaSelecionadaIndex >= 0)
+            ? linhaSelecionadaIndex
+            : tbody.children.length - 1;
+
+  // Clona a linha de referência
+  const refRow = tbody.children[idx];
+  const nova = refRow.cloneNode(true);
+
+  // Limpa todos os inputs da linha nova
+  nova.querySelectorAll('input').forEach(i => i.value = '');
+
+  // Insere a nova linha logo a seguir
+  tbody.insertBefore(nova, tbody.children[idx + 1]);
+
+  // Regista o handler de clique para seleccionar
+  nova.addEventListener('click', () => {
+    document.querySelectorAll('#legsTable tr').forEach(r => r.classList.remove('selected'));
+    nova.classList.add('selected');
+    linhaSelecionadaIndex = Array.from(nova.parentNode.children).indexOf(nova);
   });
-  tr.querySelector('.route-insert').addEventListener('click',e=>{e.stopPropagation();inserirLeg(e.target);});
+
+  // Marca-a como seleccionada imediatamente
+  document.querySelectorAll('#legsTable tr').forEach(r => r.classList.remove('selected'));
+  nova.classList.add('selected');
+  linhaSelecionadaIndex = idx + 1;
+
+  // Actualiza o estado e o localStorage
+  guardarLegs();           // sincroniza a tabela com legsData
+  updateLdgAuto();         // recalcula os valores
+}
+
+function criarLinhaLeg(route = '', depF = '', payl = '', tripF = '') {
+  const tbody = document.getElementById('legsTable');
+  const tr = document.createElement('tr');
+
+  tr.innerHTML = `
+    <td>${route}</td>
+    <td><input type="number" … value="${depF}"></td>
+    <td><input type="number" … value="${payl}"></td>
+    <td><input type="number" … value="${tripF}"></td>
+    <td class="ldg">0</td>
+    <td><button class="route-insert">+</button></td>
+  `;
+
+  // 2) Logo depois de criar o <tr>, regista o click handler:
+  tr.addEventListener('click', () => {
+    // limpa todas as seleções anteriores
+    document.querySelectorAll('#legsTable tr').forEach(r => r.classList.remove('selected'));
+    // marca esta linha
+    tr.classList.add('selected');
+    // guarda o índice desta linha
+    linhaSelecionadaIndex = Array.from(tr.parentNode.children).indexOf(tr);
+  });
+
+  // 3) Continua com o resto da lógica de inputs e botões:
+  tr.querySelectorAll('input').forEach(inp => {
+    inp.addEventListener('focus', e => e.target.select());
+    inp.addEventListener('input', () => {
+      guardarLegs();
+      updateLdgAuto();
+    });
+  });
+  tr.querySelector('.route-insert').addEventListener('click', e => {
+    e.stopPropagation();
+    inserirLeg(e.target);
+  });
+
+  tbody.appendChild(tr);
 }
 
 function guardarLegs(){

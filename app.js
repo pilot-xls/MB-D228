@@ -184,12 +184,18 @@ function adicionarLinhaLeg() {
 
   // 6) Rebind: inputs numéricos (DepF, Payl, TripF)
   nova.querySelectorAll('input[type="number"]').forEach(inp => {
-    inp.addEventListener('focus',  e => e.target.select());
-    inp.addEventListener('input', () => {
-      guardarLegs();
-      updateLdgAuto();
-    });
+  inp.addEventListener('focus', e => {
+    e.target.select();
+    // limpa o flag para não voltar a auto‑preencher
+    e.target.removeAttribute('data-auto');
   });
+  inp.addEventListener('input', e => {
+    // garante que, ao começares a escrever, o código já não te vai sobrepor
+    e.target.removeAttribute('data-auto');
+    guardarLegs();
+    updateLdgAuto();
+  });
+});
 
   // 7) Rebind: botão “+” para transferir dados para MB
   const btnInsert = nova.querySelector('.route-insert');
@@ -288,23 +294,44 @@ function inserirLeg(btn){
   calculate();
 }
 
-function updateLdgAuto(){
-  const{MRW}=getAviaoAtual();
-  const rows=document.querySelectorAll('#legsTable tr');
-  rows.forEach((row,i)=>{
-    const inp=row.querySelectorAll('input');
-    const dep=parseFloat(inp[0].value)||0;
-    const payl=Math.round(parseFloat(inp[1].value)||0);
-    const BEW=parseFloat(document.getElementById('basicWeight').innerText)||0;
-    const pilots=parseFloat(document.getElementById('pilots').value)||0;
-    const taxi=parseFloat(document.getElementById('fuelTaxi').value)||0;
-    const maxFuelLb=Math.round((MRW-(BEW+pilots+payl))*2.20462);
-    const under=MRW-(BEW+pilots+payl+Math.round(dep/2.20462)-taxi);
-    row.querySelector('.ldg').innerHTML=`<div>Max PayL: ${ (MRW-(BEW+pilots+Math.round(dep/2.20462))) } kg</div><div>Max Fuel: ${maxFuelLb} lb</div><div>Under: ${under} kg</div>`;
-    if(i+1<rows.length){const next=rows[i+1].querySelector('input');if(!next.value||next.dataset.auto==='1'){next.value=(dep-(parseFloat(inp[2].value)||0)).toFixed(0);next.dataset.auto='1';}}
-    row.classList.toggle('overweight',dep>maxFuelLb);
+function updateLdgAuto() {
+  const { MRW } = getAviaoAtual();
+  const rows = document.querySelectorAll('#legsTable tr');
+
+  rows.forEach((row, i) => {
+    const inputs = row.querySelectorAll('input');
+    const dep   = parseFloat(inputs[0].value) || 0;
+    const payl  = Math.round(parseFloat(inputs[1].value) || 0);
+    const BEW   = parseFloat(document.getElementById('basicWeight').innerText) || 0;
+    const pilots= parseFloat(document.getElementById('pilots').value) || 0;
+    const taxi  = parseFloat(document.getElementById('fuelTaxi').value) || 0;
+
+    // Cálculo dos limites e under
+    const maxFuelLb = Math.round((MRW - (BEW + pilots + payl)) * 2.20462);
+    const under     = MRW - (BEW + pilots + payl + Math.round(dep / 2.20462) - taxi);
+
+    // Atualiza o bloco “Info”
+    row.querySelector('.ldg').innerHTML =
+      `<div>Max PayL: ${MRW - (BEW + pilots + Math.round(dep / 2.20462))} kg</div>` +
+      `<div>Max Fuel: ${maxFuelLb} lb</div>` +
+      `<div>Under: ${under} kg</div>`;
+
+    // Auto‑populate só se data-auto === '1'
+    if (i + 1 < rows.length) {
+      const next = rows[i + 1].querySelector('input');
+      if (next.dataset.auto === '1') {
+        const trip = parseFloat(inputs[2].value) || 0;
+        next.value = (dep - trip).toFixed(0);
+        // mantém o flag para futuras repopulações, se houver
+        next.dataset.auto = '1';
+      }
+    }
+
+    // Destaca se overweight
+    row.classList.toggle('overweight', dep > maxFuelLb);
   });
 }
+
 
 async function carregarValoresPadraoSeNecessario(){
   try {

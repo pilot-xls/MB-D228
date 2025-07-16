@@ -162,7 +162,7 @@ button:hover {
 .mb-section .select-plane {
   font-size: 14px;
   margin-left: 10px;
-  gap: 7px;
+  gap: 20px;
 }
 .mb-table caption {
   caption-side: top;
@@ -177,12 +177,7 @@ button:hover {
   justify-content: center;  
   gap: 7px;                  /* espaço entre título e dropdown */
 }
-.mb-header .settings {
-  position: absolute;
-  right: 0; /* fica alinhado ao conteúdo */
-  background: none;
-  border: none;
-}
+
 /* Rotas section */
 .routes-section {
   margin-bottom: 40px;

@@ -150,48 +150,62 @@ function guardarLegsNoLocalStorage(){localStorage.setItem('legsDataV2',JSON.stri
 
 
 function adicionarLinhaLeg() {
-  // Função para adicionar uma nova perna com o btn
   const tbody = document.getElementById('legsTable');
-  // Se não houver linha seleccionada, coloca no fim
+
+  // 1) Determina onde inserir: depois da linha selecionada ou no fim
   let idx = (linhaSelecionadaIndex != null && linhaSelecionadaIndex >= 0)
             ? linhaSelecionadaIndex
             : tbody.children.length - 1;
 
-  // Clona a linha de referência
+  // 2) Clona a linha de referência e limpa os inputs
   const refRow = tbody.children[idx];
-  const nova = refRow.cloneNode(true);
-
-  // Limpa todos os inputs da linha nova
+  const nova   = refRow.cloneNode(true);
   nova.querySelectorAll('input').forEach(i => i.value = '');
 
-  // 1) Insere a nova linha logo a seguir
+  // 3) Insere a nova linha logo a seguir
   tbody.insertBefore(nova, tbody.children[idx + 1]);
-  // 2) Rebind dos listeners de foco e de input
+
+  // 4) Rebind dos listeners de foco/select e input para campos numéricos
   nova.querySelectorAll('input[type="number"]').forEach(inp => {
-    // seleciona todo o texto ao focar
-    inp.addEventListener('focus', e => e.target.select());
-    // garante que, ao mudar valor, recalcula e guarda
+    inp.addEventListener('focus',  e => e.target.select());
     inp.addEventListener('input', () => {
       guardarLegs();
       updateLdgAuto();
     });
   });
-  // Regista o handler de clique para seleccionar
+
+  // 5) Rebind dos listeners para o input de texto da coluna Leg (se existir)
+  nova.querySelectorAll('input[type="text"]').forEach(inp => {
+    inp.addEventListener('focus', e => e.target.select());
+    inp.addEventListener('input', guardarLegs);
+  });
+
+  // 6) Rebind do botão de inserir perna na própria linha
+  const btnInsert = nova.querySelector('.route-insert');
+  if (btnInsert) {
+    btnInsert.addEventListener('click', e => {
+      e.stopPropagation();
+      adicionarLinhaLeg();
+    });
+  }
+
+  // 7) Listener de clique para selecionar a nova linha
   nova.addEventListener('click', () => {
     document.querySelectorAll('#legsTable tr').forEach(r => r.classList.remove('selected'));
     nova.classList.add('selected');
-    linhaSelecionadaIndex = Array.from(nova.parentNode.children).indexOf(nova);
+    linhaSelecionadaIndex = Array.from(tbody.children).indexOf(nova);
   });
 
-  // Marca-a como seleccionada imediatamente
+  // 8) Seleciona-a imediatamente e atualiza o índice
   document.querySelectorAll('#legsTable tr').forEach(r => r.classList.remove('selected'));
   nova.classList.add('selected');
   linhaSelecionadaIndex = idx + 1;
 
-  // Actualiza o estado e o localStorage
-  guardarLegs();           // sincroniza a tabela com legsData
-  updateLdgAuto();         // recalcula os valores
+  // 9) Sincroniza e recalcula
+  guardarLegs();
+  updateLdgAuto();
 }
+
 
 function criarLinhaLeg(route = '', depF = '', payl = '', tripF = '') {
   const tbody = document.getElementById('legsTable');

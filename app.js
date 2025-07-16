@@ -247,7 +247,7 @@ document.addEventListener('DOMContentLoaded',async()=>{
   ['pilots','manualPayload','fuel','fuelTaxi','fuelDest'].forEach(id=>document.getElementById(id).addEventListener('input',calculate));
   document.getElementById('kg').addEventListener('input',convertKgToLb);
   document.getElementById('lb').addEventListener('input',convertLbToKg);
-  document.getElementById('btnAddLeg').addEventListener('click',criarLinhaLeg);
+  document.getElementById('btnAddLeg').addEventListener('click', adicionarLinhaLeg);
   document.getElementById('btnRemoveLeg').addEventListener('click',()=>{const sel=document.querySelector('#legsTable tr.selected');if(sel)sel.remove();});
   document.getElementById('dropdownRotas').addEventListener('change',preencherLegsComRota);
 

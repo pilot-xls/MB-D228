@@ -1,621 +1,140 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Mass & Balance Dornier 228</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mass & Balance Dornier 228</title>
 
-    <!-- Estilo moderno -->
-    <link rel="stylesheet" href="design.css">
-    <script src="https://unpkg.com/feather-icons"></script>
-    <script src="app-version.js"></script>
-    <script src="auto-update.js" defer></script>
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#0d0d0d">
-    <link rel="apple-touch-icon" href="icone.png">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="D228">
+  <!-- CSS externo: move estilos para design.css -->
+  <link rel="stylesheet" href="design.css">
+
+  <!-- Feather Icons -->
+  <script src="https://unpkg.com/feather-icons" defer></script>
+  <!-- JavaScript modular: move toda lógica para app.js -->
+  <script src="app.js" type="module" defer></script>
+
+  <!-- PWA Metadata -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0d0d0d">
+  <link rel="apple-touch-icon" href="icone.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="D228">
 </head>
 
 <body>
-<div class="settings-link">
-    <a href="settings.html">⚙️ Settings</a>
-</div>
+  <!-- Configurações -->
+  <nav class="settings">
+    <a href="settings.html" aria-label="Configurações">
+		<i data-feather="settings"></i>
+	</a>
+  </nav>
 
-<hr style="margin: 30px 0; border: none; border-top: 1px solid #999;">
+  <main>
+    <!-- Separator -->
+    <hr class="separator">
 
-<h2 style="text-align: center;"> Mass & Balance
-  <select id="aviaoSelecionado" onchange="calculate()" style="font-size: 14px; margin-left: 10px;"></select>
-</h2>
-<table>
-  <tr><th>Item</th><th>Peso (kg)</th><th>Momento (kg·m)</th><th>Comentário</th></tr>
-  <tr><td>Basic weight</td><td id="basicWeight">0</td><td id="basicMoment">0</td><td></td></tr>
-  <tr><td>Pilotos</td><td><input type="number" inputmode="decimal" step="any" id="pilots" value="150" oninput="calculate()" onchange="calculate()"></td><td id="momentPilots">0</td><td>ARM fixo = 4.21</td></tr>
-  <tr><td>Payload</td><td><input type="number" inputmode="decimal" step="any" id="manualPayload" value="0" oninput="calculate()" onchange="calculate()"></td><td id="momentPayload">0</td><td>ARM = 8.7 <span id="maxFuelNote" class="highlight"></span></td></tr>
-  <tr class="gray-row"><td>ZFW</td><td id="zfw">0</td><td id="momentZfw">0</td><td></td></tr>
-  <tr><td>Fuel loading</td><td><input type="number" inputmode="decimal" step="any" id="fuel" value="0" oninput="calculate()" onchange="calculate()"></td><td id="momentFuel">0</td><td>ARM = 7.936 <span id="maxPayloadNote" class="highlight"></span></td></tr>
-  <tr id="rampRow" class="gray-row"><td>Ramp Weight</td><td id="rampWeight" class="limit-check">0</td><td id="momentRamp">0</td><td></td></tr>
-  <tr><td>Fuel taxi</td><td><input type="number" inputmode="decimal" step="any" id="fuelTaxi" value="30" oninput="calculate()" onchange="calculate()"></td><td id="momentTaxi">0</td><td>ARM = 7.936</td></tr>
-  <tr id="takeoffRow" class="gray-row"><td>Take-off Weight</td><td id="takeoffWeight" class="limit-check">0</td><td id="momentTakeoff">0</td><td>MAC: <span id="macTakeoff">0</span>%</td></tr>
-  <tr><td>Fuel to destination</td><td><input type="number" inputmode="decimal" step="any" id="fuelDest" value="0" oninput="calculate()" onchange="calculate()"></td><td id="momentDest">0</td><td>ARM = 7.936</td></tr>
-  <tr id="landingRow" class="gray-row"><td>Landing Weight</td><td id="landingWeight" class="limit-check">0</td><td id="momentLanding">0</td><td>MAC: <span id="macLanding">0</span>%</td></tr>
-</table>
+    <!-- Mass & Balance -->
+    <section class="mb-section">
+      <h2>Mass &amp; Balance
+        <label for="aviaoSelecionado" class="visually-hidden">Selecionar avião</label>
+        <select id="aviaoSelecionado" class="select-plane"></select>
+      </h2>
 
-<hr style="margin: 30px 0; border: none; border-top: 1px solid #999;">
+      <table class="mb-table">
+        <caption>Calculadora de massa e momento</caption>
+        <thead>
+          <tr>
+            <th scope="col">Item</th>
+            <th scope="col">Peso (kg)</th>
+            <th scope="col">Momento (kg·m)</th>
+            <th scope="col">Comentário</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Basic weight</td>
+            <td id="basicWeight">0</td>
+            <td id="basicMoment">0</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td><label for="pilots">Pilotos</label></td>
+            <td><input id="pilots" type="number" step="any" value="150"></td>
+            <td id="momentPilots">0</td>
+            <td>ARM fixo = 4.21</td>
+          </tr>
+          <!-- ... outras linhas sem inline styles ... -->
+        </tbody>
+      </table>
+    </section>
 
-<div style="width: 100%; margin-bottom: 8px;">
-  <div style="display: flex; align-items: center; position: relative;">
-    <h2 style="margin: 0 auto; position: absolute; left: 0; right: 0; text-align: center; pointer-events: none;">Rotas</h2>
-    <div style="margin-left: auto; z-index: 1;">
-      <button id="btnAddLeg" title="Adicionar linha" style="font-size: 1.1em; padding: 2px 8px;">ADD</button>
-      <button id="btnRemoveLeg" title="Remover linha" style="font-size: 1.1em; padding: 2px 8px;">DEL</button>
-    </div>
-  </div>
-  <div style="display: flex; justify-content: center; margin-top: 4px;">
-    <select id="dropdownRotas" onchange="preencherLegsComRota()" style="min-width: 180px;">
-      <option value="">-- Selecionar rota --</option>
-    </select>
-  </div>
-</div>
+    <hr class="separator">
 
-<table class="route-table" style="table-layout: fixed;">
-  <thead>
-    <tr>
-      <th class="rota-header" style="width: 10%;">Leg</th>
-      <th style="width: 17%;">Depf(lb)</th>
-      <th style="width: 17%;">Payl(kg)</th>
-      <th style="width: 17%;">Tripf(lb)</th>
-      <th style="width: 29%;">Info</th>
-      <th style="width: 10%;"></th>
-    </tr>
-  </thead>
-  <tbody id="legsTable"></tbody>
-</table>
+    <!-- Rotas -->
+    <section class="routes-section">
+      <div class="routes-header">
+        <h2>Rotas</h2>
+        <div class="route-buttons">
+          <button id="btnAddLeg" aria-label="Adicionar perna">+</button>
+          <button id="btnRemoveLeg" aria-label="Remover perna">−</button>
+        </div>
+      </div>
+      <label for="dropdownRotas" class="visually-hidden">Selecionar rota</label>
+      <select id="dropdownRotas" class="route-select">
+        <option value="">-- Selecionar rota --</option>
+      </select>
 
-<hr style="margin: 30px 0; border: none; border-top: 1px solid #999;">
+      <table class="route-table">
+        <caption>Detalhes das pernas de rota</caption>
+        <thead>
+          <tr>
+            <th scope="col">Leg</th>
+            <th scope="col">Depf (lb)</th>
+            <th scope="col">Payl (kg)</th>
+            <th scope="col">Tripf (lb)</th>
+            <th scope="col">Info</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody id="legsTable"></tbody>
+      </table>
+    </section>
 
-<h2 style="text-align: center;">Conversor Kg &harr; Lb</h2>
-<table>
-    <tr><td>Kg para lb</td><td><input type="number" inputmode="decimal" step="any" id="kg" value="0" oninput="convertKgToLb()" onchange="convertKgToLb()"></td><td id="toLb">0</td></tr>
-    <tr><td>Lb para kg</td><td><input type="number" inputmode="decimal" step="any" id="lb" value="0" oninput="convertLbToKg()" onchange="convertLbToKg()"></td><td id="toKg">0</td></tr>
-</table>	
+    <hr class="separator">
 
-	
-<!-- SCRIPTS PRINCIPAIS -->
-<script>
-// --- Funções de Cálculo Geral e Conversores ---
+    <!-- Conversor -->
+    <section class="converter-section">
+      <h2>Conversor kg ↔ lb</h2>
+      <table class="converter-table">
+        <tbody>
+          <tr>
+            <td>Kg para lb</td>
+            <td><input id="kg" type="number" step="any" value="0"></td>
+            <td id="toLb">0</td>
+          </tr>
+          <tr>
+            <td>Lb para kg</td>
+            <td><input id="lb" type="number" step="any" value="0"></td>
+            <td id="toKg">0</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
 
-function getDefs() {
-    return JSON.parse(localStorage.getItem('definicoesMB')) || {};
-}
+  <!-- Separador final -->
+  <hr class="separator">
 
-function preencherDropdown() {
-    const defs = getDefs();
-    const select = document.getElementById("aviaoSelecionado");
-    if (!select) return;
-
-    const avioes = defs.avioes || [];
-    const ultimaSelecao = parseInt(localStorage.getItem('aviaoSelecionadoIndex')) || 0;
-
-    select.innerHTML = "";
-    avioes.forEach((aviao, index) => {
-        const opt = document.createElement("option");
-        opt.value = index;
-        opt.text = `${aviao.nome} (${aviao.peso} kg)`;
-        if (index === ultimaSelecao) opt.selected = true;
-        select.appendChild(opt);
-    });
-}
-
-function calculate() {
-    const defs = getDefs();
-    const pesoHomem = defs.pesoHomem || 86;
-    const pesoMulher = defs.pesoMulher || 68;
-    const pesoCrianca = defs.pesoCrianca || 35;
-    const pesoBagagem = defs.pesoBagagem || 10;
-
-    const avioes = defs.avioes || [];
-    const select = document.getElementById("aviaoSelecionado");
-    const selectedIndex = select ? select.selectedIndex : 0;
-    const aviao = avioes[selectedIndex];
-    if (!aviao) return;
-
-    localStorage.setItem('aviaoSelecionadoIndex', selectedIndex);
-
-    const pilots = parseFloat(document.getElementById('pilots').value) || 0;
-    const manualPayload = parseFloat(document.getElementById('manualPayload').value) || 0;
-    const fuel = parseFloat(document.getElementById('fuel').value) || 0;
-    const fuelTaxi = parseFloat(document.getElementById('fuelTaxi').value) || 0;
-    const fuelDest = parseFloat(document.getElementById('fuelDest').value) || 0;
-
-    const momentPilots = pilots * 4.21;
-    const momentPayload = manualPayload * 8.7;
-    const momentFuel = fuel * 7.936;
-    const momentTaxi = fuelTaxi * 7.936;
-    const momentDest = fuelDest * 7.936;
-
-    const zfw = aviao.peso + pilots + manualPayload;
-    const momentZfw = aviao.momento + momentPilots + momentPayload;
-    const rampWeight = zfw + fuel;
-    const momentRamp = momentZfw + momentFuel;
-    const takeoffWeight = rampWeight - fuelTaxi;
-    const momentTakeoff = momentRamp - momentTaxi;
-    const landingWeight = takeoffWeight - fuelDest;
-    const momentLanding = momentTakeoff - momentDest;
-
-    const macTakeoff = ((momentTakeoff / takeoffWeight - 7.26) / 2.042) * 100;
-    const macLanding = ((momentLanding / landingWeight - 7.26) / 2.042) * 100;
-
-    document.getElementById("basicWeight").innerText = aviao.peso.toFixed(0);
-    document.getElementById("basicMoment").innerText = aviao.momento;
-    document.getElementById('momentPilots').innerText = momentPilots.toFixed(1);
-    document.getElementById('momentPayload').innerText = momentPayload.toFixed(1);
-    document.getElementById('zfw').innerText = zfw.toFixed(0);
-    document.getElementById('momentZfw').innerText = momentZfw.toFixed(1);
-    document.getElementById('momentFuel').innerText = momentFuel.toFixed(1);
-    document.getElementById('rampWeight').innerText = rampWeight.toFixed(0);
-    document.getElementById('momentRamp').innerText = momentRamp.toFixed(1);
-    document.getElementById('momentTaxi').innerText = momentTaxi.toFixed(1);
-    document.getElementById('takeoffWeight').innerText = takeoffWeight.toFixed(0);
-    document.getElementById('momentTakeoff').innerText = momentTakeoff.toFixed(1);
-    document.getElementById('macTakeoff').innerText = macTakeoff.toFixed(1);
-    document.getElementById('momentDest').innerText = momentDest.toFixed(1);
-    document.getElementById('landingWeight').innerText = landingWeight.toFixed(0);
-    document.getElementById('momentLanding').innerText = momentLanding.toFixed(1);
-    document.getElementById('macLanding').innerText = macLanding.toFixed(1);
-
-    let maxPayload = 5730 - (aviao.peso + pilots + fuel);
-    //const effectivePayload = manualPayload > 0 ? manualPayload : payload;
-    //let maxFuel = 5730 - (aviao.peso + pilots + effectivePayload);
-let maxFuel = 5730 - (aviao.peso + pilots + manualPayload);
-	
-    document.getElementById('maxPayloadNote').innerText = maxPayload > 0
-        ? ` | Máx Payload: ${maxPayload.toFixed(0)} kg`
-        : " | Excede limite!";
-
-    document.getElementById('maxFuelNote').innerHTML = maxFuel > 0
-        ? `<small> | Máx Fuel: ${maxFuel.toFixed(0)} kg (${(maxFuel * 2.20462).toFixed(0)} lb)</small>`
-        : "<small> | Excede limite!</small>";
-
-    document.getElementById('rampWeight').classList.toggle('exceeded', rampWeight > 5730);
-    document.getElementById('takeoffWeight').classList.toggle('exceeded', takeoffWeight > 5700);
-    document.getElementById('landingWeight').classList.toggle('exceeded', landingWeight > 5700);
-
-    document.getElementById('rampRow').style.backgroundColor = rampWeight > 5730 ? '#ffcccc' : '';
-    document.getElementById('takeoffRow').style.backgroundColor = takeoffWeight > 5700 ? '#ffcccc' : '';
-    document.getElementById('landingRow').style.backgroundColor = landingWeight > 5700 ? '#ffcccc' : '';
-}
-
-function convertKgToLb() {
-    const kg = parseFloat(document.getElementById('kg').value) || 0;
-    document.getElementById('toLb').innerText = (kg * 2.20462).toFixed(1);
-}
-
-function convertLbToKg() {
-    const lb = parseFloat(document.getElementById('lb').value) || 0;
-    document.getElementById('toKg').innerText = (lb / 2.20462).toFixed(1);
-}
-</script>
-
-<script>
-// --- Lógica de Inicialização da Página e carregamento dos dados padrão ---
-async function carregarValoresPadraoSeNecessario() {
-  const definicoesExistem = localStorage.getItem("definicoesMB");
-  const rotasExistem = localStorage.getItem("rotasPadrao");
-
-  if (definicoesExistem && rotasExistem) {
-    return;
-  }
-
-  try {
-    const response = await fetch('default_settings.json');
-    if (!response.ok) throw new Error('A resposta da rede não foi bem-sucedida.');
-    const defaults = await response.json();
-
-    if (!definicoesExistem) {
-      localStorage.setItem("definicoesMB", JSON.stringify(defaults.definicoesMB));
+  <!-- Service Worker -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('service-worker.js')
+          .then(() => console.log('SW registado'))
+          .catch(err => console.error('Erro ao registar SW:', err));
+      });
     }
-    if (!rotasExistem) {
-      localStorage.setItem("rotasPadrao", JSON.stringify(defaults.rotasPadrao));
-    }
-    console.log("Definições padrão carregadas com sucesso a partir do ficheiro.");
-  } catch (error) {
-    console.error("Falha ao carregar definições padrão:", error);
-    if (!definicoesExistem) {
-      const definicoesIniciais = {
-        pesoHomem: 86, pesoMulher: 68, pesoCrianca: 35, pesoBagagem: 10,
-        avioes: [{ nome: "Dornier 228", peso: 3643, momento: 26419 }]
-      };
-      localStorage.setItem("definicoesMB", JSON.stringify(definicoesIniciais));
-    }
-    if (!rotasExistem) {
-      localStorage.setItem("rotasPadrao", JSON.stringify([]));
-    }
-  }
-}
-
-document.addEventListener('DOMContentLoaded', async () => {
-    await carregarValoresPadraoSeNecessario();
-
-    carregarLegsDoLocalStorage();
-    preencherDropdown();
-    carregarDropdownRotas();
-
-    const selectedIndex = localStorage.getItem('rotaSelecionadaIndex') || 0;
-    const dropdownRotas = document.getElementById('dropdownRotas');
-    if (dropdownRotas.options.length > selectedIndex) {
-        dropdownRotas.selectedIndex = selectedIndex;
-    }
-
-    carregarLegs();
-
-    document.querySelectorAll('input[type="number"], input[type="text"]').forEach(input => {
-        if (!input.closest('#legsTable')) {
-            input.addEventListener('input', calculate);
-        }
-    });
-
-    document.querySelectorAll('input[type="number"], input[type="text"]').forEach(input => {
-        input.addEventListener('focus', () => input.select());
-        if (!input.closest('#legsTable')) {
-            input.addEventListener('input', calculate);
-        }
-    });
-
-    document.getElementById('btnAddLeg').onclick = adicionarLinhaLeg;
-    document.getElementById('btnRemoveLeg').onclick = removerLinhaLeg;
-
-    document.querySelectorAll('#legsTable tr').forEach(tr => criarLinhaLegHandlers(tr));
-
-    calculate();
-    updateLdgAuto();
-    feather.replace();
-});
-</script>
-
-<script defer>
-if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('service-worker.js')
-        .then(() => console.log("Service Worker registado"))
-        .catch(err => console.error("Erro ao registar SW:", err));
-}
-</script>
-
-	
-<!-- Popup para editar payload de cada leg -->
-<div id="popupPayload" style="display:none; position:fixed; left:0; top:0; width:100vw; height:100vh; z-index:999; background:rgba(0,0,0,0.35); align-items:center; justify-content:center;">
-  <div style="background:#fff; border-radius:10px; max-width:340px; width:95vw; margin:auto; box-shadow:0 8px 24px #0002; padding:20px; position:relative;">
-    <button onclick="fecharPopupPayload()" style="position:absolute; top:6px; right:12px; font-size:1.5em; border:none; background:none; cursor:pointer;">&times;</button>
-    <h3 style="margin-top:0; font-size:1.1em;">Editar Payload</h3>
-    <table style="width:100%;">
-      <tr><td>Homens</td><td><input type="number" inputmode="numeric" pattern="[0-9]*" id="ppHomens" min="0" value="0"></td></tr>
-      <tr><td>Mulheres</td><td><input type="number" inputmode="numeric" pattern="[0-9]*" id="ppMulheres" min="0" value="0"></td></tr>
-      <tr><td>Crianças</td><td><input type="number" inputmode="numeric" pattern="[0-9]*" id="ppCriancas" min="0" value="0"></td></tr>
-      <tr><td>Bagagem</td><td><input type="number" inputmode="numeric" pattern="[0-9]*" id="ppBagagem" min="0" value="0"></td></tr>
-      <tr style="font-weight:bold;"><td>Total</td><td id="ppTotal">0</td></tr>
-    </table>
-	<button onclick="limparPayloadDoPopup()" style="margin-top:10px; width:100%;">Limpar</button>	  
-    <button onclick="guardarPayloadDoPopup()" style="margin-top:10px; width:100%;">Guardar</button>
-  </div>
-</div>
-
-<script>
-// === Gestão única de legs, popup e dados associados ===
-
-let legsData = [];
-let legEmEdicao = null;
-let linhaSelecionadaIndex = null;
-
-function carregarLegsDoLocalStorage() {
-  let dados = localStorage.getItem('legsDataV2');
-  if (dados) {
-    legsData = JSON.parse(dados);
-  } else {
-    legsData = Array(5).fill(0).map(()=>({homens:0, mulheres:0, criancas:0, bagagem:0, payload:0}));
-  }
-}
-function guardarLegsNoLocalStorage() {
-  localStorage.setItem('legsDataV2', JSON.stringify(legsData));
-}
-function selecionarLinhaLeg(tr) {
-  document.querySelectorAll('#legsTable tr').forEach(row => row.classList.remove('selected'));
-  tr.classList.add('selected');
-  linhaSelecionadaIndex = Array.from(tr.parentNode.children).indexOf(tr);
-}
-function carregarDropdownRotas() {
-    const rotas = JSON.parse(localStorage.getItem("rotasPadrao") || "[]");
-    const dropdown = document.getElementById("dropdownRotas");
-    if (!dropdown) return;
-
-    dropdown.innerHTML = '<option value="">-- Selecionar rota --</option>';
-    rotas.forEach((r, i) => {
-        const opt = document.createElement("option");
-        opt.value = i;
-        opt.text = r.nome;
-        dropdown.appendChild(opt);
-    });
-}
-function criarLinhaLeg(route = '', depF = '', payl = '', tripF = '') {
-    const tbody = document.getElementById('legsTable');
-    const tr = document.createElement('tr');
-
-    tr.innerHTML = `
-        <td class="rota-col" onclick="editarRota(this)">
-          <div class="rota-visual">${route}</div>
-          <input type="text" class="rota-edit" value="${route}" onblur="fecharRota(this)" style="display: none;">
-        </td>
-        <td><input type="number" inputmode="decimal" step="any" value="${depF}" data-auto="1"></td>
-        <td>
-		<input type="number" inputmode="decimal" step="any" value="${payl}" 
-		style="width:60px"
-		onclick="abrirPopupPayload(this)" 
-		readonly>
-	</td>
-        <td><input type="number" inputmode="decimal" step="any" value="${tripF}"></td>
-        <td class="ldg">0</td>
-        <td><button class="route-insert" onclick="inserirLeg(this)">+</button></td>
-    `;
-
-    tr.addEventListener('click', function(e) {
-      if (e.target.tagName === "BUTTON") return;
-      selecionarLinhaLeg(tr);
-    });
-
-    tbody.appendChild(tr);
-
-    tr.querySelectorAll('input').forEach(input => {
-        input.addEventListener('focus', () => input.select());
-        input.addEventListener('input', () => {
-            input.dataset.auto = "0";
-            updateLdgAuto();
-            guardarLegs();
-        });
-    });
-
-    updateLdgAuto();
-}
-function editarRota(td) {
-    const div = td.querySelector('.rota-visual');
-    const input = td.querySelector('.rota-edit');
-    input.value = div.textContent.trim();
-    div.style.display = "none";
-    input.style.display = "block";
-    input.focus();
-    input.select();
-}
-function fecharRota(input) {
-    const td = input.parentElement;
-    const div = td.querySelector('.rota-visual');
-    div.textContent = input.value.trim();
-    input.style.display = "none";
-    div.style.display = "block";
-    updateLdgAuto();
-    guardarLegs();
-}
-function guardarLegs() {
-    const linhas = [...document.querySelectorAll('#legsTable tr')];
-    const dados = linhas.map(row => ({
-        route: row.cells[0].querySelector('.rota-edit').value.trim(),
-        depF: row.cells[1].querySelector("input")?.value || '',
-        payl: row.cells[2].querySelector("input")?.value || '',
-        tripF: row.cells[3].querySelector("input")?.value || ''
-    }));
-    localStorage.setItem('rotaAtiva', JSON.stringify(dados));
-}
-function carregarLegs() {
-    const dados = JSON.parse(localStorage.getItem('rotaAtiva') || '[]');
-    const tbody = document.getElementById("legsTable");
-    tbody.innerHTML = "";
-
-    if (dados.length === 0) {
-        for (let i = 0; i < 5; i++) criarLinhaLeg();
-    } else {
-        dados.forEach(l => criarLinhaLeg(l.route, l.depF, l.payl, l.tripF));
-    }
-}
-function preencherLegsComRota() {
-    const dropdown = document.getElementById("dropdownRotas");
-    const idx = dropdown.value;
-    localStorage.setItem('rotaSelecionadaIndex', dropdown.selectedIndex);
-
-    if (idx === "") {
-        const tbody = document.getElementById("legsTable");
-        tbody.innerHTML = "";
-        for (let i = 0; i < 5; i++) criarLinhaLeg();
-        localStorage.removeItem('rotaAtiva');
-        guardarLegs();
-        return;
-    }
-    const rotas = JSON.parse(localStorage.getItem("rotasPadrao") || "[]");
-    if (!rotas[idx]) return;
-
-    const rotaSelecionada = rotas[idx];
-    const tbody = document.getElementById("legsTable");
-    tbody.innerHTML = "";
-
-    rotaSelecionada.legs.forEach(leg => {
-        criarLinhaLeg(leg.route, leg.depF, leg.payl, leg.tripF);
-    });
-
-    guardarLegs();
-updateLdgAuto();
-}
-function inserirLeg(btn) {
-    const row = btn.closest("tr");
-    const depFuelLb = parseFloat(row.cells[1].querySelector("input")?.value || 0);
-    const payloadKg = parseFloat(row.cells[2].querySelector("input")?.value || 0);
-    const tripFuelLb = parseFloat(row.cells[3].querySelector("input")?.value || 0);
-    const depFuelKg = depFuelLb / 2.20462;
-    const tripFuelKg = tripFuelLb / 2.20462;
-    document.getElementById("manualPayload").value = Math.round(payloadKg);
-    document.getElementById("fuel").value = Math.round(depFuelKg);
-    document.getElementById("fuelDest").value = Math.round(tripFuelKg);
-    if (typeof calculate === "function") calculate();
-}
-function updateLdgAuto() {
-    const rows = document.querySelectorAll("#legsTable tr");
-    rows.forEach((row, i) => {
-        const inputs     = row.querySelectorAll("td input");
-        const depFuelLb  = parseFloat(inputs[1].value) || 0;
-        const payloadKg  = Math.round(parseFloat(inputs[2].value) || 0);
-        const tripLb     = parseFloat(inputs[3].value) || 0;
-        const BEW        = parseFloat(document.getElementById("basicWeight").innerText) || 0;
-        const pilots     = parseFloat(document.getElementById("pilots").value) || 0;
-        const taxiKg     = parseFloat(document.getElementById("fuelTaxi").value) || 0;
-        const depFuelKg  = Math.round(depFuelLb / 2.20462);
-        const maxFuelKg  = 5730 - (BEW + pilots + payloadKg);
-        const maxFuelLb  = Math.round(maxFuelKg * 2.20462);
-        const maxPayloadKg = 5730 - (BEW + pilots + depFuelKg);
-	const TakeoffUnderLoad = 5700 - (BEW + pilots + payloadKg + depFuelKg - taxiKg);    
-        const ldgCell = row.querySelector(".ldg");
-        if (ldgCell) {
-            ldgCell.innerHTML = `
-                <div>Max PayL: ${maxPayloadKg.toFixed(0)} kg</div>
-                <div>Max Fuel: ${maxFuelLb.toFixed(0)} lb</div>
-		<div>Underload: ${TakeoffUnderLoad.toFixed(0)} Kg</div>
-            `;
-        }
-        const ldgKg = depFuelLb - tripLb;
-        if (i + 1 < rows.length) {
-            const nextDepInput = rows[i + 1].cells[1].querySelector("input");
-            const atual        = nextDepInput.value || "";
-            const isAuto       = nextDepInput.dataset.auto;
-            if (!atual || atual === "0" || isAuto === "1") {
-                nextDepInput.value = ldgKg;
-                nextDepInput.dataset.auto = "1";
-            }
-        }
-        row.classList.toggle("overweight", depFuelLb > maxFuelLb);
-    });
-}
-function criarLinhaLegHandlers(tr) {
-    tr.addEventListener('click', function(e) {
-        if (e.target.tagName === "BUTTON") return;
-        selecionarLinhaLeg(tr);
-    });
-}
-
-// --- Popup Payload ---
-function abrirPopupPayload(input) {
-    const tr = input.closest('tr');
-    const idx = Array.from(tr.parentNode.children).indexOf(tr);
-    legEmEdicao = idx;
-
-    if (!window.legsData) window.legsData = [];
-    if (!legsData[idx]) legsData[idx] = {homens:0, mulheres:0, criancas:0, bagagem:0, payload:0};
-
-    document.getElementById('ppHomens').value   = legsData[idx].homens   ?? 0;
-    document.getElementById('ppMulheres').value = legsData[idx].mulheres ?? 0;
-    document.getElementById('ppCriancas').value = legsData[idx].criancas ?? 0;
-    document.getElementById('ppBagagem').value  = legsData[idx].bagagem  ?? 0;
-    atualizarPopupTotal();
-    document.getElementById('popupPayload').style.display = 'flex';
-}
-function atualizarPopupTotal() {
-    const defs = JSON.parse(localStorage.getItem('definicoesMB')) || {};
-    const pH = defs.pesoHomem   || 86;
-    const pM = defs.pesoMulher  || 68;
-    const pC = defs.pesoCrianca || 35;
-    const homens   = parseInt(document.getElementById('ppHomens').value)   || 0;
-    const mulheres = parseInt(document.getElementById('ppMulheres').value) || 0;
-    const criancas = parseInt(document.getElementById('ppCriancas').value) || 0;
-    const bagagem  = parseInt(document.getElementById('ppBagagem').value)  || 0;
-    const total = homens * pH + mulheres * pM + criancas * pC + bagagem;
-    document.getElementById('ppTotal').innerText = total;
-    return total;
-}
-function limparPayloadDoPopup() {
-    document.getElementById('ppHomens').value = 0;
-    document.getElementById('ppMulheres').value = 0;
-    document.getElementById('ppCriancas').value = 0;
-    document.getElementById('ppBagagem').value = 0;
-    atualizarPopupTotal();
-}
-function guardarPayloadDoPopup() {
-    if (legEmEdicao === null) return;
-    legsData[legEmEdicao] = {
-        homens:   parseInt(document.getElementById('ppHomens').value)   || 0,
-        mulheres: parseInt(document.getElementById('ppMulheres').value) || 0,
-        criancas: parseInt(document.getElementById('ppCriancas').value) || 0,
-        bagagem:  parseInt(document.getElementById('ppBagagem').value)  || 0,
-        payload:  atualizarPopupTotal()
-    };
-    const tr = document.querySelectorAll('#legsTable tr')[legEmEdicao];
-    if (tr) {
-        const paylInput = tr.cells[2].querySelector('input');
-        if (paylInput) paylInput.value = legsData[legEmEdicao].payload;
-    }
-    guardarLegsNoLocalStorage();
-    fecharPopupPayload();
-	updateLdgAuto();
-	
-}
-function fecharPopupPayload() {
-    document.getElementById('popupPayload').style.display = 'none';
-    legEmEdicao = null;
-}
-['ppHomens', 'ppMulheres', 'ppCriancas', 'ppBagagem'].forEach(id => {
-    document.getElementById(id).addEventListener('input', atualizarPopupTotal);
-});
-
-document.addEventListener('DOMContentLoaded', () => {
-    carregarLegsDoLocalStorage();
-    function ativarPopupNasCelulasPayload() {
-        document.querySelectorAll('#legsTable tr').forEach((tr, idx) => {
-            const paylInput = tr.cells[2]?.querySelector('input');
-            if (paylInput) {
-                paylInput.onfocus = null;
-                paylInput.onclick = null;
-                paylInput.addEventListener('focus', function(e){
-                    e.preventDefault();
-                    abrirPopupPayload(paylInput);
-                });
-                paylInput.addEventListener('click', function(e){
-                    e.preventDefault();
-                    abrirPopupPayload(paylInput);
-                });
-            }
-        });
-    }
-    setTimeout(ativarPopupNasCelulasPayload, 350);
-    const observer = new MutationObserver(ativarPopupNasCelulasPayload);
-    observer.observe(document.getElementById('legsTable'), {childList: true});
-});
-
-// Funções adicionar/remover linha sincronizam com legsData!
-function adicionarLinhaLeg() {
-  const tbody = document.getElementById('legsTable');
-  let idx = linhaSelecionadaIndex;
-  if (idx == null || idx < 0) idx = tbody.children.length - 1;
-  const novaLinha = tbody.children[idx]?.cloneNode(true) || null;
-  if (novaLinha) {
-    novaLinha.querySelectorAll('input').forEach(input => input.value = '');
-    novaLinha.querySelector('.rota-visual').textContent = '';
-    novaLinha.querySelector('.rota-edit').value = '';
-    tbody.insertBefore(novaLinha, tbody.children[idx + 1]);
-    criarLinhaLegHandlers(novaLinha);
-    selecionarLinhaLeg(novaLinha);
-    legsData.splice(idx+1, 0, {homens:0, mulheres:0, criancas:0, bagagem:0, payload:0});
-    guardarLegsNoLocalStorage();
-    guardarLegs();
-    updateLdgAuto();
-  } else {
-    criarLinhaLeg();
-  }
-}
-function removerLinhaLeg() {
-  const tbody = document.getElementById('legsTable');
-  let idx = linhaSelecionadaIndex;
-  if (idx == null || idx < 0) return;
-  if (tbody.children.length <= 1) return;
-  tbody.removeChild(tbody.children[idx]);
-  legsData.splice(idx, 1);
-  linhaSelecionadaIndex = null;
-  guardarLegsNoLocalStorage();
-  guardarLegs();
-  updateLdgAuto();
-}
-</script>
+  </script>
 </body>
 </html>

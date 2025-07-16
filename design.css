@@ -130,33 +130,12 @@ button:hover {
   background-color: #1565c0;
 }
 
-.limit-check {
-  transition: background-color 0.3s, color 0.3s;
-}
-
-.limit-check.exceeded {
-  background-color: var(--danger);
-  color: white;
-  font-weight: bold;
-}
-
-.limit-check.safe {
-  background-color: var(--safe);
-  color: white;
-  font-weight: bold;
-}
-
 .gray-row {
   background-color: var(--row-hover);
 }
 
-.highlight {
-  color: var(--danger);
-  font-weight: bold;
-}
-
 tr.exceeded {
-  background-color: #ffcccc;  /* rosa suave para erro */
+  background-color: #ffcccc;  /* rosa suave para erro quando o peso é execedido*/
 }
 
 /* Mass & Balance section */

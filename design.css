@@ -29,7 +29,7 @@ h2, h3 {
 
 /* Separator */
 hr.separator {
-  margin: 30px 0;
+  margin: 60px 0 30px; /* 60px em cima, 30px em baixo */
   border: none;
   border-top: 1px solid var(--input-bg);
 }

@@ -155,6 +155,10 @@ button:hover {
   font-weight: bold;
 }
 
+tr.exceeded {
+  background-color: #ffcccc;  /* rosa suave para erro */
+}
+
 /* Mass & Balance section */
 .mb-section {
   margin-bottom: 40px;

@@ -218,6 +218,12 @@ document.addEventListener('DOMContentLoaded',async()=>{
   preencherDropdownRotas();
   carregarLegsDoLocalStorage();
   carregarLegs();
+
+  // Dispara o calculate() sempre que o valor de qualquer input muda:
+  ['pilots','manualPayload','fuel','fuelTaxi','fuelDest'].forEach(id => {
+    const el = document.getElementById(id);
+    el.addEventListener('input', calculate);
+  });
   
   // Selecionar texto todo ao focar
   document.querySelectorAll('input[type="number"],input[type="text"]').forEach(inp=>inp.addEventListener('focus',e=>e.target.select()));
@@ -231,6 +237,7 @@ document.addEventListener('DOMContentLoaded',async()=>{
   document.getElementById('btnRemoveLeg').addEventListener('click',()=>{const sel=document.querySelector('#legsTable tr.selected');if(sel)sel.remove();});
   document.getElementById('dropdownRotas').addEventListener('change',preencherLegsComRota);
 
-  calculate(); updateLdgAuto();
+  calculate(); 
+  updateLdgAuto();
   if(window.feather)feather.replace();
 });

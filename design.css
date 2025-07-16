@@ -222,11 +222,6 @@ tr.exceeded {
   white-space: nowrap;
   font-size: clamp(12px, 1.5vw, 16px);
 }
-.route-table td.rota-col {
-  padding: 0;
-  background-color: #fffbe6;
-  text-align: center;
-}
 .rota-visual {
   writing-mode: vertical-rl;
   transform: rotate(180deg);

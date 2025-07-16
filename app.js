@@ -189,7 +189,10 @@ function criarLinhaLeg(route = '', depF = '', payl = '', tripF = '') {
   const tr = document.createElement('tr');
 
   tr.innerHTML = `
-    <td>${route}</td>
+    <td class="rota-col" onclick="editarRota(this)">
+      <div class="rota-visual">${route}</div>
+      <input type="text" class="rota-edit" value="${route}" onblur="fecharRota(this)" style="display: none;">
+    </td>
     <td><input type="number" … value="${depF}"></td>
     <td><input type="number" … value="${payl}"></td>
     <td><input type="number" … value="${tripF}"></td>

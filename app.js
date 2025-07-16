@@ -164,9 +164,18 @@ function adicionarLinhaLeg() {
   // Limpa todos os inputs da linha nova
   nova.querySelectorAll('input').forEach(i => i.value = '');
 
-  // Insere a nova linha logo a seguir
+  // 1) Insere a nova linha logo a seguir
   tbody.insertBefore(nova, tbody.children[idx + 1]);
-
+  // 2) Rebind dos listeners de foco e de input
+  nova.querySelectorAll('input[type="number"]').forEach(inp => {
+    // seleciona todo o texto ao focar
+    inp.addEventListener('focus', e => e.target.select());
+    // garante que, ao mudar valor, recalcula e guarda
+    inp.addEventListener('input', () => {
+      guardarLegs();
+      updateLdgAuto();
+    });
+  });
   // Regista o handler de clique para seleccionar
   nova.addEventListener('click', () => {
     document.querySelectorAll('#legsTable tr').forEach(r => r.classList.remove('selected'));

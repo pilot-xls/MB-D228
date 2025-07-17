@@ -165,6 +165,16 @@ tr.exceeded {
 .routes-section {
   margin-bottom: 40px;
 }
+.route-table colgroup col:nth-child(1) {
+  width:     30px;
+  min-width: 30px;
+  max-width: 30px;
+}
+.route-table colgroup col:nth-child(6) {
+  width:     30px;
+  min-width: 30px;
+  max-width: 30px;
+}
 .routes-header {
   display: flex;
   align-items: center;

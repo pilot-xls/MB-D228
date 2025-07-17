@@ -250,33 +250,40 @@ function carregarLegs() {
         dados.forEach(l => criarLinhaLeg(l.route, l.depF, l.payl, l.tripF));
     }
 }
+
 function preencherLegsComRota() {
     const dropdown = document.getElementById("dropdownRotas");
     const idx = dropdown.value;
+    // 1) Antes de tudo, limpa o payload guardado
+    legsData.forEach(leg => {
+      leg.homens   = 0;
+      leg.mulheres = 0;
+      leg.criancas = 0;
+      leg.bagagem  = 0;
+      leg.payload  = 0;
+    });
+    // Atualiza no localStorage
+    guardarLegsNoLocalStorage();
+
     localStorage.setItem('rotaSelecionadaIndex', dropdown.selectedIndex);
-
-    if (idx === "") {
-        const tbody = document.getElementById("legsTable");
-        tbody.innerHTML = "";
-        for (let i = 0; i < 5; i++) criarLinhaLeg();
-        localStorage.removeItem('rotaAtiva');
-        guardarLegs();
-        return;
-    }
     const rotas = JSON.parse(localStorage.getItem("rotasPadrao") || "[]");
-    if (!rotas[idx]) return;
-
-    const rotaSelecionada = rotas[idx];
     const tbody = document.getElementById("legsTable");
     tbody.innerHTML = "";
 
-    rotaSelecionada.legs.forEach(leg => {
-        criarLinhaLeg(leg.route, leg.depF, leg.payl, leg.tripF);
-    });
-
-    guardarLegs();
-updateLdgAuto();
+    if (idx === "") {
+        // Se não há rota, cria 5 linhas em branco
+        for (let i = 0; i < 5; i++) criarLinhaLeg();
+        localStorage.removeItem('rotaAtiva');
+    } else if (rotas[idx]) {
+        // Se há rota, preenche com legs dessa rota
+        rotas[idx].legs.forEach(leg => {
+            criarLinhaLeg(leg.route, leg.depF, leg.payl, leg.tripF);
+        });
+        // Como já zeraste legsData, não precisas de chamar guardarLegs() aqui
+    }
+    updateLdgAuto();
 }
+
 function inserirLeg(btn) {
     const row = btn.closest("tr");
     const depFuelLb = parseFloat(row.cells[1].querySelector("input")?.value || 0);

@@ -159,7 +159,7 @@ function selecionarLinhaLeg(tr) {
   tr.classList.add('selected');
   linhaSelecionadaIndex = Array.from(tr.parentNode.children).indexOf(tr);
 }
-function carregarDropdownRotas() {
+function preencherDropdownRotas() {
     const rotas = JSON.parse(localStorage.getItem("rotasPadrao") || "[]");
     const dropdown = document.getElementById("dropdownRotas");
     if (!dropdown) return;

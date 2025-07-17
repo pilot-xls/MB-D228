@@ -192,6 +192,7 @@ tr.exceeded {
   margin: 4px auto 0;
   font-size: 14px;
   min-width: 180px;
+  margin-bottom: 10px;
 }
 
 /* Conversor section */
@@ -297,9 +298,7 @@ button.route-insert {
 
 /* Estado de excesso de peso */
 .route-table tr.overweight td {
-  background-color: var(--danger, #ff4d4d);
-  color: white;
-  font-weight: bold;
+   background-color: #ffcccc;
 }
 
 /* Linha selecionada */

@@ -467,8 +467,6 @@ document.addEventListener('DOMContentLoaded',async()=>{
   if(window.feather)feather.replace();
 });
 
-window.preencherDropdownRotas    = preencherDropdownRotas;
-window.carregarDropdownRotas     = carregarDropdownRotas;   
 window.inserirLeg                = inserirLeg;
 window.editarRota                = editarRota;
 window.fecharRota                = fecharRota;

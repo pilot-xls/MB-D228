@@ -193,6 +193,18 @@ tr.exceeded {
   width: 50%;
 }
 
+
+.route-table th,
+.route-table td {
+  vertical-align: middle;
+  font-size: clamp(var(--cell-font-min), 1.4vw, var(--cell-font-max));
+  padding: var(--cell-padding);
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  white-space: normal;      /* permite quebra de texto se necessário */
+  box-sizing: border-box;
+}
+
 /* Route-table specifics */
 /* 1. Variáveis para facilitar ajustes globais */
 :root {
@@ -208,9 +220,9 @@ tr.exceeded {
   --selected-bg: #e3f0fd;
 }
 
-/* 2. Tabela base */
+/* 2. Tabela base ajustável */
 .route-table {
-  table-layout: fixed;
+  table-layout: auto;       /* permite o ajuste automático de colunas */
   width: 100%;
   border-collapse: collapse;
 }
@@ -221,12 +233,12 @@ tr.exceeded {
   padding: var(--cell-padding);
   word-break: break-word;
   overflow-wrap: anywhere;
+  white-space: normal;      /* permite quebra de texto se necessário */
   box-sizing: border-box;
 }
 
 /* 3. Inputs e células com texto */
-.route-table td input,
-.route-table td .rota-visual {
+.route-table td input {
   display: block;
   width: 100%;
   padding: var(--input-padding);
@@ -239,12 +251,18 @@ tr.exceeded {
   box-sizing: border-box;
 }
 
-/* 4. Estilo padrão para rota-visual */
+/* 4. Estilo para rota-visual (texto vertical) */
 .rota-visual {
+  display: block;
+  width: auto;
+  padding: var(--input-padding) 4px;
   font-size: clamp(var(--rota-font-min), 1.5vw, var(--rota-font-max));
-  /* força horizontal, anulando qualquer escrita vertical */
-  writing-mode: horizontal-tb;
-  transform: none;
+  writing-mode: vertical-rl;  /* orienta texto vertical da direita para esquerda */
+  text-orientation: upright;  /* mantém cada carácter na posição normal */
+  white-space: nowrap;        /* evita quebra dentro de cada carácter */
+  box-sizing: border-box;
+  background: var(--rota-bg);
+  border: none;
 }
 
 /* 5. Campo de edição da rota */
@@ -269,8 +287,8 @@ button.route-insert {
   outline: var(--selected-outline);
   background: var(--selected-bg);
 }
-background: #e3f0fd;
-}
+
+
 
 /* Mobile support */
 @media (max-width: 600px) {

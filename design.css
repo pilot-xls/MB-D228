@@ -194,83 +194,74 @@ tr.exceeded {
 }
 
 /* Route-table specifics */
-/* 1. Variáveis para facilitar ajustes globais */
-:root {
-  --rota-font-min: 12px;
-  --rota-font-max: 16px;
-  --cell-font-min: 10px;
-  --cell-font-max: 14px;
-  --cell-padding: 4px;
-  --input-padding: 6px;
-  --rota-bg: transparent;
-  --overweight-bg: #ffcccc;
-  --selected-outline: 2px solid #1a73e8;
-  --selected-bg: #e3f0fd;
-}
 
-#dropdownRotas {
-  margin-bottom: 0.5rem;  /* 1rem, 1.5rem, 2rem… */
-}
-
-/* 2. Tabela base ajustável e full-width */
 .route-table {
-  table-layout: auto;       /* colunas se ajustam ao conteúdo */
-  width: 100%;              /* ocupa toda a largura da janela/container */
-  max-width: 100%;
-  border-collapse: collapse;
+  table-layout: fixed;
+  width: 100%;
 }
+
+/* Células normais */
 .route-table th,
 .route-table td {
   vertical-align: middle;
-  font-size: clamp(var(--cell-font-min), 1.4vw, var(--cell-font-max));
-  padding: var(--cell-padding);
+  font-size: clamp(10px, 1.4vw, 14px);
   word-break: break-word;
   overflow-wrap: anywhere;
-  white-space: normal;      /* permite quebra de texto */
+  padding: 4px;
   box-sizing: border-box;
 }
 
-/* 3. Coluna da rota com largura mínima para conter texto vertical */
-.route-table col:first-child {
-  width: max-content;
-}
-
-/* 4. Inputs e células (texto padrão horizontal) */
-.route-table td input {
+/* Inputs e visual da rota */
+.route-table td input,
+.route-table td .rota-visual {
   display: block;
   width: 100%;
-  padding: var(--input-padding);
+  box-sizing: border-box;
+  margin: 0;
+  padding: 6px;
   text-align: center;
-  background: var(--rota-bg);
   border: none;
+  background: transparent;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  box-sizing: border-box;
+  font-size: clamp(12px, 1.5vw, 16px);
 }
 
-/* 5. Estilo para rota-visual: texto vertical legível */
+/* Coluna de rota com fundo e sem padding extra */
+.route-table td.rota-col {
+  padding: 0;
+  background-color: #fffbe6;
+  text-align: center;
+}
+
+/* Cabeçalho vertical — reparei que o seletor está “.th.rota-header” mas devia ser “th.rota-header” */
+th.rota-header {
+  writing-mode: vertical-rl;
+  white-space: nowrap;
+  padding: 4px;
+}
+
+/* Texto vertical dentro da célula */
 .rota-visual {
-  display: block;
-  width: auto;
-  padding: var(--input-padding) 4px;
-  font-size: clamp(var(--rota-font-min), 1.5vw, var(--rota-font-max));
-  writing-mode: vertical-rl;  /* texto vertical da direita para esquerda */
-  text-orientation: upright;  /* caracteres mantêm orientação normal */
-  white-space: nowrap;        /* evita quebra entre caracteres */
-  box-sizing: border-box;
-  background: var(--rota-bg);
-  border: none;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  white-space: nowrap;
+  text-align: center;
 }
 
-/* 6. Campo de edição da rota */
+/* Campo de edição da rota */
 .rota-edit {
-  font-size: clamp(var(--cell-font-min), 1.2vw, var(--cell-font-max));
-  padding: var(--input-padding);
+  font-size: clamp(10px, 1.2vw, 14px);
+  width: 100%;
+  box-sizing: border-box;
+  padding: 6px;
+  text-align: center;
+  border: none;
   background: var(--input-bg);
 }
 
-/* 7. Botões e estados especiais */
+/* Botão de inserir leg */
 button.route-insert {
   padding: 2px 6px;
   font-size: 12px;
@@ -278,12 +269,18 @@ button.route-insert {
   min-width: 20px;
   min-height: 20px;
 }
+
+/* Estado de excesso de peso */
 .route-table tr.overweight td {
-  background-color: var(--overweight-bg);
+  background-color: var(--danger, #ff4d4d);
+  color: white;
+  font-weight: bold;
 }
+
+/* Linha selecionada */
 #legsTable tr.selected {
-  outline: var(--selected-outline);
-  background: var(--selected-bg);
+  outline: 2px solid #1a73e8;
+  background: #e3f0fd;
 }
 
 

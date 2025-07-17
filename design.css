@@ -142,6 +142,10 @@ tr.exceeded {
 .mb-section {
   margin-bottom: 40px;
 }
+.mb-section th,
+.mb-section td{
+  padding: 5px;
+}
 .mb-section .select-plane {
   font-size: 14px;
   margin-left: 10px;
@@ -202,7 +206,7 @@ tr.exceeded {
 }
 .route-table thead th {
   font-weight: bold;
-  font-size: 0.8rem;
+  font-size: 0.6rem;
 }
 
 /* Células normais */

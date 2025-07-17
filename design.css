@@ -220,11 +220,11 @@ tr.exceeded {
   --selected-bg: #e3f0fd;
 }
 
-/* 2. Tabela base ajustável */
+/* 2. Tabela base ajustável e full-width */
 .route-table {
-  table-layout: auto;       /* permite ajuste de colunas ao conteúdo */
-  width: auto;              /* tabela encolhe ou expande conforme texto */
-  max-width: 100%;          /* não excede o container */
+  table-layout: auto;       /* colunas se ajustam ao conteúdo */
+  width: 100%;              /* ocupa toda a largura da janela/container */
+  max-width: 100%;
   border-collapse: collapse;
 }
 .route-table th,
@@ -238,12 +238,12 @@ tr.exceeded {
   box-sizing: border-box;
 }
 
-/* Ajuste específico da primeira coluna (rota) */
-.route-table col:nth-child(1) {
-  width: max-content;       /* coluna cresce até caber o texto */
+/* 3. Coluna da rota com largura mínima para conter texto vertical */
+.route-table col:first-child {
+  width: max-content;
 }
 
-/* 3. Inputs e células com texto */
+/* 4. Inputs e células (texto padrão horizontal) */
 .route-table td input {
   display: block;
   width: 100%;
@@ -257,28 +257,28 @@ tr.exceeded {
   box-sizing: border-box;
 }
 
-/* 4. Estilo para rota-visual (texto vertical) */
+/* 5. Estilo para rota-visual: texto vertical legível */
 .rota-visual {
   display: block;
   width: auto;
   padding: var(--input-padding) 4px;
   font-size: clamp(var(--rota-font-min), 1.5vw, var(--rota-font-max));
   writing-mode: vertical-rl;  /* texto vertical da direita para esquerda */
-  text-orientation: upright;  /* cada carácter mantém posição normal */
-  white-space: nowrap;        /* evita quebra dentro de cada carácter */
+  text-orientation: upright;  /* caracteres mantêm orientação normal */
+  white-space: nowrap;        /* evita quebra entre caracteres */
   box-sizing: border-box;
   background: var(--rota-bg);
   border: none;
 }
 
-/* 5. Campo de edição da rota */
+/* 6. Campo de edição da rota */
 .rota-edit {
   font-size: clamp(var(--cell-font-min), 1.2vw, var(--cell-font-max));
   padding: var(--input-padding);
   background: var(--input-bg);
 }
 
-/* 6. Botões e estados especiais */
+/* 7. Botões e estados especiais */
 button.route-insert {
   padding: 2px 6px;
   font-size: 12px;
@@ -293,6 +293,7 @@ button.route-insert {
   outline: var(--selected-outline);
   background: var(--selected-bg);
 }
+
 
 
 

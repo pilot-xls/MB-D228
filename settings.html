@@ -42,6 +42,31 @@
       display: flex;
       justify-content: space-around;
     }
+	  /* faz toda a página “encaixar” na largura do ecrã */
+    body {
+      padding: 1rem;
+      box-sizing: border-box;
+    }
+    /* tabela de aviões em full‑width e colunas auto‑dimensionadas */
+    table {
+      width: 100%;
+      table-layout: auto;
+      border-collapse: collapse;
+    }
+    table th,
+    table td {
+      white-space: normal;       /* permite quebra de texto */
+      word-break: break-word;
+      padding: 0.5rem;
+    }
+    /* inputs, selects e textareas ocupam toda a largura disponível */
+    input,
+    select,
+    textarea {
+      width: 100%;
+      box-sizing: border-box;
+      margin-bottom: 1rem;
+    }
   </style>
 </head>
 

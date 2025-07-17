@@ -165,16 +165,6 @@ tr.exceeded {
 .routes-section {
   margin-bottom: 40px;
 }
-.route-table colgroup col:nth-child(1) {
-  width:     30px;
-  min-width: 30px;
-  max-width: 30px;
-}
-.route-table colgroup col:nth-child(6) {
-  width:     30px;
-  min-width: 30px;
-  max-width: 30px;
-}
 .routes-header {
   display: flex;
   align-items: center;
@@ -210,6 +200,10 @@ tr.exceeded {
   table-layout: fixed;
   width: 100%;
 }
+.route-table thead th {
+  font-weight: bold;
+  font-size: 0.8rem;
+}
 
 /* Células normais */
 .route-table th,
@@ -225,20 +219,20 @@ tr.exceeded {
 /*ajusta a  largura de uma coluna*/
 .route-table th:nth-child(1),
 .route-table td:nth-child(1) {
-  width: 30px;      /* ajusta este valor conforme precisares */
-  min-width: 30px;
-  max-width: 30px;
+  width: 40px;      
+  min-width: 40px;
+  max-width: 40px;
 }
 .route-table th:nth-child(6),
 .route-table td:nth-child(6) {
-  width: 50px;      /* ajusta este valor conforme precisares */
+  width: 50px;      
   min-width: 50px;
   max-width: 50px;
 }
 
 .route-table th:nth-child(5),
 .route-table td:nth-child(5) {
-  width: 110px;      /* ajusta este valor conforme precisares */
+  width: 110px;     
   min-width: 110px;
   max-width: 110px;
 }

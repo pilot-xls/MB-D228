@@ -200,7 +200,7 @@ tr.exceeded {
 }
 .converter-table td:nth-child(2),
 .converter-table td:nth-child(3) {
-  width: 50%;
+  width: 40%;
 }
 
 /* Route-table specifics */
@@ -221,6 +221,27 @@ tr.exceeded {
   box-sizing: border-box;
 }
 
+/*ajusta a  largura de uma coluna*/
+.route-table th:nth-child(1),
+.route-table td:nth-child(1) {
+  width: 30px;      /* ajusta este valor conforme precisares */
+  min-width: 30px;
+  max-width: 30px;
+}
+.route-table th:nth-child(6),
+.route-table td:nth-child(6) {
+  width: 50px;      /* ajusta este valor conforme precisares */
+  min-width: 50px;
+  max-width: 50px;
+}
+
+.route-table th:nth-child(5),
+.route-table td:nth-child(5) {
+  width: 110px;      /* ajusta este valor conforme precisares */
+  min-width: 110px;
+  max-width: 110px;
+}
+
 /* Inputs e visual da rota */
 .route-table td input,
 .route-table td .rota-visual {
@@ -238,12 +259,6 @@ tr.exceeded {
   font-size: clamp(12px, 1.5vw, 16px);
 }
 
-/* Coluna de rota com fundo e sem padding extra */
-.route-table td.rota-col {
-  padding: 0;
-  background-color: #fffbe6;
-  text-align: center;
-}
 
 /* Cabeçalho vertical — reparei que o seletor está “.th.rota-header” mas devia ser “th.rota-header” */
 th.rota-header {

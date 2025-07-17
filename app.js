@@ -467,7 +467,13 @@ document.addEventListener('DOMContentLoaded',async()=>{
   if(window.feather)feather.replace();
 });
 
-window.inserirLeg = inserirLeg;
-window.editarRota = editarRota;
-window.fecharRota = fecharRota;
-window.abrirPopupPayload = abrirPopupPayload;
+window.preencherDropdownRotas    = preencherDropdownRotas;
+window.carregarDropdownRotas     = carregarDropdownRotas;   
+window.inserirLeg                = inserirLeg;
+window.editarRota                = editarRota;
+window.fecharRota                = fecharRota;
+window.abrirPopupPayload         = abrirPopupPayload;
+window.atualizarPopupTotal       = atualizarPopupTotal;
+window.limparPayloadDoPopup      = limparPayloadDoPopup;
+window.guardarPayloadDoPopup     = guardarPayloadDoPopup;
+window.fecharPopupPayload        = fecharPopupPayload;

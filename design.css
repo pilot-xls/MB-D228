@@ -194,49 +194,67 @@ tr.exceeded {
 }
 
 /* Route-table specifics */
+/* 1. Variáveis para facilitar ajustes globais */
+:root {
+  --rota-font-min: 12px;
+  --rota-font-max: 16px;
+  --cell-font-min: 10px;
+  --cell-font-max: 14px;
+  --cell-padding: 4px;
+  --input-padding: 6px;
+  --rota-bg: transparent;
+  --overweight-bg: #ffcccc;
+  --selected-outline: 2px solid #1a73e8;
+  --selected-bg: #e3f0fd;
+}
+
+/* 2. Tabela base */
 .route-table {
   table-layout: fixed;
   width: 100%;
+  border-collapse: collapse;
 }
 .route-table th,
 .route-table td {
   vertical-align: middle;
-  font-size: clamp(10px, 1.4vw, 14px);
+  font-size: clamp(var(--cell-font-min), 1.4vw, var(--cell-font-max));
+  padding: var(--cell-padding);
   word-break: break-word;
   overflow-wrap: anywhere;
-  padding: 4px;
   box-sizing: border-box;
 }
+
+/* 3. Inputs e células com texto */
 .route-table td input,
 .route-table td .rota-visual {
   display: block;
   width: 100%;
-  box-sizing: border-box;
-  margin: 0;
-  padding: 6px;
+  padding: var(--input-padding);
   text-align: center;
+  background: var(--rota-bg);
   border: none;
-  background: transparent;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: clamp(12px, 1.5vw, 16px);
-}
-.rota-visual {
-  writing-mode: vertical-rl;
-  transform: rotate(180deg);
-  white-space: nowrap;
-  text-align: center;
-}
-.rota-edit {
-  font-size: clamp(10px, 1.2vw, 14px);
-  width: 100%;
   box-sizing: border-box;
-  padding: 6px;
-  text-align: center;
-  border: none;
+}
+
+/* 4. Estilo padrão para rota-visual */
+.rota-visual {
+  font-size: clamp(var(--rota-font-min), 1.5vw, var(--rota-font-max));
+  /* força horizontal, anulando qualquer escrita vertical */
+  writing-mode: horizontal-tb;
+  transform: none;
+}
+
+/* 5. Campo de edição da rota */
+.rota-edit {
+  font-size: clamp(var(--cell-font-min), 1.2vw, var(--cell-font-max));
+  padding: var(--input-padding);
   background: var(--input-bg);
 }
+
+/* 6. Botões e estados especiais */
 button.route-insert {
   padding: 2px 6px;
   font-size: 12px;
@@ -245,11 +263,13 @@ button.route-insert {
   min-height: 20px;
 }
 .route-table tr.overweight td {
-    background-color: #ffcccc;  /* rosa suave*/
+  background-color: var(--overweight-bg);
 }
 #legsTable tr.selected {
-  outline: 2px solid #1a73e8;
-  background: #e3f0fd;
+  outline: var(--selected-outline);
+  background: var(--selected-bg);
+}
+background: #e3f0fd;
 }
 
 /* Mobile support */

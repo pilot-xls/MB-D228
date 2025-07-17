@@ -193,18 +193,6 @@ tr.exceeded {
   width: 50%;
 }
 
-
-.route-table th,
-.route-table td {
-  vertical-align: middle;
-  font-size: clamp(var(--cell-font-min), 1.4vw, var(--cell-font-max));
-  padding: var(--cell-padding);
-  word-break: break-word;
-  overflow-wrap: anywhere;
-  white-space: normal;      /* permite quebra de texto se necessário */
-  box-sizing: border-box;
-}
-
 /* Route-table specifics */
 /* 1. Variáveis para facilitar ajustes globais */
 :root {
@@ -218,6 +206,10 @@ tr.exceeded {
   --overweight-bg: #ffcccc;
   --selected-outline: 2px solid #1a73e8;
   --selected-bg: #e3f0fd;
+}
+
+#dropdownRotas {
+  margin-bottom: 1.5rem;  /* ajusta a gosto: 1rem, 1.5rem, 2rem… */
 }
 
 /* 2. Tabela base ajustável e full-width */

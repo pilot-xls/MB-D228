@@ -467,4 +467,7 @@ document.addEventListener('DOMContentLoaded',async()=>{
   if(window.feather)feather.replace();
 });
 
-
+window.inserirLeg = inserirLeg;
+window.editarRota = editarRota;
+window.fecharRota = fecharRota;
+window.abrirPopupPayload = abrirPopupPayload;

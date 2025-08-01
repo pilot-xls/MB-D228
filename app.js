@@ -102,7 +102,7 @@ function calculate() {
   const maxFuel = MRW - (BEW + pilots + manualPayload);
   const fuelNote = document.getElementById('maxFuelNote');
   if (maxFuel >= 0) {
-    fuelNote.innerHTML = `<small> | Máx Fuel: ${maxFuel.toFixed(0)} kg (${(maxFuel * 2.20462).toFixed(0)} lb)</small>`;
+    fuelNote.innerHTML = `<small> | Máx Fuel:\n${maxFuel.toFixed(0)} kg (${(maxFuel * 2.20462).toFixed(0)} lb)</small>`;
   } else {
     fuelNote.innerHTML = '<small> | Excede limite!</small>';
   }
@@ -111,7 +111,7 @@ function calculate() {
   const maxPayload = MRW - (BEW + pilots + fuel);
   const payloadNote = document.getElementById('maxPayloadNote');
   if (maxPayload >= 0) {
-    payloadNote.innerText = ` | Máx Payload: ${maxPayload.toFixed(0)} kg`;
+    payloadNote.innerText = ` | Máx Payload:\n${maxPayload.toFixed(0)} kg`;
   } else {
     payloadNote.innerText = ' | Excede limite!';
   } 

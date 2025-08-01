@@ -165,6 +165,11 @@ tr.exceeded {
   gap: 7px;                  /* espaço entre título e dropdown */
 }
 
+.highlight {
+  color: red; 
+  font-weight: bold;
+}
+
 /* Rotas section */
 .routes-section {
   margin-bottom: 40px;

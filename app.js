@@ -111,7 +111,7 @@ function calculate() {
   const maxPayload = MRW - (BEW + pilots + fuel);
   const payloadNote = document.getElementById('maxPayloadNote');
   if (maxPayload >= 0) {
-    payloadNote.innerText = ` | Máx Payload:\n${maxPayload.toFixed(0)} kg`;
+    payloadNote.innerText = ` | Máx Payload:<br>${maxPayload.toFixed(0)} kg`;
   } else {
     payloadNote.innerText = ' | Excede limite!';
   } 

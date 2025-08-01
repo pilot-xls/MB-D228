@@ -102,18 +102,18 @@ function calculate() {
   const maxFuel = MRW - (BEW + pilots + manualPayload);
   const fuelNote = document.getElementById('maxFuelNote');
   if (maxFuel >= 0) {
-    fuelNote.innerHTML = `<small> | Máx Fuel:\n${maxFuel.toFixed(0)} kg (${(maxFuel * 2.20462).toFixed(0)} lb)</small>`;
+    fuelNote.innerHTML = `<small> \n Máx Fuel: ${maxFuel.toFixed(0)} kg (${(maxFuel * 2.20462).toFixed(0)} lb)</small>`;
   } else {
-    fuelNote.innerHTML = '<small> | Excede limite!</small>';
+    fuelNote.innerHTML = '<small> \n Excede limite!</small>';
   }
   
   // 2) Máx Payload (vai aparecer na row do Fuel loading)
   const maxPayload = MRW - (BEW + pilots + fuel);
   const payloadNote = document.getElementById('maxPayloadNote');
   if (maxPayload >= 0) {
-    payloadNote.innerText = ` | Máx Payload:<br>${maxPayload.toFixed(0)} kg`;
+    payloadNote.innerText = ` \n Máx Payload:${maxPayload.toFixed(0)} kg`;
   } else {
-    payloadNote.innerText = ' | Excede limite!';
+    payloadNote.innerText = ' \n Excede limite!';
   } 
   
   

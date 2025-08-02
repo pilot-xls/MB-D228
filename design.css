@@ -178,15 +178,17 @@ tr.exceeded {
 .routes-section {
   margin-bottom: 40px;
 }
-.routes-header { 
+.routes-header {
   display: flex;
+  justify-content: space-between; /* h2 à esquerda, botões à direita */
   align-items: center;
-  justify-content: center;
-  position: relative;
+  width: 100%;
 }
-.routes-header h2{ 
-  align-self: flex-start;
+.routes-header h2 {
+  margin: 0;
+  text-align: left;
 }
+
 .route-buttons {
   position: absolute;
   right: 0;

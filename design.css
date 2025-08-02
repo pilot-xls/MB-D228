@@ -208,7 +208,8 @@ tr.exceeded {
   margin-bottom: 40px;
 }
 .converter-section h2 {
-  align-self: flex-start;
+  text-align: left;
+  margin: 0;
 }
 .converter-table td:nth-child(2),
 .converter-table td:nth-child(3) {

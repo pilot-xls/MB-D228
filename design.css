@@ -165,6 +165,10 @@ tr.exceeded {
   gap: 7px;                  /* espaço entre título e dropdown */
 }
 
+.mb-header h2 {
+  align-self: flex-start;
+}
+
 .highlight {
   color: red; 
   font-weight: bold;

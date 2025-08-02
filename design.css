@@ -38,7 +38,7 @@ hr.separator {
 nav.settings {
   position: absolute;
   top: 15px;
-  left: 15px; /*right: 10px;*/
+  right: 15px; /*left: 10px;*/
   background: var(--row-hover);
   padding: 8px;
   border-radius: 8px;
@@ -178,11 +178,14 @@ tr.exceeded {
 .routes-section {
   margin-bottom: 40px;
 }
-.routes-header {
+.routes-header { 
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
+}
+.routes-header h2{ 
+  align-self: flex-start;
 }
 .route-buttons {
   position: absolute;
@@ -201,6 +204,9 @@ tr.exceeded {
 /* Conversor section */
 .converter-section {
   margin-bottom: 40px;
+}
+.converter-section h2 {
+  align-self: flex-start;
 }
 .converter-table td:nth-child(2),
 .converter-table td:nth-child(3) {

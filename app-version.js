@@ -1,2 +1,2 @@
 // Versão da app (manual)
-const APP_VERSION = 'v207';
+const APP_VERSION = 'v82';

@@ -468,7 +468,12 @@ document.addEventListener('DOMContentLoaded',async()=>{
   document.getElementById('btnAddLeg').addEventListener('click', adicionarLinhaLeg);
   document.getElementById('btnRemoveLeg').addEventListener('click',()=>{const sel=document.querySelector('#legsTable tr.selected');if(sel)sel.remove();});
   document.getElementById('dropdownRotas').addEventListener('change',preencherLegsComRota);
-
+	
+	document.getElementById("menu-toggle").addEventListener("click", () => {
+      const menu = document.getElementById("dropdown-menu");
+      menu.classList.toggle("visible");
+    });
+	
   calculate(); 
   updateLdgAuto();
   if(window.feather)feather.replace();

@@ -191,7 +191,7 @@ tr.exceeded {
 
 .route-buttons {
   position: absolute;
-  right: 15;
+  right: 15px;
   display: flex;
   gap: 8px;
 }

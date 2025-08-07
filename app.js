@@ -476,7 +476,7 @@ document.addEventListener('DOMContentLoaded',async()=>{
 	
   calculate(); 
   updateLdgAuto();
-  if(window.feather)feather.replace();
+  feather.replace();
 });
 
 window.inserirLeg                = inserirLeg;

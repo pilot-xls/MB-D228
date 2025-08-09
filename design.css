@@ -12,62 +12,6 @@
 }
 
 
-page-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px 24px;
-  background: white;
-  border-bottom: 1px solid var(--border-color);
-  position: relative;
-}
-
-h1 {
-  margin: 0;
-  font-size: 1.5rem;
-}
-
-.dropdown {
-  position: relative;
-}
-
-#menu-toggle {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 8px;
-}
-
-.dropdown-menu {
-  display: none;
-  position: absolute;
-  right: 0;
-  top: 100%;
-  background: white;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-  border-radius: 4px;
-  overflow: hidden;
-  min-width: 180px;
-  z-index: 1000;
-}
-
-.dropdown-menu a {
-  display: block;
-  padding: 12px 16px;
-  color: var(--fg);
-  text-decoration: none;
-  transition: background 0.2s;
-}
-
-.dropdown-menu a:hover {
-  background: var(--row-hover);
-}
-
-/* Toggle visibility via JS */
-.dropdown-menu.visible {
-  display: block;
-}
-
 body {
   font-family: 'Manrope', sans-serif;
   background-color: var(--bg);
@@ -91,7 +35,7 @@ hr.separator {
   border-top: 1px solid var(--input-bg);
 }
 
-/* Nav settings icon 
+/* Nav settings icon*/
 nav.settings {
   position: absolute;
   top: 15px;
@@ -110,7 +54,8 @@ nav.settings a {
 nav.settings a:hover {
   text-decoration: underline;
 }
-*/
+
+
 /* Tabelas gerais */
 table {
   width: 100%;

@@ -192,7 +192,7 @@
   <br>
   <div style="display: flex; justify-content: space-between; align-items: center; padding: 0 10px;">
     <button class="button-danger" onclick="abrirModalReset()">Reset Definições</button>
-    <button onclick="guardarDefinicoes()">Guardar Tudo</button>
+    <button onclick="guardarDefinicoes()">Guardar</button>
   </div>
   <br><br>
 
@@ -380,7 +380,7 @@
     }
 
     function fecharModalReset() {
-      document.getElementById("modalReset").style.display = "nome";
+      document.getElementById("modalReset").style.display = "none";
     }
 
     // Fecha a modal ativa se o utilizador clicar fora dela

@@ -125,6 +125,8 @@ function calculate() {
     const limit  = id==='rampRow'? MRW : id==='takeoffRow'? MTOW      : MLW;
     el.classList.toggle('exceeded', weight>limit);
   });
+  
+  updateLdgAuto(); 
 }
 
 // --- Conversores ---
@@ -297,6 +299,7 @@ function inserirLeg(btn) {
     if (typeof calculate === "function") calculate();
 }
 function updateLdgAuto() {
+	const { peso: BEW, momento, MRW, MTOW, MLW } = getAviaoAtual();
     const rows = document.querySelectorAll("#legsTable tr");
     rows.forEach((row, i) => {
         const inputs     = row.querySelectorAll("td input");
@@ -307,10 +310,10 @@ function updateLdgAuto() {
         const pilots     = parseFloat(document.getElementById("pilots").value) || 0;
         const taxiKg     = parseFloat(document.getElementById("fuelTaxi").value) || 0;
         const depFuelKg  = Math.round(depFuelLb / 2.20462);
-        const maxFuelKg  = 5730 - (BEW + pilots + payloadKg);
+        const maxFuelKg  = MRW - (BEW + pilots + payloadKg);
         const maxFuelLb  = Math.round(maxFuelKg * 2.20462);
-        const maxPayloadKg = 5730 - (BEW + pilots + depFuelKg);
-	const TakeoffUnderLoad = 5700 - (BEW + pilots + payloadKg + depFuelKg - taxiKg);    
+        const maxPayloadKg = MRW - (BEW + pilots + depFuelKg);
+		const TakeoffUnderLoad = MTOW - (BEW + pilots + payloadKg + depFuelKg - taxiKg);    
         const ldgCell = row.querySelector(".ldg");
         if (ldgCell) {
             ldgCell.innerHTML = `

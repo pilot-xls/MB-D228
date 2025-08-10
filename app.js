@@ -41,7 +41,7 @@ function preencherDropdown() {
   avioes.forEach((av, i) => {
     const opt = document.createElement('option');
     opt.value = i;
-    opt.textContent = `${av.nome} (${av.peso} kg)`;
+    opt.textContent = `${av.nome} (${av.MTOW} kg)`;
     if (i === lastIdx) opt.selected = true;
     select.appendChild(opt);
   });

@@ -1,477 +1,448 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-pt">
 <head>
-  <link rel="stylesheet" href="design.css">
-  <script src="https://unpkg.com/feather-icons"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Definições - Mass & Balance</title>
 
-  <meta charset="UTF-8">
-  <title>Definições - Mass & Balance</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  
-  <!-- Força o check de versão a cada hora -->
-  <script src="auto-update.js" defer></script>
+    <link rel="stylesheet" href="design.css">
+    <script src="https://unpkg.com/feather-icons"></script>
+    <script src="auto-update.js" defer></script>
+    
+    <style>
+        /* --- Estilos para as modais --- */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
 
-  <style>
-    /* --- escondem as modais por defeito --- */
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.5);
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-    }
-    .modal .modal-content {
-      background: #fff;
-      padding: 20px;
-      border-radius: 8px;
-      max-width: 90%;
-      box-sizing: border-box;
-    }
+        .modal .modal-content {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 90%;
+            box-sizing: border-box;
+        }
 
-    .button-danger {
-      background-color: var(--danger, #ff4d4d);
-    }
-    .button-danger:hover {
-      background-color: #d32f2f;
-    }
-    .modal-content .action-buttons {
-      margin-top: 20px;
-      display: flex;
-      justify-content: space-around;
-    }
+        .button-danger {
+            background-color: var(--danger, #ff4d4d);
+        }
 
-    /* faz toda a página “encaixar” na largura do ecrã */
-    body {
-      padding: 1rem;
-      box-sizing: border-box;
-    }
+        .button-danger:hover {
+            background-color: #d32f2f;
+        }
 
-    /* tabela de aviões em full‑width e colunas auto‑dimensionadas */
-    table {
-      width: 100%;
-      table-layout: auto;
-      border-collapse: collapse;
-    }
-    table th,
-    table td {
-      white-space: nowrap;       /* impede quebra de texto */
-      overflow: hidden;
-      text-overflow: ellipsis;
-      word-break: keep-all;
-      padding: 0.5rem;
-    }
+        .modal-content .action-buttons {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-around;
+        }
 
-    /* define larguras relativas por coluna */
-    table colgroup col:nth-child(1) { width: 25%; }  /* Nome */
-    table colgroup col:nth-child(2) { width: 15%; }  /* BEW */
-    table colgroup col:nth-child(3) { width: 15%; }  /* Momento */
-    table colgroup col:nth-child(4) { width: 15%; }  /* MRW */
-    table colgroup col:nth-child(5) { width: 15%; }  /* MTOW */
-    table colgroup col:nth-child(6) { width: 15%; }  /* MLW */
+        /* Estilos de layout */
+        body {
+            padding: 1rem;
+            box-sizing: border-box;
+        }
 
-    /* inputs, selects e textareas ocupam toda a largura disponível */
-    input,
-    select,
-    textarea {
-      width: 100%;
-      box-sizing: border-box;
-      margin-bottom: 1rem;
-    }
-  </style>
+        h2, h3 {
+            text-align: center;
+        }
+
+        hr {
+            margin: 30px 0;
+            border: none;
+            border-top: 1px solid #999;
+        }
+
+        /* Estilos para tabelas e inputs */
+        table {
+            width: 100%;
+            table-layout: auto;
+            border-collapse: collapse;
+        }
+
+        table th,
+        table td {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            word-break: keep-all;
+            padding: 0.5rem;
+        }
+
+        table colgroup col:nth-child(1) { width: 25%; }
+        table colgroup col:nth-child(2) { width: 15%; }
+        table colgroup col:nth-child(3) { width: 15%; }
+        table colgroup col:nth-child(4) { width: 15%; }
+        table colgroup col:nth-child(5) { width: 15%; }
+        table colgroup col:nth-child(6) { width: 15%; }
+        
+        input,
+        select,
+        textarea {
+            width: 100%;
+            box-sizing: border-box;
+            margin-bottom: 1rem;
+        }
+    </style>
 </head>
-
 <body>
 
-  <!-- Botões fixos no canto superior direito -->
-  <div class="top-buttons">
-    <button onclick="location.href='index.html'" title="Voltar para a Calculadora">⬅️</button>
-    <button onclick="abrirModalQR()" title="Partilhar App">📲</button>
-  </div>
-  
-  <!-- Modal com o QR Code -->
-  <div id="modalQR" class="modal">
-    <div class="modal-content">
-      <span class="close" onclick="fecharModalQR()">&times;</span>
-      <h3>📲 Partilhar App</h3>
-      <p>Aponta a câmara para o QR code:</p>
-      <img src="qr_mb_d228.png" alt="QR Code" style="width: 200px; height: 200px; border: 1px solid #ccc; background: white; padding: 10px;">
+    <div class="top-buttons">
+        <button onclick="location.href='index.html'" title="Voltar para a Calculadora">⬅️</button>
+        <button onclick="abrirModalQR()" title="Partilhar App">📲</button>
     </div>
-  </div>
 
-  <!-- Modal de confirmação para o Reset -->
-  <div id="modalReset" class="modal">
-    <div class="modal-content">
-      <span class="close" onclick="fecharModalReset()">&times;</span>
-      <h3>⚠️ Confirmar Reset</h3>
-      <p>Tem a certeza que quer repor todas as definições? As suas alterações (aviões, rotas, etc.) serão perdidas.</p>
-      <div class="action-buttons">
-        <button class="button-danger" onclick="resetarDefinicoes()">Sim, Repor</button>
-        <button onclick="fecharModalReset()">Cancelar</button>
-      </div>
+    <div id="modalQR" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="fecharModalQR()">&times;</span>
+            <h3>📲 Partilhar App</h3>
+            <p>Aponta a câmara para o QR code:</p>
+            <img src="qr_mb_d228.png" alt="QR Code" style="width: 200px; height: 200px; border: 1px solid #ccc; background: white; padding: 10px;">
+        </div>
     </div>
-  </div>
 
+    <div id="modalReset" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="fecharModalReset()">&times;</span>
+            <h3>⚠️ Confirmar Reset</h3>
+            <p>Tem a certeza que quer repor todas as definições? As suas alterações (aviões, rotas, etc.) serão perdidas.</p>
+            <div class="action-buttons">
+                <button class="button-danger" onclick="resetarDefinicoes()">Sim, Repor</button>
+                <button onclick="fecharModalReset()">Cancelar</button>
+            </div>
+        </div>
+    </div>
 
-  <hr style="margin: 30px 0; border: none; border-top: 1px solid #999;"> <!-- linha de separação de tabelas -->
-  
-  <!-- Definições -->
-  <h2>Definições de Pesos Padrão</h2>
-  <label>Peso padrão - Homem (kg): 
-    <input type="number" inputmode="decimal" step="any" id="pesoHomem" value="86" onfocus="this.select()">
-  </label><br>
-  <label>Peso padrão - Mulher (kg): 
-    <input type="number" inputmode="decimal" step="any" id="pesoMulher" value="68" onfocus="this.select()">
-  </label><br>
-  <label>Peso padrão - Criança (kg): 
-    <input type="number" inputmode="decimal" step="any" id="pesoCrianca" value="35" onfocus="this.select()">
-  </label><br>
-  <label>Peso padrão - Bagagem extra (kg): 
-    <input type="number" inputmode="decimal" step="any" id="pesoBagagem" value="10" onfocus="this.select()">
-  </label><br>
-  
-  <hr style="margin: 30px 0; border: none; border-top: 1px solid #999;"> <!-- linha de separação de tabelas -->
-  
-  <!-- Tabela de aviões -->
-   <h2>Aviões Disponíveis</h2>
-  <table>
-    <colgroup>
-      <col> <!-- Nome -->
-      <col> <!-- BEW -->
-      <col> <!-- Momento -->
-      <col> <!-- MRW -->
-      <col> <!-- MTOW -->
-      <col> <!-- MLW -->
-      <col> <!-- ações -->
-    </colgroup>
-    <thead>
-      <tr>
-        <th>Nome</th>
-        <th>BEW</th>
-        <th>Momento</th>
-        <th>MRW</th>
-        <th>MTOW</th>
-        <th>MLW</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody id="tabelaAvioes"></tbody>
-  </table>
-  
-  <!-- Adicionar avião -->
-  <h3>Adicionar Novo Avião</h3>
-  <input type="text" id="novoNome" placeholder="Nome do avião">
-  <input type="number" inputmode="decimal" step="any" id="novoPeso" placeholder="Peso (kg)" onfocus="this.select()">
-  <input type="number" inputmode="decimal" step="any" id="novoMomento" placeholder="Momento" onfocus="this.select()">
-  <input type="number" inputmode="decimal" step="any" id="novoMRW" placeholder="MRW" onfocus="this.select()">
-  <input type="number" inputmode="decimal" step="any" id="novoMTOW" placeholder="MTOW" onfocus="this.select()">
-  <input type="number" inputmode="decimal" step="any" id="novoMLW" placeholder="MLW" onfocus="this.select()">
-  <button onclick="adicionarAviao()">Adicionar Avião</button>
-
-  <hr style="margin: 30px 0; border: none; border-top: 1px solid #999;"> <!-- linha de separação de tabelas -->
-  <h2>Rotas Padrão</h2>
-  
-  <label>Nome da Rota: <input type="text" id="nomeRota" placeholder="Ex: RVP952/953"></label>
-  <button onclick="adicionarLinhaRota()">+ Adicionar Leg</button>
-  <table>
-    <thead>
-      <tr><th>ROUTE</th><th>DEP F. (lb)</th><th>PAYL. (kg)</th><th>TRIP F. (lb)</th><th>Remover</th></tr>
-    </thead>
-    <tbody id="rotaTemp"></tbody>
-  </table>  
-  
-  <h3>Rotas Guardadas</h3>
-  <ul id="listaRotas">
-    <!-- Vai ser preenchido dinamicamente -->
-  </ul>
-
-  <hr style="margin: 30px 0; border: none; border-top: 1px solid #999;"> <!-- linha de separação de tabelas -->
-  
-  <br>
-  <div style="display: flex; justify-content: space-between; align-items: center; padding: 0 10px;">
-    <button class="button-danger" onclick="abrirModalReset()">Reset Definições</button>
-    <button onclick="guardarDefinicoes()">Guardar</button>
-  </div>
-  <br><br>
-
-  <!-- Mostra versão -->
-  <footer style="text-align: right; margin-top: 30px; font-size: 12px; color: #888;">
-    <span id="versaoApp"></span>
-  </footer>
-  
-  <!-- Scripts principais -->
-
-  <script>
-    let rotasPadrao = JSON.parse(localStorage.getItem('rotasPadrao')) || [];
-  
-    function adicionarLinhaRota(route = '', depF = '', payl = '', tripF = '') {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td><input type="text" value="${route}"></td>
-        <td><input type="number" value="${depF}"></td>
-        <td><input type="number" value="${payl}"></td>
-        <td><input type="number" value="${tripF}"></td>
-        <td><button onclick="this.closest('tr').remove()">X</button></td>
-      `;
-      document.getElementById('rotaTemp').appendChild(tr);
-    }
-  
-      
-    function renderizarRotasGuardadas() {
-    const lista = document.getElementById('listaRotas');
-    lista.innerHTML = '';
-    rotasPadrao.forEach((rota, idx) => {
-      const li = document.createElement('li');
-      li.innerHTML = `
-        ${rota.nome}
-        <button onclick="editarRota(${idx})">Editar</button>
-        <button onclick="removerRota(${idx})">Remover</button>
-      `;
-      lista.appendChild(li);
-    });
-  }
-
-    function removerRota(index) {
-      if (confirm('Apagar esta rota definitivamente?')) {
-        rotasPadrao.splice(index, 1);
-        localStorage.setItem('rotasPadrao', JSON.stringify(rotasPadrao));
-        renderizarRotasGuardadas();
-      }
-    }
-  
-    document.addEventListener('DOMContentLoaded', renderizarRotasGuardadas);
-
-  function editarRota(index) {
-    const rota = rotasPadrao[index];
-    document.getElementById('nomeRota').value = rota.nome;
-    document.getElementById('rotaTemp').innerHTML = '';
-    rota.legs.forEach(leg => {
-      adicionarLinhaRota(leg.route, leg.depF, leg.payl, leg.tripF);
-    });
-    rotasPadrao.splice(index, 1); // remove temporariamente a rota antiga
-  }
-
-  </script>
-
-  
-  <script>
-    let listaAvioes = [];
-
-    function carregarDefinicoes() {
-      const defs = JSON.parse(localStorage.getItem("definicoesMB")) || {};
-      document.getElementById("pesoHomem").value = defs.pesoHomem || 86;
-      document.getElementById("pesoMulher").value = defs.pesoMulher || 68;
-      document.getElementById("pesoCrianca").value = defs.pesoCrianca || 35;
-      document.getElementById("pesoBagagem").value = defs.pesoBagagem || 10;
-      listaAvioes = defs.avioes || [];
-      rotasPadrao = JSON.parse(localStorage.getItem('rotasPadrao')) || [];
-      renderAvioes();
-      renderizarRotasGuardadas();
-    }
-  
-    function renderAvioes() {
-      const tabela = document.getElementById("tabelaAvioes");
-      tabela.innerHTML = "";
-      listaAvioes.forEach((aviao, i) => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-          <td><input type="text" value="${aviao.nome}" onchange="atualizarAviao(${i}, 'nome', this.value)" onfocus="this.select()"></td>
-          <td><input type="number" inputmode="decimal" step="any" value="${aviao.peso}" onchange="atualizarAviao(${i}, 'peso', this.value)" onfocus="this.select()"></td>
-          <td><input type="number" inputmode="decimal" step="any" value="${aviao.momento}" onchange="atualizarAviao(${i}, 'momento', this.value)" onfocus="this.select()"></td>
-		  <td><input type="number" inputmode="decimal" step="any" value="${aviao.MRW}" onchange="atualizarAviao(${i}, 'MRW', this.value)" onfocus="this.select()"></td>
-		  <td><input type="number" inputmode="decimal" step="any" value="${aviao.MTOW}" onchange="atualizarAviao(${i}, 'MTOW', this.value)" onfocus="this.select()"></td>
-		  <td><input type="number" inputmode="decimal" step="any" value="${aviao.MLW}" onchange="atualizarAviao(${i}, 'MLW', this.value)" onfocus="this.select()"></td>
-          <td class="actions"><button onclick="removerAviao(${i})">Remover</button></td>
-        `;
-        tabela.appendChild(row);
-      });
-    }
-
-    function atualizarAviao(index, campo, valor) {
-      listaAvioes[index][campo] = campo === 'peso' || campo === 'momento' || campo === 'MRW'|| campo === 'MTOW'|| campo === 'MLW' ? parseFloat(valor) : valor;
-    }
-
-    function removerAviao(index) {
-      listaAvioes.splice(index, 1);
-      renderAvioes();
-    }
-
-    function adicionarAviao() {
-      const nome = document.getElementById("novoNome").value;
-      const peso = parseFloat(document.getElementById("novoPeso").value);
-      const momento = parseFloat(document.getElementById("novoMomento").value);
-	  const MRW = parseFloat(document.getElementById("novoMRW").value);
-	  const MTOW = parseFloat(document.getElementById("novoMTOW").value);
-	  const MLW = parseFloat(document.getElementById("novoMLW").value);
-      if (!nome || isNaN(peso) || isNaN(momento)) {
-        alert("Preenche todos os campos do novo avião.");
-        return;
-      }
-      listaAvioes.push({ nome, peso, momento, MRW, MTOW, MLW });
-      document.getElementById("novoNome").value = "";
-      document.getElementById("novoPeso").value = "";
-      document.getElementById("novoMomento").value = "";
-	  document.getElementById("novoMRW").value = "";
-	  document.getElementById("novoMTOW").value = "";
-	  document.getElementById("novoMLW").value = "";
-      renderAvioes();
-    }
-
-    function guardarDefinicoes() {
-      const definicoes = {
-        pesoHomem: parseFloat(document.getElementById("pesoHomem").value),
-        pesoMulher: parseFloat(document.getElementById("pesoMulher").value),
-        pesoCrianca: parseFloat(document.getElementById("pesoCrianca").value),
-        pesoBagagem: parseFloat(document.getElementById("pesoBagagem").value),
-        avioes: listaAvioes
-      };
+    <hr>
     
-      const nome = document.getElementById('nomeRota').value.trim();
-      const linhas = document.querySelectorAll('#rotaTemp tr');
-      const legs = [];
+    <h2>Definições de Pesos Padrão</h2>
+    <label>Peso padrão - Homem (kg):
+        <input type="number" inputmode="decimal" step="any" id="pesoHomem" value="86" onfocus="this.select()">
+    </label>
+    <label>Peso padrão - Mulher (kg):
+        <input type="number" inputmode="decimal" step="any" id="pesoMulher" value="68" onfocus="this.select()">
+    </label>
+    <label>Peso padrão - Criança (kg):
+        <input type="number" inputmode="decimal" step="any" id="pesoCrianca" value="35" onfocus="this.select()">
+    </label>
+    <label>Peso padrão - Bagagem extra (kg):
+        <input type="number" inputmode="decimal" step="any" id="pesoBagagem" value="10" onfocus="this.select()">
+    </label>
+
+    <hr>
+
+    <h2>Aviões Disponíveis</h2>
+    <table>
+        <colgroup>
+            <col>
+            <col>
+            <col>
+            <col>
+            <col>
+            <col>
+            <col>
+        </colgroup>
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>BEW</th>
+                <th>Momento</th>
+                <th>MRW</th>
+                <th>MTOW</th>
+                <th>MLW</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody id="tabelaAvioes"></tbody>
+    </table>
+
+    <h3>Adicionar Novo Avião</h3>
+    <input type="text" id="novoNome" placeholder="Nome do avião">
+    <input type="number" inputmode="decimal" step="any" id="novoPeso" placeholder="Peso (kg)" onfocus="this.select()">
+    <input type="number" inputmode="decimal" step="any" id="novoMomento" placeholder="Momento" onfocus="this.select()">
+    <input type="number" inputmode="decimal" step="any" id="novoMRW" placeholder="MRW" onfocus="this.select()">
+    <input type="number" inputmode="decimal" step="any" id="novoMTOW" placeholder="MTOW" onfocus="this.select()">
+    <input type="number" inputmode="decimal" step="any" id="novoMLW" placeholder="MLW" onfocus="this.select()">
+    <button onclick="adicionarAviao()">Adicionar Avião</button>
+
+    <hr>
     
-      linhas.forEach(row => {
-        const inputs = row.querySelectorAll('input');
-        legs.push({
-          route: inputs[0].value.trim(),
-          depF: inputs[1].value.trim(),
-          payl: inputs[2].value.trim(),
-          tripF: inputs[3].value.trim()
-        });
-      });
+    <h2>Rotas Padrão</h2>
+    <label>Nome da Rota: <input type="text" id="nomeRota" placeholder="Ex: RVP952/953"></label>
+    <button onclick="adicionarLinhaRota()">+ Adicionar Leg</button>
+    <table>
+        <thead>
+            <tr><th>ROUTE</th><th>DEP F. (lb)</th><th>PAYL. (kg)</th><th>TRIP F. (lb)</th><th>Remover</th></tr>
+        </thead>
+        <tbody id="rotaTemp"></tbody>
+    </table>
+
+    <h3>Rotas Guardadas</h3>
+    <ul id="listaRotas">
+        </ul>
+
+    <hr>
     
-      if (nome && legs.length > 0) {
-        const indexExistente = rotasPadrao.findIndex(r => r.nome === nome);
-    
-        if (indexExistente !== -1) {
-          if (!confirm(`Já existe uma rota chamada "${nome}". Queres substituir?`)) {
-            return;
-          }
-          rotasPadrao[indexExistente] = { nome, legs };
-        } else {
-          rotasPadrao.push({ nome, legs });
-        }
-    
-        document.getElementById('rotaTemp').innerHTML = '';
-        document.getElementById('nomeRota').value = '';
-        renderizarRotasGuardadas();
-      }
-    
-      localStorage.setItem("definicoesMB", JSON.stringify(definicoes));
-      localStorage.setItem("rotasPadrao", JSON.stringify(rotasPadrao));
-    
-      alert("Definições guardadas com sucesso!");
-      window.location.href = "index.html";
-    }
+    <div style="display: flex; justify-content: space-between; align-items: center; padding: 0 10px;">
+        <button class="button-danger" onclick="abrirModalReset()">Reset Definições</button>
+        <button onclick="guardarDefinicoes()">Guardar</button>
+    </div>
+    <br><br>
 
-    // --- Funções para Modais ---
-    function abrirModalQR() {
-      document.getElementById("modalQR").style.display = "flex";
-    }
+    <footer style="text-align: right; margin-top: 30px; font-size: 12px; color: #888;">
+        <span id="versaoApp"></span>
+    </footer>
 
-    function fecharModalQR() {
-      document.getElementById("modalQR").style.display = "none";
-    }
+    <script>
+        // Variáveis globais para as definições e rotas
+        let listaAvioes = [];
+        let rotasPadrao = [];
 
-    function abrirModalReset() {
-      document.getElementById("modalReset").style.display = "flex";
-    }
-
-    function fecharModalReset() {
-      document.getElementById("modalReset").style.display = "none";
-    }
-
-    // Fecha a modal ativa se o utilizador clicar fora dela
-    window.onclick = function(event) {
-      if (event.target.classList.contains('modal')) {
-        event.target.style.display = "none";
-      }
-    }
-    
-    // --- Lógica de Reset e Carregamento ---
-
-    /**
-     * Repõe as definições para os valores de fábrica.
-     */
-    async function resetarDefinicoes() {
-      console.log("A repor as definições...");
-      
-      // 1. Apaga as definições atuais do armazenamento local
-      localStorage.removeItem("definicoesMB");
-      localStorage.removeItem("rotasPadrao");
-
-      // 2. Força o carregamento das definições padrão a partir do ficheiro.
-      await carregarValoresPadraoSeNecessario();
-
-      // 3. Fecha a janela de confirmação
-      fecharModalReset();
-
-      // 4. Recarrega os novos dados do localStorage e atualiza a interface imediatamente
-      carregarDefinicoes();
-    }
-
-    /**
-     * Carrega as definições padrão do ficheiro `default_settings.json` se não existirem no localStorage.
-     * Esta função agora trata o ficheiro como a única fonte de verdade para os padrões.
-     */
-    async function carregarValoresPadraoSeNecessario() {
-      const definicoesExistem = localStorage.getItem("definicoesMB");
-      const rotasExistem = localStorage.getItem("rotasPadrao");
-
-      // Se os dados já existem no localStorage, não é preciso fazer mais nada.
-      if (definicoesExistem && rotasExistem) {
-        return;
-      }
-
-      try {
-        // Tenta sempre ir buscar as definições ao ficheiro, que é a única fonte de verdade.
-        // O service worker garante que este ficheiro está disponível offline após a primeira visita.
-        const response = await fetch('default_settings.json');
-        if (!response.ok) throw new Error('A resposta da rede não foi bem-sucedida ao carregar as definições padrão.');
+        // --- Funções de Carregamento e Guardar ---
         
-        const htmlText = await response.text();
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(htmlText, 'text/html');
-        const dataElement = doc.getElementById('default-data');
+        // Carrega as definições padrão do ficheiro se não existirem no localStorage.
+        async function carregarValoresPadraoSeNecessario() {
+            const definicoesExistem = localStorage.getItem("definicoesMB");
+            const rotasExistem = localStorage.getItem("rotasPadrao");
+
+            if (definicoesExistem && rotasExistem) {
+                return;
+            }
+
+            try {
+                const response = await fetch('default_settings.json');
+                if (!response.ok) throw new Error('A resposta da rede não foi bem-sucedida ao carregar as definições padrão.');
+                
+                const defaults = await response.json();
+                
+                if (!definicoesExistem) {
+                    localStorage.setItem("definicoesMB", JSON.stringify(defaults.definicoesMB));
+                }
+                if (!rotasExistem) {
+                    localStorage.setItem("rotasPadrao", JSON.stringify(defaults.rotasPadrao));
+                }
+                console.log("Definições padrão carregadas com sucesso.");
+            } catch (error) {
+                console.error("Falha crítica ao carregar definições padrão.", error);
+            }
+        }
+
+        // Carrega as definições do localStorage para a página.
+        function carregarDefinicoes() {
+            const definicoes = JSON.parse(localStorage.getItem("definicoesMB"));
+            if (definicoes) {
+                document.getElementById("pesoHomem").value = definicoes.pesoHomem || '';
+                document.getElementById("pesoMulher").value = definicoes.pesoMulher || '';
+                document.getElementById("pesoCrianca").value = definicoes.pesoCrianca || '';
+                document.getElementById("pesoBagagem").value = definicoes.pesoBagagem || '';
+                listaAvioes = definicoes.avioes || [];
+                renderAvioes();
+            }
+
+            rotasPadrao = JSON.parse(localStorage.getItem("rotasPadrao")) || [];
+            renderizarRotasGuardadas();
+        }
+
+        // Guarda todas as definições no localStorage.
+        function guardarDefinicoes() {
+            const definicoes = {
+                pesoHomem: parseFloat(document.getElementById("pesoHomem").value) || 0,
+                pesoMulher: parseFloat(document.getElementById("pesoMulher").value) || 0,
+                pesoCrianca: parseFloat(document.getElementById("pesoCrianca").value) || 0,
+                pesoBagagem: parseFloat(document.getElementById("pesoBagagem").value) || 0,
+                avioes: listaAvioes
+            };
+
+            // Lógica para guardar a nova rota
+            const nome = document.getElementById('nomeRota').value.trim();
+            const linhas = document.querySelectorAll('#rotaTemp tr');
+            const legs = [];
+            
+            linhas.forEach(row => {
+                const inputs = row.querySelectorAll('input');
+                legs.push({
+                    route: inputs[0].value.trim(),
+                    depF: inputs[1].value.trim(),
+                    payl: inputs[2].value.trim(),
+                    tripF: inputs[3].value.trim()
+                });
+            });
+            
+            if (nome && legs.length > 0) {
+                const indexExistente = rotasPadrao.findIndex(r => r.nome === nome);
+                if (indexExistente !== -1) {
+                    if (!confirm(`Já existe uma rota chamada "${nome}". Queres substituir?`)) {
+                        return;
+                    }
+                    rotasPadrao[indexExistente] = { nome, legs };
+                } else {
+                    rotasPadrao.push({ nome, legs });
+                }
+                document.getElementById('rotaTemp').innerHTML = '';
+                document.getElementById('nomeRota').value = '';
+            }
+            
+            localStorage.setItem("definicoesMB", JSON.stringify(definicoes));
+            localStorage.setItem("rotasPadrao", JSON.stringify(rotasPadrao));
+            
+            alert("Definições guardadas com sucesso!");
+            window.location.href = "index.html";
+        }
+
+        // Repõe as definições para os valores de fábrica.
+        async function resetarDefinicoes() {
+            localStorage.removeItem("definicoesMB");
+            localStorage.removeItem("rotasPadrao");
+            await carregarValoresPadraoSeNecessario();
+            fecharModalReset();
+            carregarDefinicoes();
+        }
+
+        // --- Funções de Gestão de Aviões ---
+        function renderAvioes() {
+            const tabela = document.getElementById("tabelaAvioes");
+            tabela.innerHTML = "";
+            listaAvioes.forEach((aviao, i) => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td><input type="text" value="${aviao.nome}" onchange="atualizarAviao(${i}, 'nome', this.value)" onfocus="this.select()"></td>
+                    <td><input type="number" inputmode="decimal" step="any" value="${aviao.peso}" onchange="atualizarAviao(${i}, 'peso', this.value)" onfocus="this.select()"></td>
+                    <td><input type="number" inputmode="decimal" step="any" value="${aviao.momento}" onchange="atualizarAviao(${i}, 'momento', this.value)" onfocus="this.select()"></td>
+                    <td><input type="number" inputmode="decimal" step="any" value="${aviao.MRW}" onchange="atualizarAviao(${i}, 'MRW', this.value)" onfocus="this.select()"></td>
+                    <td><input type="number" inputmode="decimal" step="any" value="${aviao.MTOW}" onchange="atualizarAviao(${i}, 'MTOW', this.value)" onfocus="this.select()"></td>
+                    <td><input type="number" inputmode="decimal" step="any" value="${aviao.MLW}" onchange="atualizarAviao(${i}, 'MLW', this.value)" onfocus="this.select()"></td>
+                    <td class="actions"><button onclick="removerAviao(${i})">Remover</button></td>
+                `;
+                tabela.appendChild(row);
+            });
+        }
+
+        function atualizarAviao(index, campo, valor) {
+            listaAvioes[index][campo] = campo === 'nome' ? valor : parseFloat(valor);
+        }
+
+        function removerAviao(index) {
+            listaAvioes.splice(index, 1);
+            renderAvioes();
+        }
+
+        function adicionarAviao() {
+            const nome = document.getElementById("novoNome").value;
+            const peso = parseFloat(document.getElementById("novoPeso").value);
+            const momento = parseFloat(document.getElementById("novoMomento").value);
+            const MRW = parseFloat(document.getElementById("novoMRW").value);
+            const MTOW = parseFloat(document.getElementById("novoMTOW").value);
+            const MLW = parseFloat(document.getElementById("novoMLW").value);
+
+            if (!nome || isNaN(peso) || isNaN(momento) || isNaN(MRW) || isNaN(MTOW) || isNaN(MLW)) {
+                alert("Preencha todos os campos do novo avião.");
+                return;
+            }
+            listaAvioes.push({ nome, peso, momento, MRW, MTOW, MLW });
+            document.getElementById("novoNome").value = "";
+            document.getElementById("novoPeso").value = "";
+            document.getElementById("novoMomento").value = "";
+            document.getElementById("novoMRW").value = "";
+            document.getElementById("novoMTOW").value = "";
+            document.getElementById("novoMLW").value = "";
+            renderAvioes();
+        }
         
-        if (!dataElement) throw new Error('O contentor de dados não foi encontrado em default_settings.json');
-
-        const defaults = JSON.parse(dataElement.textContent);
-
-        // Guarda no localStorage apenas os dados que faltarem.
-        if (!definicoesExistem) {
-          localStorage.setItem("definicoesMB", JSON.stringify(defaults.definicoesMB));
+        // --- Funções de Gestão de Rotas ---
+        function adicionarLinhaRota(route = '', depF = '', payl = '', tripF = '') {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td><input type="text" value="${route}"></td>
+                <td><input type="number" value="${depF}"></td>
+                <td><input type="number" value="${payl}"></td>
+                <td><input type="number" value="${tripF}"></td>
+                <td><button onclick="this.closest('tr').remove()">X</button></td>
+            `;
+            document.getElementById('rotaTemp').appendChild(tr);
         }
-        if (!rotasExistem) {
-          localStorage.setItem("rotasPadrao", JSON.stringify(defaults.rotasPadrao));
+        
+        function renderizarRotasGuardadas() {
+            const lista = document.getElementById('listaRotas');
+            lista.innerHTML = '';
+            rotasPadrao.forEach((rota, idx) => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    ${rota.nome}
+                    <button onclick="editarRota(${idx})">Editar</button>
+                    <button onclick="removerRota(${idx})">Remover</button>
+                `;
+                lista.appendChild(li);
+            });
         }
-        console.log("Definições padrão carregadas com sucesso a partir do ficheiro.");
+        
+        function removerRota(index) {
+            if (confirm('Apagar esta rota definitivamente?')) {
+                rotasPadrao.splice(index, 1);
+                localStorage.setItem('rotasPadrao', JSON.stringify(rotasPadrao));
+                renderizarRotasGuardadas();
+            }
+        }
+        
+        function editarRota(index) {
+            const rota = rotasPadrao[index];
+            document.getElementById('nomeRota').value = rota.nome;
+            document.getElementById('rotaTemp').innerHTML = '';
+            rota.legs.forEach(leg => {
+                adicionarLinhaRota(leg.route, leg.depF, leg.payl, leg.tripF);
+            });
+            rotasPadrao.splice(index, 1);
+            renderizarRotasGuardadas();
+        }
 
-      } catch (error) {
-        // Se a busca falhar (caso raro de primeira visita offline), informa na consola.
-        // A aplicação irá arrancar com valores vazios, que é o comportamento esperado sem definições.
-        console.error("Falha crítica ao carregar definições padrão. A aplicação pode não ter aviões ou rotas pré-definidas até à próxima ligação à rede.", error);
-      }
-    }
+        // --- Funções para Modais ---
+        function abrirModalQR() {
+            document.getElementById("modalQR").style.display = "flex";
+        }
 
-    // Carrega valores padrão se for a primeira vez
-    window.onload = async () => {
-      await carregarValoresPadraoSeNecessario();
-      carregarDefinicoes();
-    };
-  </script>
+        function fecharModalQR() {
+            document.getElementById("modalQR").style.display = "none";
+        }
 
-  <!-- Versão da aplicação -->
-  <script src="app-version.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      if (typeof APP_VERSION !== 'undefined') {
-        document.getElementById('versaoApp').innerText = 'Versão: ' + APP_VERSION;
-      }
-       feather.replace();
-    });
-  </script>
+        function abrirModalReset() {
+            document.getElementById("modalReset").style.display = "flex";
+        }
+
+        function fecharModalReset() {
+            document.getElementById("modalReset").style.display = "none";
+        }
+
+        // Event listener para fechar modais ao clicar fora
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = "none";
+            }
+        }
+
+        // --- Inicialização ---
+        window.onload = async () => {
+            await carregarValoresPadraoSeNecessario();
+            carregarDefinicoes();
+        };
+
+        // Scripts da versão da app e icons
+        <script src="app-version.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                if (typeof APP_VERSION !== 'undefined') {
+                    document.getElementById('versaoApp').innerText = 'Versão: ' + APP_VERSION;
+                }
+                feather.replace();
+            });
+        </script>
+    </script>
 </body>
 </html>

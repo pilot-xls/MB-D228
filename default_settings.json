@@ -15,7 +15,7 @@
                   },
                   {
                     "nome": "CSDVU-2",
-                    "peso": 3645,
+                    "peso": 3643,
                     "momento": 28051.1,
                     "MRW": 5730,
                     "MTOW": 5900,
@@ -27,32 +27,32 @@
         {
           "nome": "RVP951/952",
           "legs": [
-            { "route": "BGR/VRL", "depF": "2000", "payl": "0", "tripF": "250" },
-            { "route": "VRL/VIS", "depF": "0", "payl": "0", "tripF": "150" },
-            { "route": "VIS/CAS", "depF": "0", "payl": "0", "tripF": "500" },
-            { "route": "CAS/PRM", "depF": "0", "payl": "0", "tripF": "400" },
+            { "route": "BGC/VRL", "depF": "2000", "payl": "0", "tripF": "250" },
+            { "route": "VRL/VSE", "depF": "0", "payl": "0", "tripF": "150" },
+            { "route": "VSE/CAT", "depF": "0", "payl": "0", "tripF": "500" },
+            { "route": "CAT/PRM", "depF": "0", "payl": "0", "tripF": "400" },
             { "route": "PRM/CAS", "depF": "0", "payl": "0", "tripF": "400" }
           ]
         },
         {
           "nome": "RVP952/953",
           "legs": [
-            { "route": "CAS/VIS", "depF": "2000", "payl": "0", "tripF": "500" },
-            { "route": "VIS/VRL", "depF": "0", "payl": "0", "tripF": "150" },
-            { "route": "VRL/BGR", "depF": "0", "payl": "0", "tripF": "250" },
-            { "route": "BGR/VRL", "depF": "0", "payl": "0", "tripF": "250" },
-            { "route": "VRL/VIS", "depF": "0", "payl": "0", "tripF": "150" },
-            { "route": "VIS/CAS", "depF": "0", "payl": "0", "tripF": "500" }
+            { "route": "CAT/VSE", "depF": "2000", "payl": "0", "tripF": "500" },
+            { "route": "VSE/VRL", "depF": "0", "payl": "0", "tripF": "150" },
+            { "route": "VRL/BGC", "depF": "0", "payl": "0", "tripF": "250" },
+            { "route": "BGC/VRL", "depF": "0", "payl": "0", "tripF": "250" },
+            { "route": "VRL/VSE", "depF": "0", "payl": "0", "tripF": "150" },
+            { "route": "VSE/CAT", "depF": "0", "payl": "0", "tripF": "500" }
           ]
         },
         {
           "nome": "RVP953/954",
           "legs": [
-            { "route": "CAS/PRM", "depF": "2000", "payl": "0", "tripF": "400" },
-            { "route": "PRM/CAS", "depF": "0", "payl": "0", "tripF": "400" },
-            { "route": "CAS/VIS", "depF": "0", "payl": "0", "tripF": "500" },
-            { "route": "VIS/VRL", "depF": "0", "payl": "0", "tripF": "150" },
-            { "route": "VRL/BGR", "depF": "0", "payl": "0", "tripF": "250" }
+            { "route": "CAT/PRM", "depF": "2000", "payl": "0", "tripF": "400" },
+            { "route": "PRM/CAT", "depF": "0", "payl": "0", "tripF": "400" },
+            { "route": "CAT/VSE", "depF": "0", "payl": "0", "tripF": "500" },
+            { "route": "VSE/VRL", "depF": "0", "payl": "0", "tripF": "150" },
+            { "route": "VRL/BGC", "depF": "0", "payl": "0", "tripF": "250" }
           ]
         }
       ]

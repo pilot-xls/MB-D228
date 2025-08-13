@@ -324,6 +324,9 @@ function preencherLegsComRota() {
         });
     }
     updateLdgAuto();
+	
+	guardarLegsNoLocalStorage();
+	guardarLegs();
 }
 
 /**
@@ -704,6 +707,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     } else {
         inicializarCalculadora();
         
+		
+		
         document.getElementById('aviaoSelecionado')?.addEventListener('change', calculate);
         ['pilots', 'manualPayload', 'fuel', 'fuelTaxi', 'fuelDest'].forEach(id => {
             document.getElementById(id)?.addEventListener('input', calculate);

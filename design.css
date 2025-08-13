@@ -239,7 +239,9 @@ tr.exceeded {
   padding: 4px;
   box-sizing: border-box;
 }
-
+.route-table tr {
+	text-align: center;
+}
 /*ajusta a  largura de uma coluna*/
 .route-table th:nth-child(1),
 .route-table td:nth-child(1) {

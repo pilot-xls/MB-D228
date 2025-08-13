@@ -724,7 +724,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     
         calculate();
     }
-
+	
+	document.querySelectorAll('input[type="number"],input[type="text"]').forEach(inp=>inp.addEventListener('focus',e=>e.target.select()));
+	
     feather.replace();
 });
 

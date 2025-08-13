@@ -509,6 +509,7 @@ function guardarPayloadDoPopup() {
     }
     
     guardarLegsNoLocalStorage();
+	guardarLegs();
     fecharPopupPayload();
     updateLdgAuto();
 }

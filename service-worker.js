@@ -1,5 +1,5 @@
 // Nome da cache (altera para forçar atualização quando modificares ficheiros)
-const CACHE_NAME = 'calc-cache-v138';
+const CACHE_NAME = 'calc-cache-v288';
 
 // Lista de ficheiros a guardar para acesso offline
 const FILES_TO_CACHE = [
@@ -8,8 +8,10 @@ const FILES_TO_CACHE = [
   './settings.html',
   './default_settings.json',
   './design.css',
+  './app.js',
   './app-version.js',
   './auto-update.js',
+  './qr_mb_d228.png',
   './icone.png',
   './manifest.json',
   './service-worker.js'
@@ -59,5 +61,6 @@ self.addEventListener('message', (event) => {
     self.skipWaiting();
   }
 });
+
 
 

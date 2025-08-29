@@ -12,7 +12,7 @@ let listaRotasPadrao = [];
 let legsData = [];
 let legEmEdicao = null;
 let linhaSelecionadaIndex = null;
-let versaoApp = "13.8"; // Versão da aplicação
+let versaoApp = "288"; // Versão da aplicação
 
 // --- Funções de Carregamento e Inicialização (Comum a ambas as páginas) ---
 

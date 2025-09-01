@@ -413,21 +413,29 @@ function fecharRota(input) {
 function adicionarLinhaLeg() {
     const tbody = document.getElementById('legsTable');
     if (!tbody) return;
+
+    // índice da linha selecionada ou última linha por defeito
     let idx = linhaSelecionadaIndex !== null ? linhaSelecionadaIndex : tbody.children.length - 1;
-    const novaLinha = tbody.children[idx]?.cloneNode(true) || null;
-    if (novaLinha) {
-        novaLinha.querySelectorAll('input').forEach(input => input.value = '');
-        novaLinha.querySelector('.rota-visual').textContent = '';
-        novaLinha.querySelector('.rota-edit').value = '';
+
+    // cria uma nova linha do zero (com listeners corretos)
+    criarLinhaLeg();
+
+    // obtém a última linha criada
+    const novaLinha = tbody.lastChild;
+
+    // se houver uma linha selecionada, insere logo a seguir
+    if (idx < tbody.children.length - 1) {
         tbody.insertBefore(novaLinha, tbody.children[idx + 1]);
-        selecionarLinhaLeg(novaLinha);
-        legsData.splice(idx + 1, 0, {homens:0, mulheres:0, criancas:0, bagagem:0, payload:0});
-        guardarLegsNoLocalStorage();
-        guardarLegs();
-        updateLdgAuto();
-    } else {
-        criarLinhaLeg();
     }
+
+    // seleciona a nova linha
+    selecionarLinhaLeg(novaLinha);
+
+    // atualiza dados
+    legsData.splice(idx + 1, 0, { homens:0, mulheres:0, criancas:0, bagagem:0, payload:0 });
+    guardarLegsNoLocalStorage();
+    guardarLegs();
+    updateLdgAuto();
 }
 
 function removerLinhaLeg() {

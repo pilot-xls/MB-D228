@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="design.css">
     <script src="https://unpkg.com/feather-icons"></script>
     <script src="auto-update.js" defer></script>
+	<script src="app-version.js"></script>
+	<script src="app.js" defer></script>
     
     <style>
         /* --- Estilos para as modais --- */
@@ -214,11 +216,25 @@
         <span id="versaoApp"></span>
     </footer>
 
-
 	
+	<script>
+    (function () {
+      const el = document.getElementById('versaoApp');
+      if (!el) return;
+      fetch('./app-version.js', { cache: 'no-store' })
+        .then(r => r.ok ? r.text() : Promise.reject())
+        .then(code => {
+          const m = code.match(/APP_VERSION\s*=\s*['"`]([^'"`]+)['"`]/);
+          const v = m && m[1] ? m[1] : null;
+          el.textContent = 'Versão: ' + (v || 'desconhecida');
+        })
+        .catch(() => {
+          el.textContent = 'Versão: ' + (window.APP_VERSION || 'desconhecida');
+        });
+    })();
+	</script>
 
-    <script src="app.js"></script>
-	
+    
 	
 </body>
 </html>

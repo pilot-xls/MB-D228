@@ -663,10 +663,37 @@ function carregarListaRotas(rotas) {
         const li = document.createElement('li');
         li.innerHTML = `
             ${rota.nome}
+            <button onclick="editarRotaGuardada(${index})">Editar</button>
             <button onclick="removerRota(${index})">Remover</button>
         `;
         ul.appendChild(li);
     });
+}
+
+function editarRotaGuardada(index) {
+    const rotas = JSON.parse(localStorage.getItem('rotasPadrao')) || [];
+    const rota = rotas[index];
+    if (!rota) return;
+
+    // Preenche o nome
+    document.getElementById('nomeRota').value = rota.nome;
+
+    // Limpa tabela temporária e adiciona legs
+    const tbody = document.getElementById('rotaTemp');
+    if (tbody) {
+        tbody.innerHTML = '';
+        rota.legs.forEach(leg => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td><input type="text" value="${leg.route}"></td>
+                <td><input type="number" inputmode="decimal" step="any" value="${leg.depF}"></td>
+                <td><input type="number" inputmode="decimal" step="any" value="${leg.payl}"></td>
+                <td><input type="number" inputmode="decimal" step="any" value="${leg.tripF}"></td>
+                <td><button onclick="removerLinhaRota(this)">-</button></td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
 }
 
 function adicionarLinhaRota() {

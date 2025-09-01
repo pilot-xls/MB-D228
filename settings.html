@@ -195,11 +195,12 @@
     <hr>
     
     <div style="display: flex; justify-content: space-between; align-items: center; padding: 0 10px;">
-        <button class="button-danger" onclick="abrirModalReset()">Reset Definições</button>
-        <button onclick="guardarDefinicoes()">Guardar</button>
-    </div>
-    <br><br>
-
+		<button class="button-danger" onclick="abrirModalReset()">Reset Definições</button>
+		<div>
+			<button onclick="forcarUpdate()">🔄 Forçar atualização</button>
+			<button onclick="guardarDefinicoes()">Guardar</button>
+		</div>
+	</div>
 
 
 	<!-- Banner de atualização escondido por defeito -->
@@ -234,7 +235,29 @@
     })();
 	</script>
 
-    
+    <script>
+	async function forcarUpdate() {
+	  if ('serviceWorker' in navigator) {
+		try {
+		  const reg = await navigator.serviceWorker.getRegistration();
+		  if (reg) {
+			await reg.update(); // procura um SW novo
+			if (reg.waiting) {
+			  reg.waiting.postMessage({ action: 'skipWaiting' });
+			}
+			window.location.reload(); // recarrega com a versão nova
+		  } else {
+			alert("Nenhum service worker registado.");
+		  }
+		} catch (e) {
+		  console.error("Erro ao forçar update:", e);
+		  alert("Falha ao tentar atualizar.");
+		}
+	  } else {
+		alert("Service Worker não suportado neste browser.");
+	  }
+	}
+	</script>
 	
 </body>
 </html>

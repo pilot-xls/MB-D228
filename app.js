@@ -620,13 +620,21 @@ function guardarDefinicoes() {
             }))
         };
         if (rotaAtual.nome) {
-            const rotas = JSON.parse(localStorage.getItem('rotasPadrao')) || [];
-            rotas.push(rotaAtual);
-            localStorage.setItem('rotasPadrao', JSON.stringify(rotas));
-            inicializarDefinicoes();
-            document.getElementById('nomeRota').value = '';
-            document.getElementById('rotaTemp').innerHTML = '';
-        }
+			let rotas = JSON.parse(localStorage.getItem('rotasPadrao')) || [];
+
+			// Procura rota com o mesmo nome
+			const idx = rotas.findIndex(r => r.nome === rotaAtual.nome);
+			if (idx >= 0) {
+				rotas[idx] = rotaAtual; // substitui rota existente
+			} else {
+				rotas.push(rotaAtual); // adiciona nova se não existir
+			}
+
+			localStorage.setItem('rotasPadrao', JSON.stringify(rotas));
+			inicializarDefinicoes();
+			document.getElementById('nomeRota').value = '';
+			document.getElementById('rotaTemp').innerHTML = '';
+		}
     }
 
     alert('Definições guardadas com sucesso!');

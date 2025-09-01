@@ -12,7 +12,6 @@ let listaRotasPadrao = [];
 let legsData = [];
 let legEmEdicao = null;
 let linhaSelecionadaIndex = null;
-let versaoApp = "288"; // Versão da aplicação
 
 // --- Funções de Carregamento e Inicialização (Comum a ambas as páginas) ---
 
@@ -535,7 +534,7 @@ function inicializarDefinicoes() {
     if (rotas) {
         carregarListaRotas(rotas);
     }
-    document.getElementById('versaoApp').textContent = `Versão: ${versaoApp}`;
+    
 }
 
 function carregarTabelaAvioes(avioes) {

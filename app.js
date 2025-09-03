@@ -175,7 +175,9 @@ function calculate() {
         el.classList.toggle('exceeded', weight > limit);
     });
 	
-	requestAnimationFrame(updateLdgAuto);
+	guardarLegsNoLocalStorage();
+    guardarLegs();
+    updateLdgAuto();
 }
 
 /**
@@ -399,6 +401,7 @@ function editarRota(td) {
     input.focus();
     input.select();
 }
+
 function fecharRota(input) {
     const td = input.parentElement;
     const div = td.querySelector('.rota-visual');
@@ -661,12 +664,15 @@ function resetarDefinicoes() {
 function abrirModalQR() {
     document.getElementById('modalQR').style.display = 'flex';
 }
+
 function fecharModalQR() {
     document.getElementById('modalQR').style.display = 'none';
 }
+
 function abrirModalReset() {
     document.getElementById('modalReset').style.display = 'flex';
 }
+
 function fecharModalReset() {
     document.getElementById('modalReset').style.display = 'none';
 }

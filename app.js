@@ -174,7 +174,8 @@ function calculate() {
         const limit = id === 'rampRow' ? MRW : id === 'takeoffRow' ? MTOW : MLW;
         el.classList.toggle('exceeded', weight > limit);
     });
-
+	
+	updateLdgAuto();
     setTimeout(updateLdgAuto, 50);
 }
 

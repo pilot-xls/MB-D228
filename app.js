@@ -175,7 +175,7 @@ function calculate() {
         el.classList.toggle('exceeded', weight > limit);
     });
 
-    updateLdgAuto();
+    setTimeout(updateLdgAuto, 50);
 }
 
 /**

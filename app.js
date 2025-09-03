@@ -175,9 +175,11 @@ function calculate() {
         el.classList.toggle('exceeded', weight > limit);
     });
 	
-	guardarLegsNoLocalStorage();
-    guardarLegs();
-    updateLdgAuto();
+	// recalcula também as linhas de Rotas com o avião novo
+	document.querySelectorAll("#legsTable tr").forEach(row => {
+		row.dataset.forceUpdate = "1";
+	});
+	updateLdgAuto();
 }
 
 /**

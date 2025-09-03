@@ -756,7 +756,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         
 		
 		
-        document.getElementById('aviaoSelecionado')?.addEventListener('change', calculate);
+        document.getElementById('aviaoSelecionado')?.addEventListener('change', () => {
+			calculate();
+			updateLdgAuto();
+		});
         ['pilots', 'manualPayload', 'fuel', 'fuelTaxi', 'fuelDest'].forEach(id => {
             document.getElementById(id)?.addEventListener('input', calculate);
         });

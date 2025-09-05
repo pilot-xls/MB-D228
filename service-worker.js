@@ -1,54 +1,82 @@
-// Nome da cache (altera para forçar atualização quando modificares ficheiros)
-const CACHE_NAME = 'calc-cache-v903';
+// Nome da cache - incrementa sempre que lanças nova versão
+const CACHE_NAME = "calc-cache-v906";
 
-// Lista de ficheiros a guardar para acesso offline
-const FILES_TO_CACHE = [
-  './',
-  './index.html',
-  './settings.html',
-  './default_settings.json',
-  './design.css',
-  './app.js',
-  './app-version.js',
-  './auto-update.js',
-  './qr_mb_d228.png',
-  './icone.png',
-  './manifest.json',
-  './service-worker.js'
+// Ficheiros essenciais para a app funcionar offline
+const CORE_ASSETS = [
+  "./index.html",
+  "./settings.html",
+  "./design.css",
+  "./app.js",
+  "./app-version.js",
+  "./auto-update.js",
+  "./default_settings.json",
+  "./manifest.json",
+  "./service-worker.js",
+  "./icons/icon-192.png",
+  "./icons/icon-512.png"
 ];
 
-// Instalação: mete ficheiros na cache + força SW imediato
-self.addEventListener('install', event => {
+// Instalação: pré-carrega todos os assets críticos
+self.addEventListener("install", event => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(FILES_TO_CACHE))
+    caches.open(CACHE_NAME).then(cache => cache.addAll(CORE_ASSETS))
   );
-  self.skipWaiting();
+  self.skipWaiting(); // força ativação imediata
 });
 
-// Fetch: responde da cache ou da rede
-self.addEventListener('fetch', event => {
-  event.respondWith(
-    caches.match(event.request).then(response => response || fetch(event.request))
-  );
-});
-
-// Ativação: apaga caches antigas + assume controlo + avisa app
-self.addEventListener('activate', event => {
+// Ativação: limpa caches antigas
+self.addEventListener("activate", event => {
   event.waitUntil(
     caches.keys().then(keys =>
-      Promise.all(keys.map(k => k !== CACHE_NAME && caches.delete(k)))
+      Promise.all(
+        keys.map(key => {
+          if (key !== CACHE_NAME) {
+            return caches.delete(key);
+          }
+        })
+      )
     )
   );
-  clients.claim();
-  self.clients.matchAll().then(clients => {
-    clients.forEach(client => client.postMessage({ type: 'NEW_VERSION' }));
-  });
+  self.clients.claim();
 });
 
-// Mensagem vinda da app (para skipWaiting manual)
-self.addEventListener('message', event => {
-  if (event.data && event.data.action === 'skipWaiting') {
-    self.skipWaiting();
+// Fetch handler resiliente
+self.addEventListener("fetch", event => {
+  const req = event.request;
+
+  // Navegações → network-first, fallback ao cache
+  if (req.mode === "navigate") {
+    event.respondWith(
+      fetch(req)
+        .then(res => {
+          const copy = res.clone();
+          caches.open(CACHE_NAME).then(c => c.put("./index.html", copy));
+          return res;
+        })
+        .catch(() => caches.match("./index.html"))
+    );
+    return;
   }
-});
 
+  // Assets → cache-first, depois rede
+  event.respondWith(
+    caches.match(req).then(cached => {
+      if (cached) return cached;
+
+      return fetch(req)
+        .then(res => {
+          if (res && res.status === 200 && req.method === "GET") {
+            const copy = res.clone();
+            caches.open(CACHE_NAME).then(c => c.put(req, copy));
+          }
+          return res;
+        })
+        .catch(() => {
+          // fallback básico se falhar (por ex. CSS ou JS)
+          if (req.destination === "style" || req.destination === "script") {
+            return caches.match("./index.html");
+          }
+        });
+    })
+  );
+});

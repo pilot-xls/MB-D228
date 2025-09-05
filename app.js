@@ -345,6 +345,8 @@ function inserirLeg(btn) {
 }
 
 /**
+
+	rever para meter na linha 357 - valor errado....   <div>Max PayL: ${maxPayloadKg.toFixed(0)} kg</div>
  * Atualiza o Landing Fuel e outras notas automáticas.
  */
 function updateLdgAuto() {
@@ -370,7 +372,7 @@ function updateLdgAuto() {
         const ldgCell = row.querySelector(".ldg");
         if (ldgCell) {
             ldgCell.innerHTML = `
-                <div>Max PayL: ${maxPayloadKg.toFixed(0)} kg</div>
+                
                 <div>Max Fuel: ${maxFuelLb.toFixed(0)} lb</div>
                 <div>Underload: ${takeoffUnderload.toFixed(0)} Kg</div>
             `;

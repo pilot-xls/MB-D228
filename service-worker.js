@@ -1,5 +1,5 @@
 // Nome da cache - incrementa sempre que lanças nova versão
-const CACHE_NAME = "calc-cache-v906";
+const CACHE_NAME = "calc-cache-v907";
 
 // Ficheiros essenciais para a app funcionar offline
 const CORE_ASSETS = [

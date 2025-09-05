@@ -787,6 +787,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 // Expor funções para uso em `onclick` no HTML
 window.adicionarLinhaLeg = adicionarLinhaLeg;
+window.getAviaoAtual = getAviaoAtual;
 window.removerLinhaLeg = removerLinhaLeg;
 window.inserirLeg = inserirLeg;
 window.editarRota = editarRota;

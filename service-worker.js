@@ -12,8 +12,8 @@ const CORE_ASSETS = [
   "./default_settings.json",
   "./manifest.json",
   "./service-worker.js",
-  "./icons/icon-192.png",
-  "./icons/icon-512.png"
+  "./qr_mb_d228.png",
+  "./icon.png"
 ];
 
 // Instalação: pré-carrega todos os assets críticos
